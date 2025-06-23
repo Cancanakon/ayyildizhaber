@@ -1,5 +1,6 @@
 import os
 import logging
+from datetime import datetime, timedelta
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -125,12 +126,20 @@ def fetch_external_news():
         except Exception as e:
             print(f"Error fetching external news: {e}")
 
-# Schedule news fetching every 30 minutes
+# Schedule news fetching every 15 minutes for more frequent updates
 scheduler.add_job(
     func=fetch_external_news,
     trigger="interval",
-    minutes=30,
+    minutes=15,
     id='fetch_news_job'
+)
+
+# Also run once at startup after 30 seconds
+scheduler.add_job(
+    func=fetch_external_news,
+    trigger="date",
+    run_date=datetime.now() + timedelta(seconds=30),
+    id='startup_news_job'
 )
 
 # Start scheduler

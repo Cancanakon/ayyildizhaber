@@ -114,18 +114,92 @@ def save_trt_news_to_db(news_items):
 
 def fetch_and_save_trt_news():
     """Main function to fetch and save TRT news"""
-    categories = ['gundem', 'ekonomi', 'spor', 'teknoloji', 'saglik', 'kultur-sanat']
+    categories = ['gundem', 'ekonomi', 'spor', 'teknoloji', 'saglik', 'kultur-sanat', 'dunya', 'politika']
     total_saved = 0
     
     for category in categories:
         try:
             logging.info(f"Fetching TRT news for category: {category}")
-            news_items = fetch_trt_news_xml(category, 10)
-            saved = save_trt_news_to_db(news_items)
-            total_saved += saved
+            news_items = fetch_trt_news_xml(category, 15)
+            
+            if news_items:
+                saved = save_trt_news_to_db(news_items)
+                total_saved += saved
+                print(f"Saved {saved} TRT news items from {category}")
+            else:
+                # Try RSS as backup
+                try:
+                    import feedparser
+                    rss_url = f"https://www.trthaber.com/rss/{category}.rss"
+                    feed = feedparser.parse(rss_url)
+                    
+                    rss_items = []
+                    for entry in feed.entries[:10]:
+                        item = {
+                            'title': entry.title,
+                            'summary': entry.description[:200] + '...' if len(entry.description) > 200 else entry.description,
+                            'content': entry.description,
+                            'source_url': entry.link,
+                            'pub_date': entry.published if hasattr(entry, 'published') else '',
+                            'category': category,
+                            'image_url': ''
+                        }
+                        rss_items.append(item)
+                    
+                    if rss_items:
+                        saved = save_trt_news_to_db(rss_items)
+                        total_saved += saved
+                        print(f"Saved {saved} TRT RSS news items from {category}")
+                        
+                except Exception as rss_e:
+                    print(f"RSS backup failed for {category}: {rss_e}")
             
         except Exception as e:
             logging.error(f"Error processing TRT category {category}: {e}")
     
-    logging.info(f"Total TRT news items saved: {total_saved}")
+    print(f"Total TRT news items saved: {total_saved}")
     return total_saved
+
+def fetch_rss_backup():
+    """Fetch from multiple RSS sources for continuous news flow"""
+    try:
+        import feedparser
+        
+        sources = [
+            {'url': 'https://www.trthaber.com/rss/manset.rss', 'category': 'gundem'},
+            {'url': 'https://www.trthaber.com/rss/son_dakika.rss', 'category': 'gundem'},
+            {'url': 'https://www.aa.com.tr/tr/rss/default?cat=guncel', 'category': 'gundem'},
+        ]
+        
+        total_saved = 0
+        
+        for source in sources:
+            try:
+                feed = feedparser.parse(source['url'])
+                items = []
+                
+                for entry in feed.entries[:8]:
+                    item = {
+                        'title': entry.title,
+                        'summary': entry.description[:200] + '...' if len(entry.description) > 200 else entry.description,
+                        'content': entry.description,
+                        'source_url': entry.link,
+                        'pub_date': entry.published if hasattr(entry, 'published') else '',
+                        'category': source['category'],
+                        'image_url': ''
+                    }
+                    items.append(item)
+                
+                if items:
+                    saved = save_trt_news_to_db(items)
+                    total_saved += saved
+                    print(f"Saved {saved} RSS backup news from {source['url']}")
+                    
+            except Exception as e:
+                print(f"Error with RSS source {source['url']}: {e}")
+        
+        return total_saved
+        
+    except Exception as e:
+        print(f"RSS backup failed: {e}")
+        return 0

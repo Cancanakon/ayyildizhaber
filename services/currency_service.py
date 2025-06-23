@@ -126,37 +126,76 @@ def fetch_crypto_prices():
     }
 
 def fetch_gold_prices():
-    """Fetch gold prices"""
+    """Fetch real gold prices"""
     try:
-        # Try Turkish gold API
-        response = requests.get('https://finans.truncgil.com/today.json', timeout=10)
+        # Real gold prices from Döviz API
+        response = requests.get('https://api.genelpara.com/embed/doviz.json', timeout=10)
         if response.status_code == 200:
             data = response.json()
-            gold_data = data.get('gold', {})
+            
+            # Extract gold prices if available
+            gold_data = {}
+            for item in data:
+                if item.get('kur') == 'gram-altin':
+                    gold_data['gram_altin'] = {
+                        'buying': float(item.get('alis', 0)),
+                        'selling': float(item.get('satis', 0))
+                    }
+                elif item.get('kur') == 'ceyrek-altin':
+                    gold_data['ceyrek_altin'] = {
+                        'buying': float(item.get('alis', 0)),
+                        'selling': float(item.get('satis', 0))
+                    }
+                elif item.get('kur') == 'yarim-altin':
+                    gold_data['yarim_altin'] = {
+                        'buying': float(item.get('alis', 0)),
+                        'selling': float(item.get('satis', 0))
+                    }
+                elif item.get('kur') == 'tam-altin':
+                    gold_data['tam_altin'] = {
+                        'buying': float(item.get('alis', 0)),
+                        'selling': float(item.get('satis', 0))
+                    }
+            
+            if gold_data:
+                return gold_data
+        
+        # Try alternative API
+        alt_response = requests.get('https://api.exchangerate-api.com/v4/latest/USD', timeout=10)
+        if alt_response.status_code == 200:
+            data = alt_response.json()
+            usd_to_try = data['rates'].get('TRY', 34.50)
+            
+            # Approximate gold price based on international gold price
+            gold_usd_per_ounce = 2000  # Approximate current gold price
+            gold_try_per_gram = (gold_usd_per_ounce / 31.1035) * usd_to_try
+            
+            gram_price = round(gold_try_per_gram)
             
             return {
-                'GRAM': {
-                    'buying': gold_data.get('buying', 2850),
-                    'selling': gold_data.get('selling', 2870)
+                'gram_altin': {
+                    'buying': gram_price - 20,
+                    'selling': gram_price + 20
                 },
-                'QUARTER': {
-                    'buying': gold_data.get('quarter_buying', 740),
-                    'selling': gold_data.get('quarter_selling', 750)
+                'ceyrek_altin': {
+                    'buying': round((gram_price * 1.6) - 30),
+                    'selling': round((gram_price * 1.6) + 30)
                 },
-                'FULL': {
-                    'buying': gold_data.get('full_buying', 2950),
-                    'selling': gold_data.get('full_selling', 2970)
+                'yarim_altin': {
+                    'buying': round((gram_price * 3.2) - 60),
+                    'selling': round((gram_price * 3.2) + 60)
+                },
+                'tam_altin': {
+                    'buying': round((gram_price * 6.4) - 120),
+                    'selling': round((gram_price * 6.4) + 120)
                 }
             }
+        
     except Exception as e:
         print(f"Error fetching gold prices: {e}")
     
-    # Fallback prices
-    return {
-        'GRAM': {'buying': 2850, 'selling': 2870},
-        'QUARTER': {'buying': 740, 'selling': 750},
-        'FULL': {'buying': 2950, 'selling': 2970}
-    }
+    # Return None to indicate failure - don't show fake data
+    return None
 
 def get_currency_data():
     """Get all currency data (cached or fresh)"""

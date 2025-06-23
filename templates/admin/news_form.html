@@ -92,7 +92,8 @@
                     <!-- Content -->
                     <div class="mb-3">
                         <label for="content" class="form-label">İçerik <span class="text-danger">*</span></label>
-                        <textarea class="form-control" id="content" name="content" rows="15" required>{{ news.content if news else '' }}</textarea>
+                        <div id="editor" style="height: 300px; background: white; border: 1px solid #ddd; border-radius: 5px;"></div>
+                        <textarea id="content" name="content" style="display: none;" required>{{ news.content if news else '' }}</textarea>
                         <div class="invalid-feedback">
                             Lütfen haber içeriğini girin.
                         </div>

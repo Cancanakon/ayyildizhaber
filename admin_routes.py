@@ -235,27 +235,7 @@ def news_delete(id):
 
 # Categories and users management removed per user request
 
-@admin_bp.route('/kategori/yeni', methods=['POST'])
-@login_required
-def category_create():
-    name = request.form.get('name')
-    description = request.form.get('description')
-    color = request.form.get('color', '#dc2626')
-    
-    slug = create_slug(name)
-    
-    category = Category(
-        name=name,
-        slug=slug,
-        description=description,
-        color=color
-    )
-    
-    db.session.add(category)
-    db.session.commit()
-    
-    flash('Kategori başarıyla oluşturuldu', 'success')
-    return redirect(url_for('admin.categories'))
+
 
 # Category editing removed
 
@@ -263,53 +243,7 @@ def category_create():
 
 # Users management removed
 
-@admin_bp.route('/kullanici/yeni', methods=['POST'])
-@login_required
-def user_create():
-    if not current_user.is_super_admin:
-        flash('Bu işlem için yetkiniz yok', 'error')
-        return redirect(url_for('admin.users'))
-    
-    username = request.form.get('username')
-    email = request.form.get('email')
-    password = request.form.get('password')
-    is_super_admin = 'is_super_admin' in request.form
-    
-    # Check if email exists
-    if Admin.query.filter_by(email=email).first():
-        flash('Bu email adresi zaten kullanılıyor', 'error')
-        return redirect(url_for('admin.users'))
-    
-    admin = Admin(
-        username=username,
-        email=email,
-        password_hash=generate_password_hash(password),
-        is_super_admin=is_super_admin
-    )
-    
-    db.session.add(admin)
-    db.session.commit()
-    
-    flash('Kullanıcı başarıyla oluşturuldu', 'success')
-    return redirect(url_for('admin.users'))
 
-@admin_bp.route('/kullanici/<int:id>/sil', methods=['POST'])
-@login_required
-def user_delete(id):
-    if not current_user.is_super_admin:
-        flash('Bu işlem için yetkiniz yok', 'error')
-        return redirect(url_for('admin.users'))
-    
-    if id == current_user.id:
-        flash('Kendi hesabınızı silemezsiniz', 'error')
-        return redirect(url_for('admin.users'))
-    
-    admin = Admin.query.get_or_404(id)
-    db.session.delete(admin)
-    db.session.commit()
-    
-    flash('Kullanıcı başarıyla silindi', 'success')
-    return redirect(url_for('admin.users'))
 
 @admin_bp.route('/istatistikler')
 @login_required

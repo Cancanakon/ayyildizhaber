@@ -1,10 +1,11 @@
 import requests
 import json
 import os
+import logging
 from datetime import datetime, timedelta
 
 CACHE_FILE = 'cache/currency_data.json'
-CACHE_DURATION = timedelta(hours=1)  # Cache for 1 hour
+CACHE_DURATION = timedelta(hours=3)  # Cache for 3 hours
 
 def ensure_cache_dir():
     """Ensure cache directory exists"""
@@ -34,211 +35,182 @@ def save_cached_data(data):
         with open(CACHE_FILE, 'w') as f:
             json.dump(cache_data, f)
     except Exception as e:
-        print(f"Error saving cache: {e}")
+        logging.error(f"Error saving cache: {e}")
 
 def fetch_currency_rates():
-    """Fetch current currency rates from API"""
+    """Fetch current currency rates from Kapali Carsi API"""
     try:
-        # Try multiple APIs for reliability
-        apis = [
-            'https://api.exchangerate-api.com/v4/latest/USD',
-            'https://api.fixer.io/latest?access_key=' + os.environ.get('FIXER_API_KEY', ''),
-            'https://openexchangerates.org/api/latest.json?app_id=' + os.environ.get('OPENEXCHANGE_API_KEY', '')
-        ]
+        logging.info("Fetching currency rates from Kapali Carsi API...")
         
-        for api_url in apis:
-            try:
-                if 'fixer.io' in api_url and not os.environ.get('FIXER_API_KEY'):
-                    continue
-                if 'openexchangerates' in api_url and not os.environ.get('OPENEXCHANGE_API_KEY'):
-                    continue
-                    
-                response = requests.get(api_url, timeout=10)
-                if response.status_code == 200:
-                    data = response.json()
-                    
-                    # Convert to our format
-                    if 'rates' in data:
-                        try_rate = data['rates'].get('TRY', 0)
-                        if try_rate > 0:
-                            return {
-                                'USD': {
-                                    'buying': round(try_rate, 2),
-                                    'selling': round(try_rate * 1.02, 2)
-                                },
-                                'EUR': {
-                                    'buying': round(try_rate * 1.1, 2),  # Approximate EUR rate
-                                    'selling': round(try_rate * 1.12, 2)
-                                },
-                                'GBP': {
-                                    'buying': round(try_rate * 1.25, 2),  # Approximate GBP rate
-                                    'selling': round(try_rate * 1.27, 2)
-                                }
-                            }
-            except:
-                continue
+        response = requests.get('https://kapalicarsi.apiluna.org/', timeout=10)
         
-        # Fallback rates if APIs fail
-        return {
-            'USD': {'buying': 34.50, 'selling': 34.70},
-            'EUR': {'buying': 37.20, 'selling': 37.40},
-            'GBP': {'buying': 43.10, 'selling': 43.30}
-        }
-        
+        if response.status_code == 200:
+            data = response.json()
+            
+            # Find currency data
+            usd_data = next((item for item in data if item.get('code') == 'USD'), None)
+            eur_data = next((item for item in data if item.get('code') == 'EUR'), None)
+            gbp_data = next((item for item in data if item.get('code') == 'GBP'), None)
+            
+            rates = {}
+            
+            if usd_data:
+                rates['USD'] = {
+                    'buying': round(float(usd_data.get('alis', 34.5)), 2),
+                    'selling': round(float(usd_data.get('satis', 34.7)), 2),
+                    'change': round(float(usd_data.get('kapanis', 0)), 2)
+                }
+            
+            if eur_data:
+                rates['EUR'] = {
+                    'buying': round(float(eur_data.get('alis', 37.2)), 2),
+                    'selling': round(float(eur_data.get('satis', 37.4)), 2),
+                    'change': round(float(eur_data.get('kapanis', 0)), 2)
+                }
+            
+            if gbp_data:
+                rates['GBP'] = {
+                    'buying': round(float(gbp_data.get('alis', 43.1)), 2),
+                    'selling': round(float(gbp_data.get('satis', 43.3)), 2),
+                    'change': round(float(gbp_data.get('kapanis', 0)), 2)
+                }
+            
+            return rates if rates else None
+            
     except Exception as e:
-        print(f"Error fetching currency rates: {e}")
+        logging.error(f"Error fetching currency rates from Kapali Carsi: {e}")
+        return None
+
+def fetch_gold_prices():
+    """Fetch real gold prices from Kapali Carsi API"""
+    try:
+        logging.info("Fetching gold prices from Kapali Carsi API...")
+        
+        response = requests.get('https://kapalicarsi.apiluna.org/', timeout=10)
+        
+        if response.status_code == 200:
+            data = response.json()
+            
+            # Find specific gold types
+            gram_gold = next((item for item in data if item.get('code') == 'ALTIN'), None)
+            quarter_gold = next((item for item in data if item.get('code') == 'CEYREK_YENI'), None)
+            full_gold = next((item for item in data if item.get('code') == 'TEK_YENI'), None)
+            half_gold = next((item for item in data if item.get('code') == 'YARIM_YENI'), None)
+            
+            gold_data = {}
+            
+            if gram_gold:
+                gold_data['gram'] = {
+                    'buying': round(float(gram_gold.get('alis', 2850)), 2),
+                    'selling': round(float(gram_gold.get('satis', 2870)), 2),
+                    'change': round(float(gram_gold.get('kapanis', 0)), 2)
+                }
+            
+            if quarter_gold:
+                gold_data['quarter'] = {
+                    'buying': round(float(quarter_gold.get('alis', 900)), 2),
+                    'selling': round(float(quarter_gold.get('satis', 920)), 2),
+                    'change': round(float(quarter_gold.get('kapanis', 0)), 2)
+                }
+            
+            if half_gold:
+                gold_data['half'] = {
+                    'buying': round(float(half_gold.get('alis', 1800)), 2),
+                    'selling': round(float(half_gold.get('satis', 1820)), 2),
+                    'change': round(float(half_gold.get('kapanis', 0)), 2)
+                }
+            
+            if full_gold:
+                gold_data['full'] = {
+                    'buying': round(float(full_gold.get('alis', 3600)), 2),
+                    'selling': round(float(full_gold.get('satis', 3650)), 2),
+                    'change': round(float(full_gold.get('kapanis', 0)), 2)
+                }
+            
+            return gold_data if gold_data else None
+            
+    except Exception as e:
+        logging.error(f"Error fetching gold prices from Kapali Carsi: {e}")
         return None
 
 def fetch_crypto_prices():
-    """Fetch cryptocurrency prices"""
+    """Fetch cryptocurrency prices from CoinGecko API"""
     try:
-        url = 'https://api.coingecko.com/api/v3/simple/price'
-        params = {
-            'ids': 'bitcoin,ethereum,binancecoin',
-            'vs_currencies': 'try'
-        }
+        logging.info("Fetching crypto prices from CoinGecko API...")
         
-        response = requests.get(url, params=params, timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            return {
-                'BTC': {
-                    'price': round(data.get('bitcoin', {}).get('try', 0)),
-                    'symbol': '₺'
-                },
-                'ETH': {
-                    'price': round(data.get('ethereum', {}).get('try', 0)),
-                    'symbol': '₺'
-                },
-                'BNB': {
-                    'price': round(data.get('binancecoin', {}).get('try', 0)),
-                    'symbol': '₺'
-                }
-            }
-    except Exception as e:
-        print(f"Error fetching crypto prices: {e}")
-    
-    # Fallback prices
-    return {
-        'BTC': {'price': 1800000, 'symbol': '₺'},
-        'ETH': {'price': 120000, 'symbol': '₺'},
-        'BNB': {'price': 15000, 'symbol': '₺'}
-    }
-
-def fetch_gold_prices():
-    """Fetch real gold prices"""
-    try:
-        # Real gold prices from Döviz API
-        response = requests.get('https://api.genelpara.com/embed/doviz.json', timeout=10)
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin&vs_currencies=try',
+            timeout=10
+        )
+        
         if response.status_code == 200:
             data = response.json()
             
-            # Extract gold prices if available
-            gold_data = {}
-            for item in data:
-                if item.get('kur') == 'gram-altin':
-                    gold_data['gram_altin'] = {
-                        'buying': float(item.get('alis', 0)),
-                        'selling': float(item.get('satis', 0))
-                    }
-                elif item.get('kur') == 'ceyrek-altin':
-                    gold_data['ceyrek_altin'] = {
-                        'buying': float(item.get('alis', 0)),
-                        'selling': float(item.get('satis', 0))
-                    }
-                elif item.get('kur') == 'yarim-altin':
-                    gold_data['yarim_altin'] = {
-                        'buying': float(item.get('alis', 0)),
-                        'selling': float(item.get('satis', 0))
-                    }
-                elif item.get('kur') == 'tam-altin':
-                    gold_data['tam_altin'] = {
-                        'buying': float(item.get('alis', 0)),
-                        'selling': float(item.get('satis', 0))
-                    }
+            crypto_data = {}
             
-            if gold_data:
-                return gold_data
-        
-        # Try alternative API
-        alt_response = requests.get('https://api.exchangerate-api.com/v4/latest/USD', timeout=10)
-        if alt_response.status_code == 200:
-            data = alt_response.json()
-            usd_to_try = data['rates'].get('TRY', 34.50)
-            
-            # Approximate gold price based on international gold price
-            gold_usd_per_ounce = 2000  # Approximate current gold price
-            gold_try_per_gram = (gold_usd_per_ounce / 31.1035) * usd_to_try
-            
-            gram_price = round(gold_try_per_gram)
-            
-            return {
-                'gram_altin': {
-                    'buying': gram_price - 20,
-                    'selling': gram_price + 20
-                },
-                'ceyrek_altin': {
-                    'buying': round((gram_price * 1.6) - 30),
-                    'selling': round((gram_price * 1.6) + 30)
-                },
-                'yarim_altin': {
-                    'buying': round((gram_price * 3.2) - 60),
-                    'selling': round((gram_price * 3.2) + 60)
-                },
-                'tam_altin': {
-                    'buying': round((gram_price * 6.4) - 120),
-                    'selling': round((gram_price * 6.4) + 120)
+            if 'bitcoin' in data:
+                btc_price = data['bitcoin']['try']
+                crypto_data['BTC'] = {
+                    'buying': round(btc_price, 0),
+                    'selling': round(btc_price * 1.01, 0),
+                    'change': 0.0
                 }
-            }
-        
+            
+            if 'ethereum' in data:
+                eth_price = data['ethereum']['try']
+                crypto_data['ETH'] = {
+                    'buying': round(eth_price, 0),
+                    'selling': round(eth_price * 1.01, 0),
+                    'change': 0.0
+                }
+                
+            if 'binancecoin' in data:
+                bnb_price = data['binancecoin']['try']
+                crypto_data['BNB'] = {
+                    'buying': round(bnb_price, 0),
+                    'selling': round(bnb_price * 1.01, 0),
+                    'change': 0.0
+                }
+            
+            return crypto_data
+            
     except Exception as e:
-        print(f"Error fetching gold prices: {e}")
-    
-    # Return None to indicate failure - don't show fake data
-    return None
+        logging.error(f"Error fetching crypto prices: {e}")
+        return None
 
 def get_currency_data():
     """Get all currency data (cached or fresh)"""
-    # Try cache first
-    cached_data = get_cached_data()
-    if cached_data:
-        return cached_data
-    
-    # Fetch fresh data
     try:
+        # Get cached data first
+        cached_data = get_cached_data()
+        if cached_data:
+            return cached_data
+        
+        # Fetch fresh data
+        logging.info("Fetching fresh currency data from Kapali Carsi and CoinGecko...")
+        
         currency_rates = fetch_currency_rates()
-        crypto_prices = fetch_crypto_prices()
         gold_prices = fetch_gold_prices()
+        crypto_prices = fetch_crypto_prices()
+        
+        if not currency_rates and not gold_prices and not crypto_prices:
+            logging.warning("No data available from any source")
+            return None
         
         data = {
-            'currencies': currency_rates,
-            'crypto': crypto_prices,
-            'gold': gold_prices,
-            'last_updated': datetime.now().isoformat()
+            'currency': currency_rates or {},
+            'gold': gold_prices or {},
+            'crypto': crypto_prices or {},
+            'last_updated': datetime.now().isoformat(),
+            'source': 'Kapali Carsi & CoinGecko'
         }
         
-        # Cache the data
+        # Save to cache
         save_cached_data(data)
+        logging.info(f"Currency data updated successfully: {len(data.get('currency', {}))} currencies, {len(data.get('gold', {}))} gold types, {len(data.get('crypto', {}))} cryptocurrencies")
         
         return data
         
     except Exception as e:
-        print(f"Error getting currency data: {e}")
-        return {
-            'currencies': {
-                'USD': {'buying': 34.50, 'selling': 34.70},
-                'EUR': {'buying': 37.20, 'selling': 37.40},
-                'GBP': {'buying': 43.10, 'selling': 43.30}
-            },
-            'crypto': {
-                'BTC': {'price': 1800000, 'symbol': '₺'},
-                'ETH': {'price': 120000, 'symbol': '₺'},
-                'BNB': {'price': 15000, 'symbol': '₺'}
-            },
-            'gold': {
-                'GRAM': {'buying': 2850, 'selling': 2870},
-                'QUARTER': {'buying': 740, 'selling': 750},
-                'FULL': {'buying': 2950, 'selling': 2970}
-            },
-            'last_updated': datetime.now().isoformat()
-        }
+        logging.error(f"Error getting currency data: {e}")
+        return None

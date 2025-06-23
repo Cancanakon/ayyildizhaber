@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}Ayyıldız Haber Ajansı - Güncel Haberler, Son Dakika{% endblock %}
+{% block description %}Türkiye'nin en güncel haberleri, son dakika gelişmeleri, politika, ekonomi, spor ve teknoloji haberlerini takip edin.{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Featured News Section -->
+            {% if featured_news %}
+            <section class="featured-news">
+                <div class="container">
+                    <h2 class="text-center mb-4">
+                        <i class="fas fa-star text-red me-2"></i>
+                        Öne Çıkan Haberler
+                    </h2>
+                    <div class="row">
+                        {% for news in featured_news[:6] %}
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="news-card featured-card h-100 fade-in">
+                                {% if news.featured_image %}
+                                <img src="{{ news.featured_image }}" class="card-img-top" alt="{{ news.title }}">
+                                {% else %}
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                    <i class="fas fa-newspaper fa-3x text-muted"></i>
+                                </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title[:80] }}{% if news.title|length > 80 %}...{% endif %}</a>
+                                    </h5>
+                                    <p class="card-text">{{ news.summary[:120] }}{% if news.summary and news.summary|length > 120 %}...{% endif %}</p>
+                                    <div class="news-meta">
+                                        <span class="category-badge">{{ news.category.name }}</span>
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock me-1"></i>
+                                            {{ news.published_at.strftime('%d.%m.%Y %H:%M') if news.published_at }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Latest News Section -->
+            <section class="latest-news mb-5">
+                <h2 class="text-red mb-4">
+                    <i class="fas fa-newspaper me-2"></i>
+                    Son Haberler
+                </h2>
+                <div class="row">
+                    {% for news in latest_news %}
+                    <div class="col-lg-6 col-md-6 mb-4">
+                        <div class="news-card slide-up">
+                            {% if news.featured_image %}
+                            <img src="{{ news.featured_image }}" class="card-img-top" alt="{{ news.title }}">
+                            {% else %}
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-newspaper fa-2x text-muted"></i>
+                            </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title }}</a>
+                                </h5>
+                                {% if news.summary %}
+                                <p class="card-text">{{ news.summary[:150] }}{% if news.summary|length > 150 %}...{% endif %}</p>
+                                {% endif %}
+                                <div class="news-meta">
+                                    <span class="category-badge" style="background-color: {{ news.category.color }};">{{ news.category.name }}</span>
+                                    <small class="text-muted ms-auto">
+                                        <i class="fas fa-eye me-1"></i>{{ news.view_count }}
+                                        <i class="fas fa-clock ms-2 me-1"></i>
+                                        {{ news.published_at.strftime('%d.%m.%Y') if news.published_at }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                {% if not latest_news %}
+                <div class="text-center py-5">
+                    <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Henüz haber bulunmamaktadır.</p>
+                </div>
+                {% endif %}
+            </section>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Popular News Widget -->
+            {% if popular_news %}
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-fire me-2"></i>
+                    Popüler Haberler
+                </div>
+                <div class="section-content">
+                    {% for news in popular_news %}
+                    <div class="popular-news-item">
+                        {% if news.featured_image %}
+                        <img src="{{ news.featured_image }}" alt="{{ news.title }}">
+                        {% else %}
+                        <div style="width: 60px; height: 60px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border-radius: 5px; margin-right: 15px;">
+                            <i class="fas fa-newspaper text-muted"></i>
+                        </div>
+                        {% endif %}
+                        <div class="content">
+                            <div class="title">
+                                <a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title[:60] }}{% if news.title|length > 60 %}...{% endif %}</a>
+                            </div>
+                            <div class="meta">
+                                <i class="fas fa-eye me-1"></i>{{ news.view_count }}
+                                <span class="ms-2">{{ news.published_at.strftime('%d.%m.%Y') if news.published_at }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Currency Widget -->
+            {% if currency_data and currency_data.currencies %}
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-coins me-2"></i>
+                    Döviz Kurları
+                </div>
+                <div class="section-content">
+                    {% for symbol, rates in currency_data.currencies.items() %}
+                    <div class="currency-item">
+                        <div class="currency-symbol">{{ symbol }}/TL</div>
+                        <div class="currency-values">
+                            <div class="buy">Alış: {{ "%.2f"|format(rates.buying) }}</div>
+                            <div class="sell">Satış: {{ "%.2f"|format(rates.selling) }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Crypto Currency Widget -->
+            {% if currency_data and currency_data.crypto %}
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fab fa-bitcoin me-2"></i>
+                    Kripto Para
+                </div>
+                <div class="section-content">
+                    {% for symbol, data in currency_data.crypto.items() %}
+                    <div class="currency-item">
+                        <div class="currency-symbol">{{ symbol }}</div>
+                        <div class="currency-values">
+                            <div class="text-primary fw-bold">{{ "{:,}".format(data.price) }} {{ data.symbol }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Gold Prices Widget -->
+            {% if currency_data and currency_data.gold %}
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-coins me-2"></i>
+                    Altın Fiyatları
+                </div>
+                <div class="section-content">
+                    {% for type, rates in currency_data.gold.items() %}
+                    <div class="currency-item">
+                        <div class="currency-symbol">
+                            {% if type == 'GRAM' %}Gram Altın
+                            {% elif type == 'QUARTER' %}Çeyrek Altın
+                            {% elif type == 'FULL' %}Tam Altın
+                            {% else %}{{ type }}
+                            {% endif %}
+                        </div>
+                        <div class="currency-values">
+                            <div class="buy">{{ rates.buying }} TL</div>
+                            <div class="sell">{{ rates.selling }} TL</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Weather Widget -->
+            {% if weather_data and weather_data.cities %}
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-cloud-sun me-2"></i>
+                    Hava Durumu
+                </div>
+                <div class="section-content">
+                    {% for city in weather_data.cities[:6] %}
+                    <div class="weather-item-widget">
+                        <div class="d-flex align-items-center">
+                            <i class="{{ city.icon }} weather-icon"></i>
+                            <span>{{ city.city }}</span>
+                        </div>
+                        <div class="text-end">
+                            <div class="weather-temp">{{ city.temperature }}°C</div>
+                            <small class="text-muted">{{ city.description }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Prayer Times Widget -->
+            {% if prayer_data and prayer_data.cities %}
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-mosque me-2"></i>
+                    Namaz Vakitleri
+                </div>
+                <div class="section-content">
+                    {% set istanbul_prayer = prayer_data.cities|selectattr("city", "equalto", "İstanbul")|first %}
+                    {% if istanbul_prayer %}
+                    <h6 class="text-center mb-3 text-primary">{{ istanbul_prayer.city }}</h6>
+                    <div class="prayer-item">
+                        <span class="prayer-name">İmsak</span>
+                        <span class="prayer-time">{{ istanbul_prayer.fajr }}</span>
+                    </div>
+                    <div class="prayer-item">
+                        <span class="prayer-name">Güneş</span>
+                        <span class="prayer-time">{{ istanbul_prayer.sunrise }}</span>
+                    </div>
+                    <div class="prayer-item">
+                        <span class="prayer-name">Öğle</span>
+                        <span class="prayer-time">{{ istanbul_prayer.dhuhr }}</span>
+                    </div>
+                    <div class="prayer-item">
+                        <span class="prayer-name">İkindi</span>
+                        <span class="prayer-time">{{ istanbul_prayer.asr }}</span>
+                    </div>
+                    <div class="prayer-item">
+                        <span class="prayer-name">Akşam</span>
+                        <span class="prayer-time">{{ istanbul_prayer.maghrib }}</span>
+                    </div>
+                    <div class="prayer-item">
+                        <span class="prayer-name">Yatsı</span>
+                        <span class="prayer-time">{{ istanbul_prayer.isha }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Auto-refresh widgets every 5 minutes
+setInterval(function() {
+    // You could implement AJAX refresh here if needed
+}, 300000);
+</script>
+{% endblock %}

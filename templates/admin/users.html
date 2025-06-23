@@ -1,0 +1,562 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Kullanıcılar - Admin Panel{% endblock %}
+{% block page_title %}Kullanıcı Yönetimi{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="mb-0">
+                <i class="fas fa-users me-3"></i>
+                Kullanıcılar
+            </h1>
+            <p class="text-muted mb-0">Admin kullanıcılarını yönetin ve yetkileri düzenleyin</p>
+        </div>
+        <div>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                <i class="fas fa-user-plus me-2"></i>
+                Yeni Kullanıcı Ekle
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- User Statistics -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <i class="fas fa-users fa-3x text-primary mb-3"></i>
+            <span class="stats-number">{{ admins|length }}</span>
+            <div class="stats-label">Toplam Kullanıcı</div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <i class="fas fa-user-crown fa-3x text-warning mb-3"></i>
+            <span class="stats-number">{{ admins|selectattr("is_super_admin")|list|length }}</span>
+            <div class="stats-label">Süper Admin</div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <i class="fas fa-user-check fa-3x text-success mb-3"></i>
+            <span class="stats-number">{{ admins|selectattr("is_active")|list|length }}</span>
+            <div class="stats-label">Aktif Kullanıcı</div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <i class="fas fa-clock fa-3x text-info mb-3"></i>
+            <span class="stats-number">{{ admins|selectattr("last_login")|list|length }}</span>
+            <div class="stats-label">Son Giriş Yapan</div>
+        </div>
+    </div>
+</div>
+
+<!-- Users Table -->
+{% if admins %}
+<div class="admin-table">
+    <div class="table-header p-3 bg-primary text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-list me-2"></i>
+                Kullanıcı Listesi
+            </h5>
+            <div class="d-flex align-items-center">
+                <input type="text" class="form-control form-control-sm me-2" 
+                       placeholder="Kullanıcı ara..." id="userSearch" onkeyup="searchUsers()">
+                <button class="btn btn-outline-light btn-sm" onclick="exportUsers()">
+                    <i class="fas fa-download me-1"></i>Dışa Aktar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-hover mb-0" id="usersTable">
+            <thead class="table-dark">
+                <tr>
+                    <th>Kullanıcı</th>
+                    <th>E-posta</th>
+                    <th>Yetki</th>
+                    <th>Durum</th>
+                    <th>Son Giriş</th>
+                    <th>Kayıt Tarihi</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admin in admins %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="user-avatar me-3">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white" 
+                                     style="width: 40px; height: 40px;">
+                                    {{ admin.username[0].upper() }}
+                                </div>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">{{ admin.username }}</h6>
+                                {% if admin.id == current_user.id %}
+                                <small class="text-success">
+                                    <i class="fas fa-user me-1"></i>Siz
+                                </small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="text-break">{{ admin.email }}</span>
+                    </td>
+                    <td>
+                        {% if admin.is_super_admin %}
+                        <span class="badge bg-warning">
+                            <i class="fas fa-crown me-1"></i>Süper Admin
+                        </span>
+                        {% else %}
+                        <span class="badge bg-info">
+                            <i class="fas fa-user me-1"></i>Admin
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if admin.is_active %}
+                        <span class="badge bg-success">
+                            <i class="fas fa-check-circle me-1"></i>Aktif
+                        </span>
+                        {% else %}
+                        <span class="badge bg-secondary">
+                            <i class="fas fa-times-circle me-1"></i>Pasif
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if admin.last_login %}
+                        <small>
+                            {{ admin.last_login.strftime('%d.%m.%Y %H:%M') }}
+                        </small>
+                        {% else %}
+                        <small class="text-muted">Hiç giriş yapmamış</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <small>{{ admin.created_at.strftime('%d.%m.%Y') }}</small>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            {% if admin.id != current_user.id %}
+                            <button type="button" class="btn btn-outline-warning" 
+                                    onclick="editUser({{ admin.id }})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            
+                            <button type="button" class="btn btn-outline-{{ 'secondary' if admin.is_active else 'success' }}" 
+                                    onclick="toggleUserStatus({{ admin.id }}, {{ 'false' if admin.is_active else 'true' }})">
+                                <i class="fas fa-{{ 'ban' if admin.is_active else 'check' }}"></i>
+                            </button>
+                            
+                            <button type="button" class="btn btn-outline-danger" 
+                                    onclick="deleteUser({{ admin.id }}, '{{ admin.username }}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            {% else %}
+                            <button type="button" class="btn btn-outline-info" 
+                                    onclick="editUser({{ admin.id }})">
+                                <i class="fas fa-user-cog me-1"></i>Profil
+                            </button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="p-3 bg-light">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <small class="text-muted">
+                    Toplam {{ admins|length }} kullanıcı gösteriliyor
+                </small>
+            </div>
+            <div class="col-md-6 text-end">
+                <small class="text-muted">
+                    Son güncelleme: {{ moment().format('DD.MM.YYYY HH:mm') if moment else 'Bilinmiyor' }}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- Empty State -->
+<div class="admin-table">
+    <div class="p-5 text-center">
+        <i class="fas fa-users fa-5x text-muted mb-4"></i>
+        <h3 class="text-muted mb-3">Henüz kullanıcı bulunmuyor</h3>
+        <p class="text-muted mb-4">
+            Sisteme ilk kullanıcıyı eklemek için aşağıdaki butona tıklayın.
+        </p>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">
+            <i class="fas fa-user-plus me-2"></i>
+            İlk Kullanıcıyı Ekle
+        </button>
+    </div>
+</div>
+{% endif %}
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-user-plus me-2"></i>
+                    Yeni Kullanıcı Ekle
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('admin.user_create') }}" class="needs-validation" novalidate>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="add_username" class="form-label">Kullanıcı Adı <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="add_username" name="username" required maxlength="80">
+                        <div class="invalid-feedback">
+                            Lütfen kullanıcı adını girin.
+                        </div>
+                        <div class="form-text">Benzersiz bir kullanıcı adı seçin</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="add_email" class="form-label">E-posta <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="add_email" name="email" required maxlength="120">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir e-posta adresi girin.
+                        </div>
+                        <div class="form-text">Giriş yapmak için kullanılacak</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="add_password" class="form-label">Şifre <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="add_password" name="password" required minlength="6">
+                            <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('add_password')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="invalid-feedback">
+                            Şifre en az 6 karakter olmalıdır.
+                        </div>
+                        <div class="form-text">Güçlü bir şifre seçin</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="add_confirm_password" class="form-label">Şifre Tekrar <span class="text-danger">*</span></label>
+                        <input type="password" class="form-control" id="add_confirm_password" required>
+                        <div class="invalid-feedback">
+                            Şifreler uyuşmuyor.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="add_is_super_admin" name="is_super_admin">
+                            <label class="form-check-label" for="add_is_super_admin">
+                                <i class="fas fa-crown text-warning me-1"></i>
+                                Süper Admin yetkisi ver
+                            </label>
+                        </div>
+                        <div class="form-text">Süper adminler tüm kullanıcıları yönetebilir</div>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="add_is_active" name="is_active" checked>
+                        <label class="form-check-label" for="add_is_active">
+                            Kullanıcıyı aktif olarak oluştur
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-2"></i>
+                        Kullanıcı Ekle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-user-edit me-2"></i>
+                    Kullanıcı Düzenle
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" id="editUserForm" class="needs-validation" novalidate>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="edit_username" class="form-label">Kullanıcı Adı <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit_username" name="username" required maxlength="80">
+                        <div class="invalid-feedback">
+                            Lütfen kullanıcı adını girin.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="edit_email" class="form-label">E-posta <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="edit_email" name="email" required maxlength="120">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir e-posta adresi girin.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="edit_password" class="form-label">Yeni Şifre</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="edit_password" name="password" minlength="6">
+                            <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('edit_password')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="form-text">Değiştirmek istemiyorsanız boş bırakın</div>
+                    </div>
+                    
+                    <div class="mb-3" id="super_admin_section">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="edit_is_super_admin" name="is_super_admin">
+                            <label class="form-check-label" for="edit_is_super_admin">
+                                <i class="fas fa-crown text-warning me-1"></i>
+                                Süper Admin yetkisi
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="edit_is_active" name="is_active">
+                        <label class="form-check-label" for="edit_is_active">
+                            Kullanıcı aktif
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save me-2"></i>
+                        Güncelle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Users data for JavaScript
+const usersData = [
+    {% for admin in admins %}
+    {
+        id: {{ admin.id }},
+        username: '{{ admin.username }}',
+        email: '{{ admin.email }}',
+        is_super_admin: {{ 'true' if admin.is_super_admin else 'false' }},
+        is_active: {{ 'true' if admin.is_active else 'false' }},
+        created_at: '{{ admin.created_at.strftime("%d.%m.%Y") }}',
+        last_login: '{{ admin.last_login.strftime("%d.%m.%Y %H:%M") if admin.last_login else "Hiç giriş yapmamış" }}'
+    },
+    {% endfor %}
+];
+
+// Search users
+function searchUsers() {
+    const input = document.getElementById('userSearch');
+    const filter = input.value.toUpperCase();
+    const table = document.getElementById('usersTable');
+    const rows = table.getElementsByTagName('tr');
+    
+    for (let i = 1; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName('td');
+        let found = false;
+        
+        for (let j = 0; j < cells.length - 1; j++) {
+            if (cells[j].textContent.toUpperCase().indexOf(filter) > -1) {
+                found = true;
+                break;
+            }
+        }
+        
+        rows[i].style.display = found ? '' : 'none';
+    }
+}
+
+// Edit user
+function editUser(userId) {
+    const user = usersData.find(u => u.id === userId);
+    if (user) {
+        document.getElementById('edit_username').value = user.username;
+        document.getElementById('edit_email').value = user.email;
+        document.getElementById('edit_is_super_admin').checked = user.is_super_admin;
+        document.getElementById('edit_is_active').checked = user.is_active;
+        
+        // Hide super admin option if editing self
+        const currentUserId = {{ current_user.id }};
+        const superAdminSection = document.getElementById('super_admin_section');
+        if (userId === currentUserId) {
+            superAdminSection.style.display = 'none';
+        } else {
+            superAdminSection.style.display = 'block';
+        }
+        
+        // Set form action
+        document.getElementById('editUserForm').action = `/admin/kullanici/${userId}/duzenle`;
+        
+        // Show modal
+        new bootstrap.Modal(document.getElementById('editUserModal')).show();
+    }
+}
+
+// Delete user
+function deleteUser(userId, username) {
+    if (confirm(`"${username}" kullanıcısını silmek istediğinizden emin misiniz?\n\nBu işlem geri alınamaz.`)) {
+        // Create form and submit
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/admin/kullanici/${userId}/sil`;
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// Toggle user status
+function toggleUserStatus(userId, newStatus) {
+    const user = usersData.find(u => u.id === userId);
+    const action = newStatus === 'true' ? 'aktifleştirmek' : 'pasifleştirmek';
+    
+    if (confirm(`"${user.username}" kullanıcısını ${action} istediğinizden emin misiniz?`)) {
+        // Create form and submit
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/admin/kullanici/${userId}/durum`;
+        
+        const statusInput = document.createElement('input');
+        statusInput.type = 'hidden';
+        statusInput.name = 'is_active';
+        statusInput.value = newStatus;
+        form.appendChild(statusInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// Toggle password visibility
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const icon = input.nextElementSibling.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+    }
+}
+
+// Password confirmation validation
+document.addEventListener('DOMContentLoaded', function() {
+    const password = document.getElementById('add_password');
+    const confirmPassword = document.getElementById('add_confirm_password');
+    
+    function validatePassword() {
+        if (password.value !== confirmPassword.value) {
+            confirmPassword.setCustomValidity('Şifreler uyuşmuyor');
+        } else {
+            confirmPassword.setCustomValidity('');
+        }
+    }
+    
+    password.addEventListener('input', validatePassword);
+    confirmPassword.addEventListener('input', validatePassword);
+});
+
+// Export users
+function exportUsers() {
+    let csv = 'Kullanıcı Adı,E-posta,Yetki,Durum,Son Giriş,Kayıt Tarihi\n';
+    
+    usersData.forEach(user => {
+        csv += `"${user.username}","${user.email}","${user.is_super_admin ? 'Süper Admin' : 'Admin'}","${user.is_active ? 'Aktif' : 'Pasif'}","${user.last_login}","${user.created_at}"\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `kullanicilar_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        const forms = document.getElementsByClassName('needs-validation');
+        Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+
+// Stats animation
+document.addEventListener('DOMContentLoaded', function() {
+    const statsCards = document.querySelectorAll('.stats-card');
+    statsCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.5s ease';
+        
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+
+// Real-time user count
+function updateUserStats() {
+    // Could implement WebSocket or periodic AJAX updates here
+    console.log('User stats could be updated here');
+}
+
+// Initialize tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>
+{% endblock %}

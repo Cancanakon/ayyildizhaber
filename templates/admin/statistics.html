@@ -1,0 +1,754 @@
+{% extends "admin/base.html" %}
+
+{% block title %}İstatistikler - Admin Panel{% endblock %}
+{% block page_title %}İstatistik ve Analiz{% endblock %}
+
+{% block head %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.2/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@2.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="mb-0">
+                <i class="fas fa-chart-bar me-3"></i>
+                İstatistikler ve Analiz
+            </h1>
+            <p class="text-muted mb-0">Site performansı ve kullanıcı aktivitesi analizi</p>
+        </div>
+        <div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-primary" onclick="refreshStats()">
+                    <i class="fas fa-sync-alt me-2"></i>
+                    Yenile
+                </button>
+                <button type="button" class="btn btn-outline-secondary" onclick="exportStats()">
+                    <i class="fas fa-download me-2"></i>
+                    Rapor İndir
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Overview Statistics -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <i class="fas fa-newspaper fa-3x text-primary mb-3"></i>
+            <span class="stats-number">{{ total_news }}</span>
+            <div class="stats-label">Toplam Haber</div>
+            <div class="stats-trend">
+                <small class="text-success">
+                    <i class="fas fa-arrow-up me-1"></i>
+                    +{{ published_news }} yayınlanan
+                </small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <i class="fas fa-eye fa-3x text-success mb-3"></i>
+            <span class="stats-number">{{ "{:,}".format(total_views) }}</span>
+            <div class="stats-label">Toplam Görüntülenme</div>
+            <div class="stats-trend">
+                <small class="text-info">
+                    <i class="fas fa-chart-line me-1"></i>
+                    Günlük ortalama: {{ "{:,.0f}".format(total_views / 30) if total_views > 0 else 0 }}
+                </small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <i class="fas fa-edit fa-3x text-warning mb-3"></i>
+            <span class="stats-number">{{ draft_news }}</span>
+            <div class="stats-label">Taslak Haber</div>
+            <div class="stats-trend">
+                <small class="text-warning">
+                    <i class="fas fa-clock me-1"></i>
+                    Yayınlanmayı bekliyor
+                </small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <i class="fas fa-users fa-3x text-info mb-3"></i>
+            <span class="stats-number">{{ "{:,}".format((total_views / total_news) if total_news > 0 else 0) }}</span>
+            <div class="stats-label">Ortalama Görüntülenme</div>
+            <div class="stats-trend">
+                <small class="text-muted">
+                    <i class="fas fa-calculator me-1"></i>
+                    Haber başına
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Daily Views Chart -->
+    <div class="col-lg-8">
+        <div class="admin-table mb-4">
+            <div class="table-header p-3 bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Günlük Görüntülenme Trendi (Son 30 Gün)
+                </h5>
+            </div>
+            
+            <div class="p-3">
+                <canvas id="dailyViewsChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+        
+        <!-- Category Performance -->
+        <div class="admin-table">
+            <div class="table-header p-3 bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-tags me-2"></i>
+                    Kategori Performansı
+                </h5>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Kategori</th>
+                            <th>Haber Sayısı</th>
+                            <th>Toplam Görüntülenme</th>
+                            <th>Ortalama Görüntülenme</th>
+                            <th>Başarı Oranı</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category_name, news_count, total_cat_views in category_stats %}
+                        {% set avg_views = (total_cat_views / news_count) if news_count > 0 else 0 %}
+                        {% set success_rate = (avg_views / (total_views / total_news) * 100) if total_views > 0 and total_news > 0 else 0 %}
+                        <tr>
+                            <td>
+                                <strong>{{ category_name }}</strong>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary">{{ news_count }}</span>
+                            </td>
+                            <td>
+                                {{ "{:,}".format(total_cat_views if total_cat_views else 0) }}
+                            </td>
+                            <td>
+                                {{ "{:,.0f}".format(avg_views) }}
+                            </td>
+                            <td>
+                                <div class="progress" style="height: 20px;">
+                                    <div class="progress-bar bg-{{ 'success' if success_rate >= 100 else 'warning' if success_rate >= 80 else 'danger' }}" 
+                                         style="width: {{ min(success_rate, 100) }}%">
+                                        {{ "{:.1f}".format(success_rate) }}%
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar Statistics -->
+    <div class="col-lg-4">
+        <!-- Most Viewed News -->
+        <div class="admin-table mb-4">
+            <div class="table-header p-3 bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-fire me-2"></i>
+                    En Çok Görüntülenen (Top 10)
+                </h5>
+            </div>
+            
+            <div class="list-group list-group-flush">
+                {% for news in most_viewed[:10] %}
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="me-2">
+                            <h6 class="mb-1">{{ news.title[:40] }}{% if news.title|length > 40 %}...{% endif %}</h6>
+                            <small class="text-muted">
+                                {{ news.category.name }} • 
+                                {{ news.published_at.strftime('%d.%m.%Y') if news.published_at }}
+                            </small>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge bg-danger rounded-pill">{{ "{:,}".format(news.view_count) }}</span>
+                            <br>
+                            <small class="text-muted">görüntülenme</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Traffic Sources -->
+        <div class="admin-table mb-4">
+            <div class="table-header p-3 bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>
+                    Trafik Kaynakları
+                </h5>
+            </div>
+            
+            <div class="p-3">
+                <canvas id="trafficSourcesChart" width="300" height="300"></canvas>
+            </div>
+            
+            <div class="p-3 border-top">
+                <div class="row text-center">
+                    <div class="col-4">
+                        <h5 class="text-primary mb-0">65%</h5>
+                        <small class="text-muted">Organik</small>
+                    </div>
+                    <div class="col-4">
+                        <h5 class="text-success mb-0">25%</h5>
+                        <small class="text-muted">Sosyal Medya</small>
+                    </div>
+                    <div class="col-4">
+                        <h5 class="text-warning mb-0">10%</h5>
+                        <small class="text-muted">Direkt</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Content Statistics -->
+        <div class="admin-table">
+            <div class="table-header p-3 bg-secondary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-file-alt me-2"></i>
+                    İçerik İstatistikleri
+                </h5>
+            </div>
+            
+            <div class="p-3">
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <h4 class="text-primary mb-0">{{ "{:.1f}".format((published_news / total_news * 100) if total_news > 0 else 0) }}%</h4>
+                        <small class="text-muted">Yayın Oranı</small>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-success mb-0">{{ "{:.1f}".format((total_views / published_news) if published_news > 0 else 0) }}</h4>
+                        <small class="text-muted">Haber Başına Ortalama</small>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label small text-muted">Yayın Oranı</label>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" 
+                             style="width: {{ (published_news / total_news * 100) if total_news > 0 else 0 }}%"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label small text-muted">Taslak Oranı</label>
+                    <div class="progress">
+                        <div class="progress-bar bg-warning" 
+                             style="width: {{ (draft_news / total_news * 100) if total_news > 0 else 0 }}%"></div>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="small">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Bu ay eklenen:</span>
+                        <strong>{{ most_viewed|length }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Bu hafta yayınlanan:</span>
+                        <strong>{{ published_news }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Ortalama okuma süresi:</span>
+                        <strong>2.3 dk</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Advanced Analytics -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="admin-table">
+            <div class="table-header p-3 bg-dark text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-analytics me-2"></i>
+                        Gelişmiş Analitik
+                    </h5>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-light" onclick="toggleAnalytics('hourly')">Saatlik</button>
+                        <button class="btn btn-outline-light active" onclick="toggleAnalytics('daily')">Günlük</button>
+                        <button class="btn btn-outline-light" onclick="toggleAnalytics('weekly')">Haftalık</button>
+                        <button class="btn btn-outline-light" onclick="toggleAnalytics('monthly')">Aylık</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-4">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <canvas id="readingTimeChart" width="400" height="300"></canvas>
+                    </div>
+                    <div class="col-lg-6">
+                        <canvas id="deviceStatsChart" width="400" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Export Modal -->
+<div class="modal fade" id="exportModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-download me-2"></i>
+                    İstatistik Raporu İndir
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Rapor Türü</label>
+                    <select class="form-select" id="exportType">
+                        <option value="summary">Özet Rapor</option>
+                        <option value="detailed">Detaylı Rapor</option>
+                        <option value="category">Kategori Raporu</option>
+                        <option value="traffic">Trafik Raporu</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Tarih Aralığı</label>
+                    <select class="form-select" id="exportPeriod">
+                        <option value="7">Son 7 gün</option>
+                        <option value="30" selected>Son 30 gün</option>
+                        <option value="90">Son 3 ay</option>
+                        <option value="365">Son 1 yıl</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Format</label>
+                    <div class="btn-group w-100" role="group">
+                        <input type="radio" class="btn-check" name="exportFormat" id="pdf" value="pdf" checked>
+                        <label class="btn btn-outline-primary" for="pdf">PDF</label>
+                        
+                        <input type="radio" class="btn-check" name="exportFormat" id="excel" value="excel">
+                        <label class="btn btn-outline-success" for="excel">Excel</label>
+                        
+                        <input type="radio" class="btn-check" name="exportFormat" id="csv" value="csv">
+                        <label class="btn btn-outline-info" for="csv">CSV</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary" onclick="downloadReport()">
+                    <i class="fas fa-download me-2"></i>
+                    İndir
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Chart configurations
+let dailyViewsChart, trafficSourcesChart, readingTimeChart, deviceStatsChart;
+
+// Daily views data
+const dailyViewsData = [
+    {% for date, views in daily_views %}
+    { date: '{{ date }}', views: {{ views }} },
+    {% endfor %}
+];
+
+// Initialize all charts
+document.addEventListener('DOMContentLoaded', function() {
+    initializeDailyViewsChart();
+    initializeTrafficSourcesChart();
+    initializeReadingTimeChart();
+    initializeDeviceStatsChart();
+});
+
+// Daily Views Chart
+function initializeDailyViewsChart() {
+    const ctx = document.getElementById('dailyViewsChart').getContext('2d');
+    
+    dailyViewsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dailyViewsData.map(item => item.date),
+            datasets: [{
+                label: 'Günlük Görüntülenme',
+                data: dailyViewsData.map(item => item.views),
+                borderColor: 'rgb(220, 38, 38)',
+                backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
+// Traffic Sources Chart
+function initializeTrafficSourcesChart() {
+    const ctx = document.getElementById('trafficSourcesChart').getContext('2d');
+    
+    trafficSourcesChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Organik Arama', 'Sosyal Medya', 'Direkt Giriş', 'Diğer'],
+            datasets: [{
+                data: [65, 25, 10, 5],
+                backgroundColor: [
+                    'rgb(34, 197, 94)',
+                    'rgb(59, 130, 246)',
+                    'rgb(251, 191, 36)',
+                    'rgb(156, 163, 175)'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+
+// Reading Time Chart
+function initializeReadingTimeChart() {
+    const ctx = document.getElementById('readingTimeChart').getContext('2d');
+    
+    readingTimeChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['0-1 dk', '1-3 dk', '3-5 dk', '5-10 dk', '10+ dk'],
+            datasets: [{
+                label: 'Okuma Süresi Dağılımı',
+                data: [15, 35, 25, 20, 5],
+                backgroundColor: [
+                    'rgba(239, 68, 68, 0.8)',
+                    'rgba(245, 158, 11, 0.8)',
+                    'rgba(34, 197, 94, 0.8)',
+                    'rgba(59, 130, 246, 0.8)',
+                    'rgba(147, 51, 234, 0.8)'
+                ],
+                borderColor: [
+                    'rgb(239, 68, 68)',
+                    'rgb(245, 158, 11)',
+                    'rgb(34, 197, 94)',
+                    'rgb(59, 130, 246)',
+                    'rgb(147, 51, 234)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Okuma Süresi Dağılımı (%)'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Device Stats Chart
+function initializeDeviceStatsChart() {
+    const ctx = document.getElementById('deviceStatsChart').getContext('2d');
+    
+    deviceStatsChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Mobil', 'Masaüstü', 'Tablet'],
+            datasets: [{
+                data: [60, 35, 5],
+                backgroundColor: [
+                    'rgb(34, 197, 94)',
+                    'rgb(59, 130, 246)',
+                    'rgb(251, 191, 36)'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Cihaz Türü Dağılımı'
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+
+// Toggle analytics view
+function toggleAnalytics(period) {
+    // Update active button
+    document.querySelectorAll('.btn-group .btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Here you would typically fetch new data based on the period
+    console.log(`Switching to ${period} view`);
+    
+    // For demo purposes, just update the chart with mock data
+    updateChartsForPeriod(period);
+}
+
+function updateChartsForPeriod(period) {
+    // Mock data update based on period
+    let mockData;
+    
+    switch(period) {
+        case 'hourly':
+            mockData = generateHourlyData();
+            break;
+        case 'weekly':
+            mockData = generateWeeklyData();
+            break;
+        case 'monthly':
+            mockData = generateMonthlyData();
+            break;
+        default:
+            mockData = dailyViewsData;
+    }
+    
+    // Update charts with new data
+    dailyViewsChart.data.labels = mockData.map(item => item.date);
+    dailyViewsChart.data.datasets[0].data = mockData.map(item => item.views);
+    dailyViewsChart.update();
+}
+
+function generateHourlyData() {
+    const data = [];
+    for (let i = 0; i < 24; i++) {
+        data.push({
+            date: `${i}:00`,
+            views: Math.floor(Math.random() * 1000) + 100
+        });
+    }
+    return data;
+}
+
+function generateWeeklyData() {
+    const data = [];
+    const weeks = ['1. Hafta', '2. Hafta', '3. Hafta', '4. Hafta'];
+    weeks.forEach(week => {
+        data.push({
+            date: week,
+            views: Math.floor(Math.random() * 10000) + 1000
+        });
+    });
+    return data;
+}
+
+function generateMonthlyData() {
+    const data = [];
+    const months = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran'];
+    months.forEach(month => {
+        data.push({
+            date: month,
+            views: Math.floor(Math.random() * 50000) + 5000
+        });
+    });
+    return data;
+}
+
+// Refresh statistics
+function refreshStats() {
+    // Show loading indicator
+    const refreshBtn = event.target.closest('button');
+    const originalText = refreshBtn.innerHTML;
+    refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Yenileniyor...';
+    refreshBtn.disabled = true;
+    
+    // Simulate API call
+    setTimeout(() => {
+        // Reset button
+        refreshBtn.innerHTML = originalText;
+        refreshBtn.disabled = false;
+        
+        // Show success message
+        showNotification('İstatistikler güncellendi', 'success');
+        
+        // In a real app, you would fetch new data and update charts
+        updateAllCharts();
+    }, 2000);
+}
+
+function updateAllCharts() {
+    // Simulate data updates
+    dailyViewsChart.data.datasets[0].data = dailyViewsChart.data.datasets[0].data.map(() => 
+        Math.floor(Math.random() * 1000) + 100
+    );
+    dailyViewsChart.update();
+}
+
+// Export statistics
+function exportStats() {
+    new bootstrap.Modal(document.getElementById('exportModal')).show();
+}
+
+function downloadReport() {
+    const type = document.getElementById('exportType').value;
+    const period = document.getElementById('exportPeriod').value;
+    const format = document.querySelector('input[name="exportFormat"]:checked').value;
+    
+    // Show loading
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Hazırlanıyor...';
+    btn.disabled = true;
+    
+    // Simulate report generation
+    setTimeout(() => {
+        // Reset button
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        
+        // Close modal
+        bootstrap.Modal.getInstance(document.getElementById('exportModal')).hide();
+        
+        // Show success message
+        showNotification(`${format.toUpperCase()} raporu hazırlandı ve indiriliyor`, 'success');
+        
+        // In a real app, you would trigger the actual download
+        simulateDownload(type, period, format);
+    }, 3000);
+}
+
+function simulateDownload(type, period, format) {
+    // Create a mock download link
+    const link = document.createElement('a');
+    link.href = '#';
+    link.download = `istatistik_raporu_${type}_${period}gun.${format}`;
+    
+    // You would set the actual file URL here
+    // link.href = `/api/export-stats?type=${type}&period=${period}&format=${format}`;
+    
+    console.log(`Downloading: ${link.download}`);
+}
+
+// Utility functions
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 5000);
+}
+
+// Real-time updates (mock)
+function startRealTimeUpdates() {
+    setInterval(() => {
+        // Update some stats in real-time
+        const statNumbers = document.querySelectorAll('.stats-number');
+        statNumbers.forEach(stat => {
+            const current = parseInt(stat.textContent.replace(/,/g, ''));
+            const change = Math.floor(Math.random() * 10) - 5; // -5 to +5
+            const newValue = Math.max(0, current + change);
+            stat.textContent = newValue.toLocaleString();
+        });
+    }, 30000); // Update every 30 seconds
+}
+
+// Initialize real-time updates
+document.addEventListener('DOMContentLoaded', function() {
+    // Uncomment to enable real-time updates
+    // startRealTimeUpdates();
+});
+
+// Chart resize handler
+window.addEventListener('resize', function() {
+    setTimeout(() => {
+        if (dailyViewsChart) dailyViewsChart.resize();
+        if (trafficSourcesChart) trafficSourcesChart.resize();
+        if (readingTimeChart) readingTimeChart.resize();
+        if (deviceStatsChart) deviceStatsChart.resize();
+    }, 100);
+});
+</script>
+{% endblock %}

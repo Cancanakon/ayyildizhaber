@@ -322,15 +322,16 @@
                     {% for type, rates in currency_data.gold.items() %}
                     <div class="currency-item">
                         <div class="currency-symbol">
-                            {% if type == 'GRAM' %}Gram Altın
-                            {% elif type == 'QUARTER' %}Çeyrek Altın
-                            {% elif type == 'FULL' %}Tam Altın
+                            {% if type == 'gram' %}Gram Altın
+                            {% elif type == 'quarter' %}Çeyrek Altın
+                            {% elif type == 'half' %}Yarım Altın
+                            {% elif type == 'full' %}Tam Altın
                             {% else %}{{ type }}
                             {% endif %}
                         </div>
                         <div class="currency-values">
-                            <div class="buy">{{ rates.buying }} TL</div>
-                            <div class="sell">{{ rates.selling }} TL</div>
+                            <div class="buy">{{ "{:,}".format(rates.buying|int) }} TL</div>
+                            <div class="sell">{{ "{:,}".format(rates.selling|int) }} TL</div>
                         </div>
                     </div>
                     {% endfor %}

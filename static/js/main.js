@@ -235,6 +235,57 @@ function trackNewsView(newsId) {
     }).catch(console.error);
 }
 
+// Image fallback system for news images
+function initializeImageFallback() {
+    // Handle image fallback for news images
+    const imagesWithFallback = document.querySelectorAll('.img-with-fallback');
+    
+    imagesWithFallback.forEach(img => {
+        img.addEventListener('error', function() {
+            if (this.dataset.tried) return; // Prevent infinite loops
+            
+            const container = this.closest('.image-container');
+            const contentImages = container ? container.dataset.contentImages : '';
+            
+            if (contentImages) {
+                const imageList = contentImages.split(',').filter(url => url.trim());
+                let found = false;
+                
+                for (let imageUrl of imageList) {
+                    imageUrl = imageUrl.trim();
+                    if (imageUrl && imageUrl !== this.src) {
+                        // Clean up URL format
+                        if (imageUrl.startsWith('//')) {
+                            imageUrl = 'https:' + imageUrl;
+                        }
+                        this.src = imageUrl;
+                        this.dataset.tried = 'true';
+                        found = true;
+                        break;
+                    }
+                }
+                
+                if (!found) {
+                    showFallbackImage(this);
+                }
+            } else {
+                showFallbackImage(this);
+            }
+        });
+    });
+}
+
+function showFallbackImage(imgElement) {
+    imgElement.style.display = 'none';
+    const container = imgElement.closest('.image-container');
+    if (container) {
+        const fallback = container.querySelector('.fallback-image');
+        if (fallback) {
+            fallback.style.display = 'flex';
+        }
+    }
+}
+
 // Initialize additional features
 document.addEventListener('DOMContentLoaded', function() {
     createBackToTopButton();

@@ -240,8 +240,32 @@ def regex_findall(text, pattern):
     import re
     try:
         if text:
-            matches = re.findall(pattern, text, re.IGNORECASE)
-            return matches
+            # Enhanced pattern to catch more image URLs
+            if 'jpg|jpeg|png|gif|webp' in pattern:
+                # Multiple patterns for different image URL formats
+                patterns = [
+                    r'https?://[^\s<>"\']+\.(?:jpg|jpeg|png|gif|webp)',
+                    r'//[^\s<>"\']+\.(?:jpg|jpeg|png|gif|webp)',
+                    r'src=["\']([^"\']*\.(?:jpg|jpeg|png|gif|webp))["\']',
+                    r'<img[^>]*src=["\']([^"\']*)["\']',
+                ]
+                all_matches = []
+                for p in patterns:
+                    matches = re.findall(p, text, re.IGNORECASE)
+                    if isinstance(matches[0] if matches else None, tuple):
+                        # Handle groups from regex
+                        matches = [m[0] if isinstance(m, tuple) else m for m in matches]
+                    all_matches.extend(matches)
+                # Remove duplicates and filter valid image URLs
+                unique_matches = []
+                for match in all_matches:
+                    if match and match not in unique_matches:
+                        if any(ext in match.lower() for ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp']):
+                            unique_matches.append(match)
+                return unique_matches
+            else:
+                matches = re.findall(pattern, text, re.IGNORECASE)
+                return matches
     except:
         pass
     return []

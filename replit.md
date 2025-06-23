@@ -98,6 +98,7 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
+- June 23, 2025: Removed categories and users management from admin panel per user request
 - June 23, 2025: Comprehensive image display fix across all templates (homepage, category, search, admin, news detail)
 - June 23, 2025: Enhanced protocol-relative URL handling (// prefixed URLs)
 - June 23, 2025: Standardized logo fallback implementation across all image references
@@ -105,7 +106,6 @@ This is a comprehensive news website application built with Flask, featuring a T
 - June 23, 2025: Fixed currency service to use Kapali Carsi API for accurate Turkish market data
 - June 23, 2025: Adjusted logo size to optimal 52px after user feedback iterations
 - June 23, 2025: Added official logo to website header with proper integration
-- June 23, 2025: Fixed category pages with populated sidebar sections (popular news, other categories, recent news)
 
 ## Changelog
 - June 23, 2025: Initial setup and deployment

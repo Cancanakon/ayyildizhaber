@@ -233,11 +233,7 @@ def news_delete(id):
     flash('Haber başarıyla silindi', 'success')
     return redirect(url_for('admin.news_list'))
 
-@admin_bp.route('/kategoriler')
-@login_required
-def categories():
-    categories = Category.query.order_by(Category.name).all()
-    return render_template('admin/categories.html', categories=categories)
+# Categories and users management removed per user request
 
 @admin_bp.route('/kategori/yeni', methods=['POST'])
 @login_required
@@ -261,46 +257,11 @@ def category_create():
     flash('Kategori başarıyla oluşturuldu', 'success')
     return redirect(url_for('admin.categories'))
 
-@admin_bp.route('/kategori/<int:id>/duzenle', methods=['POST'])
-@login_required
-def category_edit(id):
-    category = Category.query.get_or_404(id)
-    
-    category.name = request.form.get('name')
-    category.description = request.form.get('description')
-    category.color = request.form.get('color', '#dc2626')
-    category.slug = create_slug(category.name)
-    
-    db.session.commit()
-    
-    flash('Kategori başarıyla güncellendi', 'success')
-    return redirect(url_for('admin.categories'))
+# Category editing removed
 
-@admin_bp.route('/kategori/<int:id>/sil', methods=['POST'])
-@login_required  
-def category_delete(id):
-    category = Category.query.get_or_404(id)
-    
-    # Check if category has news
-    if category.news.count() > 0:
-        flash('Bu kategoride haberler bulunduğu için silinemez', 'error')
-        return redirect(url_for('admin.categories'))
-    
-    db.session.delete(category)
-    db.session.commit()
-    
-    flash('Kategori başarıyla silindi', 'success')
-    return redirect(url_for('admin.categories'))
+# Category deletion removed
 
-@admin_bp.route('/kullanicilar')
-@login_required
-def users():
-    if not current_user.is_super_admin:
-        flash('Bu sayfaya erişim yetkiniz yok', 'error')
-        return redirect(url_for('admin.dashboard'))
-    
-    admins = Admin.query.order_by(Admin.created_at.desc()).all()
-    return render_template('admin/users.html', admins=admins)
+# Users management removed
 
 @admin_bp.route('/kullanici/yeni', methods=['POST'])
 @login_required

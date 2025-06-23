@@ -98,6 +98,8 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
+- June 23, 2025: Fixed Nginx configuration error by removing invalid "http" directive from site config file
+- June 23, 2025: Moved security headers inside server block for proper Nginx syntax compliance
 - June 23, 2025: Fixed dependency conflict between lxml and trafilatura packages by using flexible version constraints
 - June 23, 2025: Updated requirements.txt and pyproject.toml to use >= for lxml and trafilatura versions
 - June 23, 2025: Fixed Yerel Haberler category image display issue by adding local file path support (/static/)

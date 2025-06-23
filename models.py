@@ -67,7 +67,7 @@ class News(db.Model):
     admin_id = db.Column(db.Integer, db.ForeignKey('admins.id'))
     
     # Relationships
-    admin = db.relationship('Admin', backref='news_created')
+    admin = db.relationship('Admin', backref=db.backref('news_created', lazy='dynamic'))
     
     def increment_view_count(self):
         self.view_count += 1

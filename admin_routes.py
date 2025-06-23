@@ -266,13 +266,14 @@ def user_create():
             flash('Bu e-posta adresi zaten kullanılıyor', 'error')
             return render_template('admin/user_form.html')
         
-        # Create new user
+        # Create new user with password hash
+        from werkzeug.security import generate_password_hash
         user = Admin(
             username=username,
             email=email,
+            password_hash=generate_password_hash(password),
             is_super_admin=is_super_admin
         )
-        user.set_password(password)
         
         db.session.add(user)
         db.session.commit()
@@ -304,7 +305,8 @@ def user_edit(id):
         # Change password if provided
         new_password = request.form.get('new_password')
         if new_password:
-            user.set_password(new_password)
+            from werkzeug.security import generate_password_hash
+            user.password_hash = generate_password_hash(new_password)
         
         db.session.commit()
         flash('Kullanıcı bilgileri güncellendi', 'success')
@@ -359,7 +361,8 @@ def profile():
                 flash('Şifre en az 6 karakter olmalıdır', 'error')
                 return render_template('admin/profile.html')
             
-            current_user.set_password(new_password)
+            from werkzeug.security import generate_password_hash
+            current_user.password_hash = generate_password_hash(new_password)
         
         db.session.commit()
         flash('Profil bilgileriniz güncellendi', 'success')

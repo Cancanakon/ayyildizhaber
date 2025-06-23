@@ -192,7 +192,6 @@ def fetch_rss_backup():
         sources = [
             {'url': 'https://www.trthaber.com/rss/manset.rss', 'category': 'gundem'},
             {'url': 'https://www.trthaber.com/rss/son_dakika.rss', 'category': 'gundem'},
-            {'url': 'https://www.aa.com.tr/tr/rss/default?cat=guncel', 'category': 'gundem'},
         ]
         
         total_saved = 0

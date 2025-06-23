@@ -8,70 +8,10 @@ import logging
 import os
 
 def fetch_external_news_api():
-    """Fetch news from external API (using provided service pattern)"""
-    try:
-        # Using news API similar to the provided service
-        api_key = os.environ.get('NEWS_API_KEY', '3ZtBxBJ6bXe3bJB0t7lFw0:26r9LIVecUDgXit4axIcKi')
-        categories = ['sport', 'health', 'technology', 'politic', 'economy']
-        
-        all_news = []
-        
-        for category in categories:
-            try:
-                url = f"https://api.collectapi.com/news/getNews"
-                headers = {
-                    'content-type': 'application/json',
-                    'authorization': f'apikey {api_key}'
-                }
-                params = {
-                    'country': 'tr',
-                    'tag': category
-                }
-                
-                response = requests.get(url, headers=headers, params=params, timeout=30)
-                
-                if response.status_code == 200:
-                    data = response.json()
-                    if data.get('success') and data.get('result'):
-                        for item in data['result'][:5]:  # Limit to 5 news per category
-                            # Clean HTML content
-                            from utils.helpers import clean_html_content
-                            title = clean_html_content(item.get('name', ''))
-                            description = clean_html_content(item.get('description', ''))
-                            image_url = item.get('image', '')
-                            
-                            # Fix and validate image URL
-                            if image_url:
-                                if image_url.startswith('//'):
-                                    image_url = 'https:' + image_url
-                                elif not image_url.startswith('http'):
-                                    image_url = ''
-                                # Additional validation for common broken image patterns
-                                if 'placeholder' in image_url.lower() or 'default' in image_url.lower():
-                                    image_url = ''
-                            
-                            news_item = {
-                                'title': title.strip(),
-                                'summary': description[:200] + '...' if len(description) > 200 else description,
-                                'content': description.strip(),
-                                'image_url': image_url.strip(),
-                                'source_url': item.get('url', ''),
-                                'category': category,
-                                'source': 'external'
-                            }
-                            
-                            if news_item['title'] and news_item['content']:
-                                all_news.append(news_item)
-                
-            except Exception as e:
-                logging.error(f"Error fetching external news for category {category}: {e}")
-                continue
-        
-        return all_news
-        
-    except Exception as e:
-        logging.error(f"Error fetching external news: {e}")
-        return []
+    """External API news fetching disabled - only TRT Haber used per user request"""
+    # All external news APIs removed per user request
+    # Only TRT Haber RSS feeds are now used
+    return []
 
 def save_external_news_to_db(news_items):
     """Save external news items to database"""
@@ -207,13 +147,13 @@ def fetch_multiple_rss_sources():
     try:
         import feedparser
         
+        # Only TRT Haber sources - all other external sources removed per user request
         sources = [
-            {'url': 'https://www.hurriyet.com.tr/rss/anasayfa', 'category': 'gundem'},
-            {'url': 'https://www.milliyet.com.tr/rss/rssNew/SonDakikaRSS.xml', 'category': 'gundem'},
-            {'url': 'https://www.sabah.com.tr/rss/ekonomi.xml', 'category': 'ekonomi'},
-            {'url': 'https://www.haberturk.com/rss/spor.xml', 'category': 'spor'},
-            {'url': 'https://www.aa.com.tr/tr/rss/default?cat=guncel', 'category': 'gundem'},
-            {'url': 'https://www.ntv.com.tr/teknoloji.rss', 'category': 'teknoloji'},
+            {'url': 'https://www.trthaber.com/rss/manset.rss', 'category': 'gundem'},
+            {'url': 'https://www.trthaber.com/rss/son_dakika.rss', 'category': 'gundem'},
+            {'url': 'https://www.trthaber.com/rss/ekonomi.rss', 'category': 'ekonomi'},
+            {'url': 'https://www.trthaber.com/rss/spor.rss', 'category': 'spor'},
+            {'url': 'https://www.trthaber.com/rss/teknoloji.rss', 'category': 'teknoloji'},
         ]
         
         total_saved = 0

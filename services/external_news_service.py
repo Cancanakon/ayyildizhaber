@@ -40,9 +40,15 @@ def fetch_external_news_api():
                             description = clean_html_content(item.get('description', ''))
                             image_url = item.get('image', '')
                             
-                            # Validate image URL
-                            if image_url and not image_url.startswith('http'):
-                                image_url = ''
+                            # Fix and validate image URL
+                            if image_url:
+                                if image_url.startswith('//'):
+                                    image_url = 'https:' + image_url
+                                elif not image_url.startswith('http'):
+                                    image_url = ''
+                                # Additional validation for common broken image patterns
+                                if 'placeholder' in image_url.lower() or 'default' in image_url.lower():
+                                    image_url = ''
                             
                             news_item = {
                                 'title': title.strip(),

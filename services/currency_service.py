@@ -47,10 +47,10 @@ def fetch_currency_rates():
         if response.status_code == 200:
             data = response.json()
             
-            # Find currency data
-            usd_data = next((item for item in data if item.get('code') == 'USD'), None)
-            eur_data = next((item for item in data if item.get('code') == 'EUR'), None)
-            gbp_data = next((item for item in data if item.get('code') == 'GBP'), None)
+            # Find currency data - check for different code formats
+            usd_data = next((item for item in data if item.get('code') in ['USD', 'USDTRY', 'USD/TRY']), None)
+            eur_data = next((item for item in data if item.get('code') in ['EUR', 'EURTRY', 'EUR/TRY']), None)
+            gbp_data = next((item for item in data if item.get('code') in ['GBP', 'GBPTRY', 'GBP/TRY']), None)
             
             rates = {}
             

@@ -33,9 +33,17 @@ def fetch_trt_news_xml(category='gundem', count=20):
                 content = clean_html_content(content) if content else ''
                 summary = clean_html_content(summary) if summary else ''
                 
-                # Validate image URL
-                if image_url and not image_url.startswith('http'):
-                    image_url = f"https://trthaberstatic.cdn.wp.trt.com.tr{image_url}" if image_url.startswith('/') else ''
+                # Fix and validate image URL
+                if image_url:
+                    if image_url.startswith('//'):
+                        image_url = 'https:' + image_url
+                    elif image_url.startswith('/') and not image_url.startswith('http'):
+                        image_url = f"https://trthaberstatic.cdn.wp.trt.com.tr{image_url}"
+                    elif not image_url.startswith('http'):
+                        image_url = ''
+                    # Additional validation for broken patterns
+                    if 'placeholder' in image_url.lower() or 'default' in image_url.lower():
+                        image_url = ''
                 
                 item = {
                     'title': title.strip(),

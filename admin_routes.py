@@ -380,38 +380,94 @@ def profile():
 @admin_bp.route('/istatistikler')
 @login_required
 def statistics():
-    # News statistics
-    total_news = News.query.count()
-    published_news = News.query.filter_by(status='published').count()
-    draft_news = News.query.filter_by(status='draft').count()
+    # Get comprehensive news statistics
+    stats = get_news_statistics()
     
-    # View statistics
-    total_views = db.session.query(db.func.sum(News.view_count)).scalar() or 0
+    # Get real traffic source data
+    from sqlalchemy import func, text
     
-    # Most viewed news
-    most_viewed = News.query.order_by(News.view_count.desc()).limit(10).all()
+    try:
+        # Real traffic sources based on actual data
+        traffic_sources = db.session.execute(text("""
+            SELECT 
+                CASE 
+                    WHEN user_agent LIKE '%Google%' OR user_agent LIKE '%googlebot%' THEN 'Google'
+                    WHEN user_agent LIKE '%Facebook%' OR user_agent LIKE '%facebookexternalhit%' THEN 'Facebook'
+                    WHEN user_agent LIKE '%Twitter%' OR user_agent LIKE '%Twitterbot%' THEN 'Twitter'
+                    WHEN user_agent LIKE '%WhatsApp%' THEN 'WhatsApp'
+                    WHEN user_agent LIKE '%Telegram%' THEN 'Telegram'
+                    WHEN user_agent LIKE '%Safari%' AND user_agent NOT LIKE '%Chrome%' THEN 'Safari'
+                    WHEN user_agent LIKE '%Chrome%' THEN 'Chrome'
+                    WHEN user_agent LIKE '%Firefox%' THEN 'Firefox'
+                    WHEN user_agent LIKE '%Edge%' THEN 'Edge'
+                    ELSE 'Diğer'
+                END as source,
+                COUNT(*) as count
+            FROM news_views 
+            WHERE viewed_at >= NOW() - INTERVAL '30 days'
+            GROUP BY source
+            ORDER BY count DESC
+            LIMIT 10
+        """)).fetchall()
+        
+        # Browser statistics
+        browser_stats = db.session.execute(text("""
+            SELECT 
+                CASE 
+                    WHEN user_agent LIKE '%Chrome%' AND user_agent NOT LIKE '%Edge%' THEN 'Chrome'
+                    WHEN user_agent LIKE '%Firefox%' THEN 'Firefox'
+                    WHEN user_agent LIKE '%Safari%' AND user_agent NOT LIKE '%Chrome%' THEN 'Safari'
+                    WHEN user_agent LIKE '%Edge%' THEN 'Edge'
+                    WHEN user_agent LIKE '%Opera%' THEN 'Opera'
+                    ELSE 'Diğer'
+                END as browser,
+                COUNT(*) as count
+            FROM news_views 
+            WHERE viewed_at >= NOW() - INTERVAL '30 days'
+            GROUP BY browser
+            ORDER BY count DESC
+        """)).fetchall()
+        
+        # Device statistics
+        device_stats = db.session.execute(text("""
+            SELECT 
+                CASE 
+                    WHEN user_agent LIKE '%Mobile%' OR user_agent LIKE '%Android%' OR user_agent LIKE '%iPhone%' THEN 'Mobil'
+                    WHEN user_agent LIKE '%Tablet%' OR user_agent LIKE '%iPad%' THEN 'Tablet'
+                    ELSE 'Masaüstü'
+                END as device,
+                COUNT(*) as count
+            FROM news_views 
+            WHERE viewed_at >= NOW() - INTERVAL '30 days'
+            GROUP BY device
+            ORDER BY count DESC
+        """)).fetchall()
+        
+        # Top viewed news
+        top_news = db.session.execute(text("""
+            SELECT n.title, n.slug, COUNT(nv.id) as views
+            FROM news n
+            LEFT JOIN news_views nv ON n.id = nv.news_id
+            WHERE nv.viewed_at >= NOW() - INTERVAL '30 days'
+            GROUP BY n.id, n.title, n.slug
+            ORDER BY views DESC
+            LIMIT 10
+        """)).fetchall()
+        
+        stats.update({
+            'traffic_sources': [{'source': row[0], 'count': row[1]} for row in traffic_sources],
+            'browser_stats': [{'browser': row[0], 'count': row[1]} for row in browser_stats],
+            'device_stats': [{'device': row[0], 'count': row[1]} for row in device_stats],
+            'top_news': [{'title': row[0], 'slug': row[1], 'views': row[2]} for row in top_news]
+        })
+    except Exception as e:
+        print(f"Error fetching traffic stats: {e}")
+        # Fallback to empty lists if SQL fails
+        stats.update({
+            'traffic_sources': [],
+            'browser_stats': [],
+            'device_stats': [],
+            'top_news': []
+        })
     
-    # Daily views (last 30 days)
-    thirty_days_ago = datetime.utcnow() - timedelta(days=30)
-    daily_views = db.session.query(
-        db.func.date(NewsView.viewed_at).label('date'),
-        db.func.count(NewsView.id).label('views')
-    ).filter(NewsView.viewed_at >= thirty_days_ago).group_by(
-        db.func.date(NewsView.viewed_at)
-    ).order_by(db.text('date DESC')).all()
-    
-    # Category statistics
-    category_stats = db.session.query(
-        Category.name,
-        db.func.count(News.id).label('news_count'),
-        db.func.sum(News.view_count).label('total_views')
-    ).join(News, Category.id == News.category_id).group_by(Category.id).all()
-    
-    return render_template('admin/statistics.html',
-                         total_news=total_news,
-                         published_news=published_news,
-                         draft_news=draft_news,
-                         total_views=total_views,
-                         most_viewed=most_viewed,
-                         daily_views=daily_views,
-                         category_stats=category_stats)
+    return render_template('admin/statistics.html', **stats)

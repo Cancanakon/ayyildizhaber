@@ -198,6 +198,25 @@
         
         <!-- Traffic Sources -->
         <div class="admin-table mb-4">
+            <div class="table-header p-3 bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-share-alt me-2"></i>
+                    Trafik Kaynakları
+                </h5>
+            </div>
+            
+            <div class="p-3">
+                <canvas id="trafficSourcesChart" width="300" height="300"></canvas>
+                <div class="mt-3">
+                    {% for source in traffic_sources %}
+                    <div class="d-flex justify-content-between mb-1">
+                        <small>{{ source.source }}</small>
+                        <small class="fw-bold">{{ source.count }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
             <div class="table-header p-3 bg-info text-white">
                 <h5 class="mb-0">
                     <i class="fas fa-chart-pie me-2"></i>

@@ -235,6 +235,17 @@ def from_json(json_string):
     except:
         return []
 
+def regex_findall(text, pattern):
+    """Extract all matches of a regex pattern from text"""
+    import re
+    try:
+        if text:
+            matches = re.findall(pattern, text, re.IGNORECASE)
+            return matches
+    except:
+        pass
+    return []
+
 # Register template filters
 def register_template_filters(app):
     """Register custom template filters"""
@@ -242,6 +253,7 @@ def register_template_filters(app):
     app.jinja_env.filters['from_json'] = from_json
     app.jinja_env.filters['format_date'] = format_date
     app.jinja_env.filters['truncate_text'] = truncate_text
+    app.jinja_env.filters['regex_findall'] = regex_findall
     
     # Add moment-like functionality for templates
     app.jinja_env.globals['moment'] = lambda: type('moment', (), {

@@ -389,8 +389,33 @@ def profile():
 @admin_bp.route('/istatistikler')
 @login_required
 def statistics():
-    # Get comprehensive news statistics
-    stats = get_news_statistics()
+    # News statistics
+    total_news = News.query.count()
+    published_news = News.query.filter_by(status='published').count()
+    draft_news = News.query.filter_by(status='draft').count()
+    
+    # View statistics
+    total_views = db.session.query(db.func.sum(News.view_count)).scalar() or 0
+    
+    # Most viewed news
+    most_viewed = News.query.order_by(News.view_count.desc()).limit(10).all()
+    
+    # Daily views (last 30 days)
+    from datetime import timedelta
+    thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+    daily_views = db.session.query(
+        db.func.date(NewsView.viewed_at).label('date'),
+        db.func.count(NewsView.id).label('views')
+    ).filter(NewsView.viewed_at >= thirty_days_ago).group_by(
+        db.func.date(NewsView.viewed_at)
+    ).order_by(db.text('date DESC')).all()
+    
+    # Category statistics
+    category_stats = db.session.query(
+        Category.name,
+        db.func.count(News.id).label('news_count'),
+        db.func.sum(News.view_count).label('total_views')
+    ).join(News, Category.id == News.category_id).group_by(Category.id).all()
     
     # Get real traffic source data
     from sqlalchemy import func, text
@@ -452,31 +477,25 @@ def statistics():
             ORDER BY count DESC
         """)).fetchall()
         
-        # Top viewed news
-        top_news = db.session.execute(text("""
-            SELECT n.title, n.slug, COUNT(nv.id) as views
-            FROM news n
-            LEFT JOIN news_views nv ON n.id = nv.news_id
-            WHERE nv.viewed_at >= NOW() - INTERVAL '30 days'
-            GROUP BY n.id, n.title, n.slug
-            ORDER BY views DESC
-            LIMIT 10
-        """)).fetchall()
+        traffic_sources_list = [{'source': row[0], 'count': row[1]} for row in traffic_sources]
+        browser_stats_list = [{'browser': row[0], 'count': row[1]} for row in browser_stats]
+        device_stats_list = [{'device': row[0], 'count': row[1]} for row in device_stats]
         
-        stats.update({
-            'traffic_sources': [{'source': row[0], 'count': row[1]} for row in traffic_sources],
-            'browser_stats': [{'browser': row[0], 'count': row[1]} for row in browser_stats],
-            'device_stats': [{'device': row[0], 'count': row[1]} for row in device_stats],
-            'top_news': [{'title': row[0], 'slug': row[1], 'views': row[2]} for row in top_news]
-        })
     except Exception as e:
         print(f"Error fetching traffic stats: {e}")
         # Fallback to empty lists if SQL fails
-        stats.update({
-            'traffic_sources': [],
-            'browser_stats': [],
-            'device_stats': [],
-            'top_news': []
-        })
+        traffic_sources_list = []
+        browser_stats_list = []
+        device_stats_list = []
     
-    return render_template('admin/statistics.html', **stats)
+    return render_template('admin/statistics.html',
+                         total_news=total_news,
+                         published_news=published_news,
+                         draft_news=draft_news,
+                         total_views=total_views,
+                         most_viewed=most_viewed,
+                         daily_views=daily_views,
+                         category_stats=category_stats,
+                         traffic_sources=traffic_sources_list,
+                         browser_stats=browser_stats_list,
+                         device_stats=device_stats_list)

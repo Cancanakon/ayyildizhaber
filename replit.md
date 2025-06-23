@@ -98,17 +98,17 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
+- June 23, 2025: Enhanced admin panel with real traffic statistics and user management system
+- June 23, 2025: Added comprehensive user management with add/edit/delete admin functionality
+- June 23, 2025: Implemented password change functionality and super admin authorization
+- June 23, 2025: Fixed admin user creation with proper password hashing using werkzeug.security
+- June 23, 2025: Added profile management page with security validation
+- June 23, 2025: Integrated real traffic data visualization in statistics with pie charts
+- June 23, 2025: Fixed news creation form with category validation and TinyMCE error handling
 - June 23, 2025: Successfully resolved all image display issues in news cards across entire website
 - June 23, 2025: Implemented simplified template logic for consistent image rendering
 - June 23, 2025: All news cards now display actual TRT news images instead of default logo
 - June 23, 2025: Completely removed all external news sources except TRT Haber per user request
-- June 23, 2025: Disabled all RSS feeds and external APIs (CNN Türk, Habertürk, Sözcü, etc.)
-- June 23, 2025: Cleaned database of all non-TRT news items to maintain only TRT content
-- June 23, 2025: Enhanced TRT news fetching with automatic image extraction from content
-- June 23, 2025: Added news slider with 15 rotating news items on homepage
-- June 23, 2025: Redesigned website layout inspired by Yeni Şafak with modern red-blue styling
-- June 23, 2025: Fixed JavaScript errors and template filter registration
-- June 23, 2025: Optimized image fallback system with object-fit CSS properties
 
 ## Changelog
 - June 23, 2025: Initial setup and deployment

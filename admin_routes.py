@@ -112,6 +112,12 @@ def news_create():
         summary = request.form.get('summary')
         content = request.form.get('content')
         category_id = request.form.get('category_id', type=int)
+        
+        # Validate category_id
+        if not category_id:
+            flash('Kategori seçimi zorunludur', 'error')
+            categories = Category.query.filter_by(is_active=True).all()
+            return render_template('admin/news_form.html', categories=categories)
         status = request.form.get('status', 'draft')
         is_featured = 'is_featured' in request.form
         is_breaking = 'is_breaking' in request.form

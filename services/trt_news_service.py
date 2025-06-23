@@ -22,11 +22,26 @@ def fetch_trt_news_xml(category='gundem', count=20):
         
         for haber in root.findall('haber'):
             try:
+                # Extract and clean content
+                title = haber.find('haber_manset').text if haber.find('haber_manset') is not None else ''
+                summary = haber.find('haber_aciklama').text if haber.find('haber_aciklama') is not None else ''
+                content = haber.find('haber_metni').text if haber.find('haber_metni') is not None else ''
+                image_url = haber.find('haber_resim').text if haber.find('haber_resim') is not None else ''
+                
+                # Clean HTML from content
+                from utils.helpers import clean_html_content
+                content = clean_html_content(content) if content else ''
+                summary = clean_html_content(summary) if summary else ''
+                
+                # Validate image URL
+                if image_url and not image_url.startswith('http'):
+                    image_url = f"https://trthaberstatic.cdn.wp.trt.com.tr{image_url}" if image_url.startswith('/') else ''
+                
                 item = {
-                    'title': haber.find('haber_manset').text if haber.find('haber_manset') is not None else '',
-                    'summary': haber.find('haber_aciklama').text if haber.find('haber_aciklama') is not None else '',
-                    'content': haber.find('haber_metni').text if haber.find('haber_metni') is not None else '',
-                    'image_url': haber.find('haber_resim').text if haber.find('haber_resim') is not None else '',
+                    'title': title.strip(),
+                    'summary': summary.strip(),
+                    'content': content.strip(),
+                    'image_url': image_url.strip(),
                     'source_url': haber.find('haber_link').text if haber.find('haber_link') is not None else '',
                     'pub_date': haber.find('haber_tarihi').text if haber.find('haber_tarihi') is not None else '',
                     'category': haber.find('haber_kategorisi').text if haber.find('haber_kategorisi') is not None else category

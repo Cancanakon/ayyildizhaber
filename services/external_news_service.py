@@ -34,11 +34,21 @@ def fetch_external_news_api():
                     data = response.json()
                     if data.get('success') and data.get('result'):
                         for item in data['result'][:5]:  # Limit to 5 news per category
+                            # Clean HTML content
+                            from utils.helpers import clean_html_content
+                            title = clean_html_content(item.get('name', ''))
+                            description = clean_html_content(item.get('description', ''))
+                            image_url = item.get('image', '')
+                            
+                            # Validate image URL
+                            if image_url and not image_url.startswith('http'):
+                                image_url = ''
+                            
                             news_item = {
-                                'title': item.get('name', ''),
-                                'summary': item.get('description', ''),
-                                'content': item.get('description', ''),  # Use description as content
-                                'image_url': item.get('image', ''),
+                                'title': title.strip(),
+                                'summary': description[:200] + '...' if len(description) > 200 else description,
+                                'content': description.strip(),
+                                'image_url': image_url.strip(),
                                 'source_url': item.get('url', ''),
                                 'category': category,
                                 'source': 'external'
@@ -210,12 +220,15 @@ def fetch_multiple_rss_sources():
                 for entry in feed.entries[:5]:  # Limit to 5 per source
                     try:
                         # Clean and prepare content
+                        from utils.helpers import clean_html_content
                         description = getattr(entry, 'description', getattr(entry, 'summary', ''))
+                        title = clean_html_content(entry.title)
+                        content = clean_html_content(description)
                         
                         item = {
-                            'title': entry.title,
-                            'summary': description[:200] + '...' if len(description) > 200 else description,
-                            'content': description,
+                            'title': title.strip(),
+                            'summary': content[:200] + '...' if len(content) > 200 else content,
+                            'content': content.strip(),
                             'source_url': entry.link,
                             'category': source['category'],
                             'source': 'rss',

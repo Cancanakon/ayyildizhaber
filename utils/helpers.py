@@ -58,13 +58,20 @@ def clean_html_content(content):
     for script in soup(["script", "style"]):
         script.decompose()
     
+    # Remove img tags and other unwanted elements
+    for tag in soup(['img', 'figure', 'iframe', 'video', 'audio']):
+        tag.decompose()
+    
     # Get text content
     text = soup.get_text()
     
-    # Clean whitespace
+    # Clean whitespace and newlines
     lines = (line.strip() for line in text.splitlines())
     chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
     text = ' '.join(chunk for chunk in chunks if chunk)
+    
+    # Remove extra whitespace
+    text = ' '.join(text.split())
     
     return text
 

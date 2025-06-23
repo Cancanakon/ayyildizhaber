@@ -100,15 +100,34 @@ def get_popular_news(limit=5, days=7):
     try:
         days_ago = datetime.utcnow() - timedelta(days=days)
         
+        # First try to get popular news from last week
         popular = News.query.filter(
             News.published_at >= days_ago,
             News.status == 'published'
         ).order_by(News.view_count.desc()).limit(limit).all()
         
-        return popular
+        # If not enough popular news, get recent news
+        if len(popular) < limit:
+            recent = News.query.filter(
+                News.status == 'published'
+            ).order_by(News.published_at.desc()).limit(limit).all()
+            
+            # Combine and deduplicate
+            popular_ids = [n.id for n in popular]
+            for news in recent:
+                if news.id not in popular_ids and len(popular) < limit:
+                    popular.append(news)
+        
+        return popular[:limit]
     except Exception as e:
         print(f"Error getting popular news: {e}")
-        return []
+        # Return recent news as fallback
+        try:
+            return News.query.filter(
+                News.status == 'published'
+            ).order_by(News.published_at.desc()).limit(limit).all()
+        except:
+            return []
 
 def format_date(date, format_type='full'):
     """Format date for display"""

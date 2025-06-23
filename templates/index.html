@@ -18,8 +18,8 @@
                     </h2>
                     <div class="row">
                         {% for news in featured_news[:6] %}
-                        <div class="col-lg-4 col-md-6 mb-4">
-                            <div class="news-card featured-card h-100 fade-in">
+                        <div class="col-lg-4 col-md-6 mb-4 d-flex">
+                            <div class="news-card featured-card fade-in w-100">
                                 {% if news.featured_image %}
                                 <img src="{{ news.featured_image }}" class="card-img-top" alt="{{ news.title }}">
                                 {% else %}
@@ -31,9 +31,9 @@
                                     <h5 class="card-title">
                                         <a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title[:80] }}{% if news.title|length > 80 %}...{% endif %}</a>
                                     </h5>
-                                    <p class="card-text">{{ news.summary[:120] }}{% if news.summary and news.summary|length > 120 %}...{% endif %}</p>
-                                    <div class="news-meta">
-                                        <span class="category-badge">{{ news.category.name }}</span>
+                                    <p class="card-text">{{ news.summary[:120] if news.summary else news.content[:120] }}{% if (news.summary and news.summary|length > 120) or (not news.summary and news.content|length > 120) %}...{% endif %}</p>
+                                    <div class="news-meta mt-auto">
+                                        <span class="category-badge" style="background-color: {{ news.category.color }};">{{ news.category.name }}</span>
                                         <small class="text-muted">
                                             <i class="fas fa-clock me-1"></i>
                                             {{ news.published_at.strftime('%d.%m.%Y %H:%M') if news.published_at }}
@@ -56,8 +56,8 @@
                 </h2>
                 <div class="row">
                     {% for news in latest_news %}
-                    <div class="col-lg-6 col-md-6 mb-4">
-                        <div class="news-card slide-up">
+                    <div class="col-lg-6 col-md-6 mb-4 d-flex">
+                        <div class="news-card slide-up w-100">
                             {% if news.featured_image %}
                             <img src="{{ news.featured_image }}" class="card-img-top" alt="{{ news.title }}">
                             {% else %}
@@ -67,12 +67,14 @@
                             {% endif %}
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title }}</a>
+                                    <a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title[:80] }}{% if news.title|length > 80 %}...{% endif %}</a>
                                 </h5>
                                 {% if news.summary %}
-                                <p class="card-text">{{ news.summary[:150] }}{% if news.summary|length > 150 %}...{% endif %}</p>
+                                <p class="card-text">{{ news.summary[:120] }}{% if news.summary|length > 120 %}...{% endif %}</p>
+                                {% else %}
+                                <p class="card-text">{{ news.content[:120] }}{% if news.content|length > 120 %}...{% endif %}</p>
                                 {% endif %}
-                                <div class="news-meta">
+                                <div class="news-meta mt-auto">
                                     <span class="category-badge" style="background-color: {{ news.category.color }};">{{ news.category.name }}</span>
                                     <small class="text-muted ms-auto">
                                         <i class="fas fa-eye me-1"></i>{{ news.view_count }}

@@ -157,6 +157,24 @@
                         </a>
                     </li>
                     
+                    {% if current_user.is_super_admin %}
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if 'users' in request.endpoint }}" 
+                           href="{{ url_for('admin.users_list') }}">
+                            <i class="fas fa-users"></i>
+                            Kullanıcılar
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if 'profile' in request.endpoint }}" 
+                           href="{{ url_for('admin.profile') }}">
+                            <i class="fas fa-user-circle"></i>
+                            Profil
+                        </a>
+                    </li>
+                    
                     <li class="nav-item mt-4">
                         <hr class="border-secondary">
                     </li>

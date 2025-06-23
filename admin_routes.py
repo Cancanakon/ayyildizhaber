@@ -233,7 +233,139 @@ def news_delete(id):
     flash('Haber başarıyla silindi', 'success')
     return redirect(url_for('admin.news_list'))
 
-# Categories and users management removed per user request
+# User Management Routes
+@admin_bp.route('/kullanicilar')
+@login_required
+def users_list():
+    if not current_user.is_super_admin:
+        flash('Bu sayfaya erişim yetkiniz yok', 'error')
+        return redirect(url_for('admin.dashboard'))
+    
+    users = Admin.query.order_by(Admin.created_at.desc()).all()
+    return render_template('admin/users_list.html', users=users)
+
+@admin_bp.route('/kullanici/yeni', methods=['GET', 'POST'])
+@login_required
+def user_create():
+    if not current_user.is_super_admin:
+        flash('Bu sayfaya erişim yetkiniz yok', 'error')
+        return redirect(url_for('admin.dashboard'))
+    
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        is_super_admin = 'is_super_admin' in request.form
+        
+        # Check if username or email already exists
+        if Admin.query.filter_by(username=username).first():
+            flash('Bu kullanıcı adı zaten kullanılıyor', 'error')
+            return render_template('admin/user_form.html')
+        
+        if Admin.query.filter_by(email=email).first():
+            flash('Bu e-posta adresi zaten kullanılıyor', 'error')
+            return render_template('admin/user_form.html')
+        
+        # Create new user
+        user = Admin(
+            username=username,
+            email=email,
+            is_super_admin=is_super_admin
+        )
+        user.set_password(password)
+        
+        db.session.add(user)
+        db.session.commit()
+        
+        flash('Yeni kullanıcı başarıyla oluşturuldu', 'success')
+        return redirect(url_for('admin.users_list'))
+    
+    return render_template('admin/user_form.html')
+
+@admin_bp.route('/kullanici/<int:id>/duzenle', methods=['GET', 'POST'])
+@login_required
+def user_edit(id):
+    user = Admin.query.get_or_404(id)
+    
+    # Only super admin can edit others, or user can edit themselves
+    if not current_user.is_super_admin and current_user.id != id:
+        flash('Bu kullanıcıyı düzenleme yetkiniz yok', 'error')
+        return redirect(url_for('admin.dashboard'))
+    
+    if request.method == 'POST':
+        user.username = request.form.get('username')
+        user.email = request.form.get('email')
+        
+        # Only super admin can change super admin status
+        if current_user.is_super_admin:
+            user.is_super_admin = 'is_super_admin' in request.form
+            user.is_active = 'is_active' in request.form
+        
+        # Change password if provided
+        new_password = request.form.get('new_password')
+        if new_password:
+            user.set_password(new_password)
+        
+        db.session.commit()
+        flash('Kullanıcı bilgileri güncellendi', 'success')
+        
+        if current_user.id == id:
+            return redirect(url_for('admin.profile'))
+        else:
+            return redirect(url_for('admin.users_list'))
+    
+    return render_template('admin/user_form.html', user=user, is_edit=True)
+
+@admin_bp.route('/kullanici/<int:id>/sil', methods=['POST'])
+@login_required
+def user_delete(id):
+    if not current_user.is_super_admin:
+        flash('Bu işlem için yetkiniz yok', 'error')
+        return redirect(url_for('admin.users_list'))
+    
+    if current_user.id == id:
+        flash('Kendi hesabınızı silemezsiniz', 'error')
+        return redirect(url_for('admin.users_list'))
+    
+    user = Admin.query.get_or_404(id)
+    db.session.delete(user)
+    db.session.commit()
+    
+    flash('Kullanıcı başarıyla silindi', 'success')
+    return redirect(url_for('admin.users_list'))
+
+@admin_bp.route('/profil', methods=['GET', 'POST'])
+@login_required
+def profile():
+    if request.method == 'POST':
+        current_user.username = request.form.get('username')
+        current_user.email = request.form.get('email')
+        
+        # Change password if provided
+        current_password = request.form.get('current_password')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+        
+        if new_password:
+            if not current_user.check_password(current_password):
+                flash('Mevcut şifre yanlış', 'error')
+                return render_template('admin/profile.html')
+            
+            if new_password != confirm_password:
+                flash('Yeni şifreler eşleşmiyor', 'error')
+                return render_template('admin/profile.html')
+            
+            if len(new_password) < 6:
+                flash('Şifre en az 6 karakter olmalıdır', 'error')
+                return render_template('admin/profile.html')
+            
+            current_user.set_password(new_password)
+        
+        db.session.commit()
+        flash('Profil bilgileriniz güncellendi', 'success')
+        return redirect(url_for('admin.profile'))
+    
+    return render_template('admin/profile.html')
 
 
 

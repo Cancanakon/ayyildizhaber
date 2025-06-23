@@ -150,7 +150,7 @@
                             <td>
                                 <div class="progress" style="height: 20px;">
                                     <div class="progress-bar bg-{{ 'success' if success_rate >= 100 else 'warning' if success_rate >= 80 else 'danger' }}" 
-                                         style="width: {{ min(success_rate, 100) }}%">
+                                         style="width: {{ [success_rate, 100]|min }}%">
                                         {{ "{:.1f}".format(success_rate) }}%
                                     </div>
                                 </div>

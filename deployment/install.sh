@@ -241,14 +241,26 @@ else
     error "✗ PostgreSQL servisi çalışmıyor"
 fi
 
-# 18. SSL Sertifikası (Let's Encrypt) - Opsiyonel
-warning "SSL sertifikası kurulumu için şu komutu çalıştırın:"
-warning "certbot --nginx -d ayyildizajans.com -d www.ayyildizajans.com"
+# 18. SSL Sertifikası Otomatik Kurulumu
+log "SSL sertifikası otomatik kurulumu başlatılıyor..."
+if [ -f "/var/www/ayyildizhaber/deployment/ssl-setup.sh" ]; then
+    chmod +x /var/www/ayyildizhaber/deployment/ssl-setup.sh
+    read -p "SSL sertifikası kurmak istiyor musunuz? Domain DNS ayarları hazır olmalı (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        bash /var/www/ayyildizhaber/deployment/ssl-setup.sh
+    else
+        warning "SSL kurulumu atlandı. Manuel kurulum için: bash /var/www/ayyildizhaber/deployment/ssl-setup.sh"
+    fi
+else
+    warning "SSL setup script bulunamadı. Manuel kurulum: certbot --nginx -d ayyildizajans.com -d www.ayyildizajans.com"
+fi
 
-# 19. Cron Jobs (Backup ve Maintenance)
+# 19. Cron Jobs (Backup, Maintenance ve SSL)
 log "Cron jobs konfigüre ediliyor..."
 (crontab -l 2>/dev/null; echo "0 2 * * * /var/www/ayyildizhaber/deployment/backup.sh") | crontab -
 (crontab -l 2>/dev/null; echo "0 0 * * 0 /var/www/ayyildizhaber/deployment/maintenance.sh") | crontab -
+(crontab -l 2>/dev/null; echo "0 3 * * * /var/www/ayyildizhaber/deployment/ssl-renew.sh") | crontab -
 
 echo ""
 echo "=== KURULUM TAMAMLANDI! ==="

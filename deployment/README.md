@@ -110,8 +110,12 @@ sudo ufw allow ssh
 sudo ufw allow 'Nginx Full'
 ```
 
-### 9. SSL Sertifikası (Let's Encrypt)
+### 9. SSL Sertifikası (Otomatik Kurulum)
 ```bash
+# Otomatik SSL kurulumu
+sudo bash /var/www/ayyildizhaber/deployment/ssl-setup.sh
+
+# Manuel kurulum (alternatif)
 sudo certbot --nginx -d ayyildizajans.com -d www.ayyildizajans.com
 ```
 
@@ -181,6 +185,21 @@ echo "0 2 * * * /var/www/ayyildizhaber/deployment/backup.sh" | sudo crontab -
 
 # Veritabanını restore et
 sudo -u postgres psql ayyildizhaber < backup_file.sql
+```
+
+### SSL Yönetimi
+```bash
+# SSL durumu kontrol
+sudo bash /var/www/ayyildizhaber/deployment/ssl-status.sh
+
+# SSL yenileme testi
+sudo certbot renew --dry-run
+
+# Manuel SSL yenileme
+sudo bash /var/www/ayyildizhaber/deployment/ssl-renew.sh
+
+# SSL logları
+sudo tail -f /var/log/letsencrypt/letsencrypt.log
 ```
 
 ## 🔒 Güvenlik

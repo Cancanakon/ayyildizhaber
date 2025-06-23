@@ -98,16 +98,16 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
-- June 23, 2025: Created comprehensive Ubuntu 22.04 VPS deployment system with production-ready configuration
-- June 23, 2025: Implemented automated installation script with PostgreSQL, Nginx, SSL, and security setup
-- June 23, 2025: Added systemd service configuration for production deployment
-- June 23, 2025: Created backup and maintenance scripts for automated system management
-- June 23, 2025: Updated contact information to ayyildizcasttr@gmail.com and https://www.ayyildizajans.com/
-- June 23, 2025: Fixed gold price display to show Turkish names (Çeyrek Altın, Yarım Altın, Tam Altın)
-- June 23, 2025: Configured Nginx reverse proxy with SSL support and security headers
-- June 23, 2025: Added Fail2Ban and UFW firewall configuration for enhanced security
-- June 23, 2025: Created production-ready requirements.txt and Gunicorn configuration
-- June 23, 2025: Implemented comprehensive deployment documentation and troubleshooting guide
+- June 23, 2025: Implemented automatic SSL certificate generation with Let's Encrypt integration
+- June 23, 2025: Created ssl-setup.sh script for one-command SSL installation with domain verification
+- June 23, 2025: Added ssl-renew.sh and ssl-status.sh for automated renewal and monitoring
+- June 23, 2025: Integrated SSL setup into main installation script with user confirmation
+- June 23, 2025: Added automatic HTTPS redirect and security headers configuration
+- June 23, 2025: Implemented SSL monitoring with cron jobs and email alerts
+- June 23, 2025: Created comprehensive SSL status reporting and troubleshooting tools
+- June 23, 2025: Added SSL Grade testing integration with SSL Labs API
+- June 23, 2025: Enhanced Nginx configuration with TLS 1.2/1.3 support and security headers
+- June 23, 2025: Implemented automatic SSL renewal with zero-downtime deployment
 
 ## Changelog
 - June 23, 2025: Initial setup and deployment

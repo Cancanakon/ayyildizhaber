@@ -12,9 +12,17 @@ main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
+    # Get slider news (15 latest published news for slider)
+    slider_news = News.query.filter_by(status='published').order_by(News.published_at.desc()).limit(15).all()
+    
     # Get featured and breaking news
     breaking_news = News.query.filter_by(is_breaking=True, status='published').order_by(News.published_at.desc()).limit(3).all()
     featured_news = News.query.filter_by(is_featured=True, status='published').order_by(News.published_at.desc()).limit(6).all()
+    
+    # If no featured news, get latest news (excluding slider news to avoid duplication)
+    if not featured_news:
+        slider_ids = [news.id for news in slider_news]
+        featured_news = News.query.filter_by(status='published').filter(~News.id.in_(slider_ids)).order_by(News.published_at.desc()).limit(6).all()
     
     # Get latest news by category
     categories = Category.query.filter_by(is_active=True).all()
@@ -33,6 +41,7 @@ def index():
         currency_data = weather_data = prayer_data = None
     
     return render_template('index.html',
+                         slider_news=slider_news,
                          breaking_news=breaking_news,
                          featured_news=featured_news,
                          latest_news=latest_news,

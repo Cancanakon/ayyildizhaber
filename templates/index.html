@@ -4,6 +4,85 @@
 {% block description %}Türkiye'nin en güncel haberleri, son dakika gelişmeleri, politika, ekonomi, spor ve teknoloji haberlerini takip edin.{% endblock %}
 
 {% block content %}
+
+    <!-- News Slider -->
+    {% if slider_news %}
+    <div class="news-slider-section">
+        <div class="container">
+            <div id="newsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                <div class="carousel-indicators">
+                    {% for news in slider_news %}
+                    <button type="button" data-bs-target="#newsCarousel" data-bs-slide-to="{{ loop.index0 }}" 
+                            class="{{ 'active' if loop.first }}" aria-label="Slide {{ loop.index }}"></button>
+                    {% endfor %}
+                </div>
+                
+                <div class="carousel-inner">
+                    {% for news in slider_news %}
+                    <div class="carousel-item {{ 'active' if loop.first }}">
+                        <div class="slider-news-item">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    {% if news.featured_image %}
+                                    <div class="slider-image">
+                                        <img src="{% if news.featured_image.startswith('http') %}{{ news.featured_image }}{% elif news.featured_image.startswith('//') %}https:{{ news.featured_image }}{% else %}{{ url_for('static', filename='uploads/' + news.featured_image) }}{% endif %}" 
+                                             alt="{{ news.title }}" 
+                                             class="img-fluid"
+                                             onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="slider-image-fallback" style="display: none;">
+                                            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="fallback-logo">
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="slider-image-fallback">
+                                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="fallback-logo">
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="slider-content">
+                                        <div class="slider-category">
+                                            <span class="category-badge" style="background-color: {{ news.category.color }};">
+                                                {{ news.category.name }}
+                                            </span>
+                                        </div>
+                                        <h2 class="slider-title">
+                                            <a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title }}</a>
+                                        </h2>
+                                        {% if news.summary %}
+                                        <p class="slider-summary">{{ news.summary[:150] }}{% if news.summary|length > 150 %}...{% endif %}</p>
+                                        {% endif %}
+                                        <div class="slider-meta">
+                                            <span class="slider-date">
+                                                <i class="fas fa-clock me-1"></i>
+                                                {{ news.published_at.strftime('%d.%m.%Y %H:%M') if news.published_at else news.created_at.strftime('%d.%m.%Y %H:%M') }}
+                                            </span>
+                                            <span class="slider-views">
+                                                <i class="fas fa-eye me-1"></i>
+                                                {{ news.view_count }} Görüntüleme
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <button class="carousel-control-prev" type="button" data-bs-target="#newsCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                    <span class="visually-hidden">Önceki</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#newsCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                    <span class="visually-hidden">Sonraki</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
 <div class="container-fluid py-4">
     <div class="row">
         <!-- Main Content -->

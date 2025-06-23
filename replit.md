@@ -98,18 +98,16 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
-- June 23, 2025: Created functional footer pages (About, Contact, Advertising, Privacy Policy, Terms of Use)
-- June 23, 2025: Implemented contact page with Hatay, İskenderun location details
-- June 23, 2025: Added comprehensive legal pages with KVKK compliance information
-- June 23, 2025: Enhanced slider category styling with softer rounded corners and transparency
-- June 23, 2025: Fixed admin profile page error by correcting SQLAlchemy relationship configuration
-- June 23, 2025: Fixed admin statistics page by implementing direct data queries instead of missing function
-- June 23, 2025: Resolved news content editor issues by replacing TinyMCE with working Quill editor
-- June 23, 2025: Fixed news publishing workflow - drafts now correctly transition to published status
-- June 23, 2025: Successfully resolved all image display issues in news cards across entire website
-- June 23, 2025: Implemented simplified template logic for consistent image rendering
-- June 23, 2025: All news cards now display actual TRT news images instead of default logo
-- June 23, 2025: Completely removed all external news sources except TRT Haber per user request
+- June 23, 2025: Created comprehensive Ubuntu 22.04 VPS deployment system with production-ready configuration
+- June 23, 2025: Implemented automated installation script with PostgreSQL, Nginx, SSL, and security setup
+- June 23, 2025: Added systemd service configuration for production deployment
+- June 23, 2025: Created backup and maintenance scripts for automated system management
+- June 23, 2025: Updated contact information to ayyildizcasttr@gmail.com and https://www.ayyildizajans.com/
+- June 23, 2025: Fixed gold price display to show Turkish names (Çeyrek Altın, Yarım Altın, Tam Altın)
+- June 23, 2025: Configured Nginx reverse proxy with SSL support and security headers
+- June 23, 2025: Added Fail2Ban and UFW firewall configuration for enhanced security
+- June 23, 2025: Created production-ready requirements.txt and Gunicorn configuration
+- June 23, 2025: Implemented comprehensive deployment documentation and troubleshooting guide
 
 ## Changelog
 - June 23, 2025: Initial setup and deployment

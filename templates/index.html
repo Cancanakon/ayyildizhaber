@@ -127,22 +127,21 @@
                                     {% endif %}
                                 {% endif %}
                                 
-                                {% if image_url %}
+                                <!-- Debug: Featured image: {{ news.featured_image or 'None' }}, Final URL: {{ image_url or 'None' }} -->
+                                
                                 <div class="image-container" style="height: 200px; overflow: hidden; position: relative;" data-content-images="{% if content_images %}{{ content_images|join(',') }}{% endif %}">
+                                    {% if image_url %}
                                     <img src="{% if image_url.startswith('http') %}{{ image_url }}{% elif image_url.startswith('//') %}https:{{ image_url }}{% else %}{{ url_for('static', filename='uploads/' + image_url) }}{% endif %}" 
                                          class="card-img-top img-with-fallback" 
                                          alt="{{ news.title }}" 
                                          loading="lazy" 
-                                         style="height: 200px; width: 100%; object-fit: cover;">
-                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center fallback-image" style="height: 200px; display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+                                         style="height: 200px; width: 100%; object-fit: cover;"
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    {% endif %}
+                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center fallback-image" style="height: 200px; {% if image_url %}display: none;{% else %}display: flex;{% endif %} position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
                                         <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" style="width: 80px; height: 80px; object-fit: contain;">
                                     </div>
                                 </div>
-                                {% else %}
-                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" style="width: 80px; height: 80px; object-fit: contain;">
-                                </div>
-                                {% endif %}
                                 <div class="card-body">
                                     <h5 class="card-title">
                                         <a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title[:80] }}{% if news.title|length > 80 %}...{% endif %}</a>
@@ -188,22 +187,22 @@
                                 {% endif %}
                             {% endif %}
                             
-                            {% if latest_image_url %}
+                            <!-- Debug: Show what image URL we have -->
+                            <!-- Image URL: {{ latest_image_url or 'No image found' }} -->
+                            
                             <div class="image-container" style="height: 200px; overflow: hidden; position: relative;" data-content-images="{% if latest_content_images %}{{ latest_content_images|join(',') }}{% endif %}">
+                                {% if latest_image_url %}
                                 <img src="{% if latest_image_url.startswith('http') %}{{ latest_image_url }}{% elif latest_image_url.startswith('//') %}https:{{ latest_image_url }}{% else %}{{ url_for('static', filename='uploads/' + latest_image_url) }}{% endif %}" 
                                      class="card-img-top img-with-fallback" 
                                      alt="{{ news.title }}" 
                                      loading="lazy" 
-                                     style="height: 200px; width: 100%; object-fit: cover;">
-                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center fallback-image" style="height: 200px; display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+                                     style="height: 200px; width: 100%; object-fit: cover;"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                {% endif %}
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center fallback-image" style="height: 200px; {% if latest_image_url %}display: none;{% else %}display: flex;{% endif %} position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
                                     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" style="width: 80px; height: 80px; object-fit: contain;">
                                 </div>
                             </div>
-                            {% else %}
-                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" style="width: 80px; height: 80px; object-fit: contain;">
-                            </div>
-                            {% endif %}
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title[:80] }}{% if news.title|length > 80 %}...{% endif %}</a>

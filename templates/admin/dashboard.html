@@ -85,13 +85,16 @@
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    {% if news.featured_image %}
-                                    <img src="{{ news.featured_image }}" alt="{{ news.title }}" 
-                                         class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                    {% if news.featured_image and (news.featured_image.startswith('http') or news.featured_image.startswith('//')) %}
+                                    <img src="{{ news.featured_image if news.featured_image.startswith('http') else 'https:' + news.featured_image }}" 
+                                         alt="{{ news.title }}" 
+                                         class="rounded me-3" 
+                                         style="width: 50px; height: 50px; object-fit: cover;"
+                                         onerror="this.src='{{ url_for('static', filename='images/logo.png') }}'; this.style.objectFit='contain'; this.style.padding='5px';">
                                     {% else %}
                                     <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" 
                                          style="width: 50px; height: 50px;">
-                                        <i class="fas fa-newspaper text-muted"></i>
+                                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" style="width: 25px; height: 25px; object-fit: contain;">
                                     </div>
                                     {% endif %}
                                     <div>

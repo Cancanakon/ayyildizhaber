@@ -98,14 +98,14 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
+- June 23, 2025: Comprehensive image display fix across all templates (homepage, category, search, admin, news detail)
+- June 23, 2025: Enhanced protocol-relative URL handling (// prefixed URLs)
+- June 23, 2025: Standardized logo fallback implementation across all image references
 - June 23, 2025: Added Turkish translations for gold prices (Çeyrek Altın, Yarım Altın, Tam Altın)
-- June 23, 2025: Implemented logo as default fallback for broken/missing news images
-- June 23, 2025: Enhanced image error handling across all news display templates
 - June 23, 2025: Fixed currency service to use Kapali Carsi API for accurate Turkish market data
 - June 23, 2025: Adjusted logo size to optimal 52px after user feedback iterations
 - June 23, 2025: Added official logo to website header with proper integration
 - June 23, 2025: Fixed category pages with populated sidebar sections (popular news, other categories, recent news)
-- June 23, 2025: Made "Ayyıldız Haber Ajansı" title red color as requested
 
 ## Changelog
 - June 23, 2025: Initial setup and deployment

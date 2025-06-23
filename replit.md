@@ -98,14 +98,14 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
+- June 23, 2025: Added official logo to website header with proper integration
+- June 23, 2025: Fixed category pages with populated sidebar sections (popular news, other categories, recent news)
+- June 23, 2025: Made "Ayyıldız Haber Ajansı" title red color as requested
+- June 23, 2025: Enhanced category page layout with better image handling and equal-sized cards
 - June 23, 2025: Fixed HTML content display issues in news articles and summaries
 - June 23, 2025: Enhanced image loading with proper URL validation and fallbacks
 - June 23, 2025: Fixed popular news section loading on news detail pages
 - June 23, 2025: Improved content cleaning to remove unwanted HTML tags
-- June 23, 2025: Real gold prices integration with Turkish financial APIs
-- June 23, 2025: Enhanced TRT news fetching with XML and RSS backup systems  
-- June 23, 2025: Added multiple RSS news sources for continuous content flow
-- June 23, 2025: Automated news fetching every 15 minutes (120+ articles loaded)
 
 ## Changelog
 - June 23, 2025: Initial setup and deployment

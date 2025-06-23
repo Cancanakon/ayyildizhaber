@@ -150,6 +150,123 @@
 
         <!-- Sidebar -->
         <div class="col-lg-4">
+            <!-- Category Description -->
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-info-circle me-2"></i>
+                    {{ category.name }} Hakkında
+                </div>
+                <div class="section-content">
+                    <p class="mb-3">{{ category.description if category.description else 'Bu kategoride güncel haberler ve gelişmeleri takip edebilirsiniz.' }}</p>
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-newspaper me-1"></i>
+                            Toplam {{ news.total }} haber
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular News -->
+            {% if popular_news %}
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-fire me-2"></i>
+                    Popüler Haberler
+                </div>
+                <div class="section-content">
+                    {% for news_item in popular_news %}
+                    <div class="popular-news-item">
+                        {% if news_item.featured_image and news_item.featured_image.startswith('http') %}
+                        <img src="{{ news_item.featured_image }}" alt="{{ news_item.title }}" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div style="width: 60px; height: 60px; background: #f8f9fa; display: none; align-items: center; justify-content: center; border-radius: 5px; margin-right: 15px;">
+                            <i class="fas fa-newspaper text-muted"></i>
+                        </div>
+                        {% else %}
+                        <div style="width: 60px; height: 60px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border-radius: 5px; margin-right: 15px;">
+                            <i class="fas fa-newspaper text-muted"></i>
+                        </div>
+                        {% endif %}
+                        <div class="content">
+                            <div class="title">
+                                <a href="{{ url_for('main.news_detail', slug=news_item.slug) }}">{{ news_item.title[:60] }}{% if news_item.title|length > 60 %}...{% endif %}</a>
+                            </div>
+                            <div class="meta">
+                                <i class="fas fa-eye me-1"></i>{{ news_item.view_count }}
+                                <span class="ms-2">{{ news_item.published_at.strftime('%d.%m.%Y') if news_item.published_at }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Other Categories -->
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-list me-2"></i>
+                    Diğer Kategoriler
+                </div>
+                <div class="section-content">
+                    {% if other_categories %}
+                        {% for cat in other_categories %}
+                        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <a href="{{ url_for('main.category_news', slug=cat.slug) }}" class="text-decoration-none">
+                                <span style="color: {{ cat.color }};">●</span>
+                                {{ cat.name }}
+                            </a>
+                            <small class="text-muted">
+                                {% set cat_count = cat.news.filter_by(status='published').count() %}
+                                {{ cat_count }}
+                            </small>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <p class="text-muted text-center py-3">Kategori bulunamadı.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Recent News from Other Categories -->
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-clock me-2"></i>
+                    Son Haberler
+                </div>
+                <div class="section-content">
+                    {% if recent_news %}
+                        {% for recent in recent_news %}
+                        <div class="d-flex mb-3 pb-3 border-bottom">
+                            {% if recent.featured_image and recent.featured_image.startswith('http') %}
+                            <img src="{{ recent.featured_image }}" class="me-3" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;" alt="{{ recent.title }}" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="me-3 bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 5px; display: none;">
+                                <i class="fas fa-newspaper text-muted"></i>
+                            </div>
+                            {% else %}
+                            <div class="me-3 bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 5px;">
+                                <i class="fas fa-newspaper text-muted"></i>
+                            </div>
+                            {% endif %}
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">
+                                    <a href="{{ url_for('main.news_detail', slug=recent.slug) }}" class="text-decoration-none">
+                                        {{ recent.title[:50] }}{% if recent.title|length > 50 %}...{% endif %}
+                                    </a>
+                                </h6>
+                                <small class="text-muted">
+                                    <span class="badge badge-sm" style="background-color: {{ recent.category.color }};">{{ recent.category.name }}</span>
+                                    {{ recent.published_at.strftime('%d.%m.%Y') if recent.published_at }}
+                                </small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <p class="text-muted text-center py-3">Son haberler yükleniyor...</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
             <!-- Category Info -->
             <div class="sidebar-section">
                 <div class="section-header" style="background-color: {{ category.color }};">

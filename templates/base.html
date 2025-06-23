@@ -67,9 +67,12 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <div class="logo">
-                        <h1><a href="{{ url_for('main.index') }}" class="text-decoration-none text-red">Ayyıldız Haber Ajansı</a></h1>
-                        <div class="tagline">Güvenilir Haber, Objektif Bakış</div>
+                    <div class="logo d-flex align-items-center">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" class="logo-img me-3">
+                        <div>
+                            <h1><a href="{{ url_for('main.index') }}" class="text-decoration-none text-red">Ayyıldız Haber Ajansı</a></h1>
+                            <div class="tagline">Güvenilir Haber, Objektif Bakış</div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-4">

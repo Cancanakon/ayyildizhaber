@@ -261,21 +261,18 @@
                             {% endif %}
                         {% endif %}
                         
-                        {% if pop_image_url %}
                         <div class="image-container" data-content-images="{% if pop_content_images %}{{ pop_content_images|join(',') }}{% endif %}">
+                            {% if pop_image_url %}
                             <img src="{% if pop_image_url.startswith('http') %}{{ pop_image_url }}{% elif pop_image_url.startswith('//') %}https:{{ pop_image_url }}{% else %}{{ url_for('static', filename='uploads/' + pop_image_url) }}{% endif %}" 
                                  alt="{{ news.title }}" 
                                  class="img-with-fallback"
-                                 style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px; margin-right: 15px;">
-                            <div class="fallback-image" style="width: 60px; height: 60px; background: #f8f9fa; display: none; align-items: center; justify-content: center; border-radius: 5px; margin-right: 15px;">
+                                 style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px; margin-right: 15px;"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            {% endif %}
+                            <div class="fallback-image" style="width: 60px; height: 60px; background: #f8f9fa; {% if pop_image_url %}display: none;{% else %}display: flex;{% endif %} align-items: center; justify-content: center; border-radius: 5px; margin-right: 15px;">
                                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 30px; height: 30px; object-fit: contain;">
                             </div>
                         </div>
-                        {% else %}
-                        <div style="width: 60px; height: 60px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border-radius: 5px; margin-right: 15px;">
-                            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 30px; height: 30px; object-fit: contain;">
-                        </div>
-                        {% endif %}
                         <div class="content">
                             <div class="title">
                                 <a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title[:60] }}{% if news.title|length > 60 %}...{% endif %}</a>

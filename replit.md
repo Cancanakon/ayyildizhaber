@@ -98,8 +98,9 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
+- June 23, 2025: Removed aa.com.tr (Anadolu Ajansı) from news sources per user request
 - June 23, 2025: Switched to TRT Haber only as external news source for better image reliability
-- June 23, 2025: Removed problematic news sources (NTV, Donanimhaber) that had image display issues
+- June 23, 2025: Removed problematic news sources (NTV, Donanimhaber, AA) that had image display issues
 - June 23, 2025: Enhanced image extraction for news sources with multiple fallback methods
 - June 23, 2025: Improved homepage image display with better URL handling and fallback logic
 - June 23, 2025: Replaced TinyMCE with Quill.js (free rich text editor, no API key required)

@@ -51,13 +51,21 @@
                             {% endif %}
                         {% endif %}
                         
-                        {% if article_image_url and (article_image_url.startswith('http') or article_image_url.startswith('//')) %}
+                        {% if article_image_url and (article_image_url.startswith('http') or article_image_url.startswith('//') or article_image_url.startswith('/static/')) %}
                         <div class="news-image" style="height: 200px; overflow: hidden; position: relative;">
-                            <img src="{{ article_image_url if article_image_url.startswith('http') else 'https:' + article_image_url }}" 
-                                 class="card-img-top" 
-                                 alt="{{ article.title }}" 
-                                 style="height: 200px; width: 100%; object-fit: cover;" 
-                                 onerror="this.src='{{ url_for('static', filename='images/logo.png') }}'; this.style.objectFit='contain'; this.style.padding='20px'; this.style.background='#f8f9fa';">
+                            {% if article_image_url.startswith('/static/') %}
+                                <img src="{{ article_image_url }}" 
+                                     class="card-img-top" 
+                                     alt="{{ article.title }}" 
+                                     style="height: 200px; width: 100%; object-fit: cover;" 
+                                     onerror="this.src='{{ url_for('static', filename='images/logo.png') }}'; this.style.objectFit='contain'; this.style.padding='20px'; this.style.background='#f8f9fa';">
+                            {% else %}
+                                <img src="{{ article_image_url if article_image_url.startswith('http') else 'https:' + article_image_url }}" 
+                                     class="card-img-top" 
+                                     alt="{{ article.title }}" 
+                                     style="height: 200px; width: 100%; object-fit: cover;" 
+                                     onerror="this.src='{{ url_for('static', filename='images/logo.png') }}'; this.style.objectFit='contain'; this.style.padding='20px'; this.style.background='#f8f9fa';">
+                            {% endif %}>
                             
                             {% if category.slug == 'yerel-haberler' %}
                             <span class="category-badge" style="background-color: {{ category.color }}; position: absolute; top: 10px; left: 10px; z-index: 2;">

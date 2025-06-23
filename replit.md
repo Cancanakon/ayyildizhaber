@@ -98,14 +98,14 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
+- June 23, 2025: Fixed Yerel Haberler category image display issue by adding local file path support (/static/)
+- June 23, 2025: Updated template logic to handle both local uploads and external image URLs properly
+- June 23, 2025: Enhanced image fallback system for category pages with proper error handling
+- June 23, 2025: Successfully implemented "Yerel Haberler" category for admin-only local news content
+- June 23, 2025: Added navigation menu integration with special styling for local news category
 - June 23, 2025: Implemented automatic SSL certificate generation with Let's Encrypt integration
 - June 23, 2025: Created ssl-setup.sh script for one-command SSL installation with domain verification
 - June 23, 2025: Added ssl-renew.sh and ssl-status.sh for automated renewal and monitoring
-- June 23, 2025: Integrated SSL setup into main installation script with user confirmation
-- June 23, 2025: Added automatic HTTPS redirect and security headers configuration
-- June 23, 2025: Implemented SSL monitoring with cron jobs and email alerts
-- June 23, 2025: Created comprehensive SSL status reporting and troubleshooting tools
-- June 23, 2025: Added SSL Grade testing integration with SSL Labs API
 - June 23, 2025: Enhanced Nginx configuration with TLS 1.2/1.3 support and security headers
 - June 23, 2025: Implemented automatic SSL renewal with zero-downtime deployment
 

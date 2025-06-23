@@ -240,29 +240,39 @@ def regex_findall(text, pattern):
     import re
     try:
         if text:
-            # Enhanced pattern to catch more image URLs
+            # Enhanced pattern to catch more image URLs from news content
             if 'jpg|jpeg|png|gif|webp' in pattern:
                 # Multiple patterns for different image URL formats
                 patterns = [
-                    r'https?://[^\s<>"\']+\.(?:jpg|jpeg|png|gif|webp)',
-                    r'//[^\s<>"\']+\.(?:jpg|jpeg|png|gif|webp)',
-                    r'src=["\']([^"\']*\.(?:jpg|jpeg|png|gif|webp))["\']',
-                    r'<img[^>]*src=["\']([^"\']*)["\']',
+                    r'https?://[^\s<>"\']+\.(?:jpg|jpeg|png|gif|webp)(?:\?[^\s<>"\']*)?',
+                    r'//[^\s<>"\']+\.(?:jpg|jpeg|png|gif|webp)(?:\?[^\s<>"\']*)?',
+                    r'src=["\']([^"\']*\.(?:jpg|jpeg|png|gif|webp)(?:\?[^"\']*)?)["\']',
+                    r'<img[^>]*src=["\']([^"\']*\.(?:jpg|jpeg|png|gif|webp)(?:\?[^"\']*)?)["\']',
+                    r'data-src=["\']([^"\']*\.(?:jpg|jpeg|png|gif|webp)(?:\?[^"\']*)?)["\']',
+                    r'background-image:\s*url\(["\']?([^"\'()]*\.(?:jpg|jpeg|png|gif|webp)(?:\?[^"\'()]*)?)["\']?\)',
                 ]
                 all_matches = []
                 for p in patterns:
                     matches = re.findall(p, text, re.IGNORECASE)
-                    if isinstance(matches[0] if matches else None, tuple):
+                    if matches and isinstance(matches[0], tuple):
                         # Handle groups from regex
                         matches = [m[0] if isinstance(m, tuple) else m for m in matches]
                     all_matches.extend(matches)
+                
                 # Remove duplicates and filter valid image URLs
                 unique_matches = []
                 for match in all_matches:
                     if match and match not in unique_matches:
+                        # Clean up the URL
+                        match = match.strip()
                         if any(ext in match.lower() for ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp']):
-                            unique_matches.append(match)
-                return unique_matches
+                            # Filter out very small or obviously thumbnail images
+                            if not any(size in match.lower() for size in ['thumb', '50x50', '100x100', 'icon', 'avatar']):
+                                unique_matches.append(match)
+                
+                # Sort by likely quality (prefer longer URLs, https over http)
+                unique_matches.sort(key=lambda x: (x.startswith('https'), len(x)), reverse=True)
+                return unique_matches[:5]  # Return top 5 matches
             else:
                 matches = re.findall(pattern, text, re.IGNORECASE)
                 return matches

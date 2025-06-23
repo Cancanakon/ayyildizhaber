@@ -147,23 +147,7 @@
                         </a>
                     </li>
                     
-                    <li class="nav-item">
-                        <a class="nav-link {{ 'active' if 'categories' in request.endpoint }}" 
-                           href="{{ url_for('admin.categories') }}">
-                            <i class="fas fa-tags"></i>
-                            Kategoriler
-                        </a>
-                    </li>
-                    
-                    {% if current_user.is_super_admin %}
-                    <li class="nav-item">
-                        <a class="nav-link {{ 'active' if 'users' in request.endpoint }}" 
-                           href="{{ url_for('admin.users') }}">
-                            <i class="fas fa-users"></i>
-                            Kullanıcılar
-                        </a>
-                    </li>
-                    {% endif %}
+
                     
                     <li class="nav-item">
                         <a class="nav-link {{ 'active' if 'statistics' in request.endpoint }}" 

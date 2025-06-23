@@ -98,6 +98,7 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
+- June 23, 2025: Replaced TinyMCE with Quill.js (free rich text editor, no API key required)
 - June 23, 2025: Removed categories and users management from admin panel per user request
 - June 23, 2025: Comprehensive image display fix across all templates (homepage, category, search, admin, news detail)
 - June 23, 2025: Enhanced protocol-relative URL handling (// prefixed URLs)

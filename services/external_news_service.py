@@ -135,11 +135,92 @@ def save_external_news_to_db(news_items):
 def fetch_and_save_external_news():
     """Main function to fetch and save external news"""
     try:
-        logging.info("Fetching external news...")
-        news_items = fetch_external_news_api()
-        saved = save_external_news_to_db(news_items)
-        logging.info(f"Total external news items saved: {saved}")
-        return saved
+        total_saved = 0
+        
+        # First try TRT news
+        try:
+            from services.trt_news_service import fetch_and_save_trt_news
+            trt_saved = fetch_and_save_trt_news()
+            total_saved += trt_saved
+            print(f"TRT News: {trt_saved} articles saved")
+        except Exception as e:
+            print(f"TRT fetch failed: {e}")
+        
+        # Try external API
+        try:
+            api_news = fetch_external_news_api()
+            if api_news:
+                api_saved = save_external_news_to_db(api_news)
+                total_saved += api_saved
+                print(f"External API: {api_saved} articles saved")
+        except Exception as e:
+            print(f"External API fetch failed: {e}")
+        
+        # Add RSS backup sources
+        try:
+            rss_saved = fetch_multiple_rss_sources()
+            total_saved += rss_saved
+            print(f"RSS Sources: {rss_saved} articles saved")
+        except Exception as e:
+            print(f"RSS fetch failed: {e}")
+        
+        print(f"Total news articles saved: {total_saved}")
+        return total_saved
+        
     except Exception as e:
         logging.error(f"Error in fetch_and_save_external_news: {e}")
+        return 0
+
+def fetch_multiple_rss_sources():
+    """Fetch from multiple RSS sources for continuous news flow"""
+    try:
+        import feedparser
+        
+        sources = [
+            {'url': 'https://www.hurriyet.com.tr/rss/anasayfa', 'category': 'gundem'},
+            {'url': 'https://www.milliyet.com.tr/rss/rssNew/SonDakikaRSS.xml', 'category': 'gundem'},
+            {'url': 'https://www.sabah.com.tr/rss/ekonomi.xml', 'category': 'ekonomi'},
+            {'url': 'https://www.haberturk.com/rss/spor.xml', 'category': 'spor'},
+            {'url': 'https://www.aa.com.tr/tr/rss/default?cat=guncel', 'category': 'gundem'},
+            {'url': 'https://www.ntv.com.tr/teknoloji.rss', 'category': 'teknoloji'},
+        ]
+        
+        total_saved = 0
+        
+        for source in sources:
+            try:
+                feed = feedparser.parse(source['url'])
+                items = []
+                
+                for entry in feed.entries[:5]:  # Limit to 5 per source
+                    try:
+                        # Clean and prepare content
+                        description = getattr(entry, 'description', getattr(entry, 'summary', ''))
+                        
+                        item = {
+                            'title': entry.title,
+                            'summary': description[:200] + '...' if len(description) > 200 else description,
+                            'content': description,
+                            'source_url': entry.link,
+                            'category': source['category'],
+                            'source': 'rss',
+                            'image_url': ''
+                        }
+                        
+                        if item['title'] and item['content']:
+                            items.append(item)
+                    except Exception as item_e:
+                        continue
+                
+                if items:
+                    saved = save_external_news_to_db(items)
+                    total_saved += saved
+                    
+            except Exception as source_e:
+                continue
+        
+        return total_saved
+        
+    except Exception as e:
+        print(f"Multiple RSS fetch failed: {e}")
         return 0

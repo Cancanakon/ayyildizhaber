@@ -149,7 +149,10 @@
                         <tbody>
                             {% for category in categories %}
                             {% set news_count = category.news.filter_by(status='published').count() %}
-                            {% set total_news = categories|sum(attribute='news')|selectattr('status', 'equalto', 'published')|list|length %}
+                            {% set total_published = namespace(value=0) %}
+{% for category in categories %}
+    {% set total_published.value = total_published.value + (category.news.filter_by(status='published').count() if category.news else 0) %}
+{% endfor %}
                             <tr>
                                 <td>
                                     <span style="color: {{ category.color }};">●</span>

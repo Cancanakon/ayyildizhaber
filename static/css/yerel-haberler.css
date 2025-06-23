@@ -1,0 +1,174 @@
+/* Yerel Haberler Özel Stilleri */
+
+.yerel-haberler-section {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid #bbf7d0;
+}
+
+.yerel-section-title {
+    color: #16a34a;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.yerel-section-title i {
+    color: #059669;
+}
+
+.yerel-news-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+}
+
+.yerel-news-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+    border-color: #16a34a;
+}
+
+.yerel-badge {
+    background: linear-gradient(135deg, #16a34a, #059669);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.yerel-news-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px 8px 0 0;
+}
+
+.yerel-news-image img {
+    transition: transform 0.3s ease;
+}
+
+.yerel-news-card:hover .yerel-news-image img {
+    transform: scale(1.05);
+}
+
+.yerel-news-content {
+    padding: 1.25rem;
+}
+
+.yerel-news-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+}
+
+.yerel-news-title a {
+    color: #1f2937;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.yerel-news-title a:hover {
+    color: #16a34a;
+}
+
+.yerel-news-summary {
+    color: #6b7280;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.yerel-news-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #9ca3af;
+}
+
+.yerel-news-date {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.yerel-view-all {
+    background: linear-gradient(135deg, #16a34a, #059669);
+    border: none;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.yerel-view-all:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .yerel-haberler-section {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .yerel-section-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .yerel-news-content {
+        padding: 1rem;
+    }
+}
+
+/* Navigation özel stil */
+.nav-yerel-link {
+    position: relative;
+    color: #16a34a !important;
+    font-weight: 600;
+}
+
+.nav-yerel-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 50%;
+    background: linear-gradient(135deg, #16a34a, #059669);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-yerel-link:hover::after {
+    width: 100%;
+}
+
+.nav-yerel-link:hover {
+    color: #059669 !important;
+}

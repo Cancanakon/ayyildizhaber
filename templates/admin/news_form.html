@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block head %}
-<!-- Quill Rich Text Editor (Free Alternative) -->
+<!-- Quill Rich Text Editor -->
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 <style>
@@ -354,19 +354,77 @@
 
 {% block scripts %}
 <script>
-// Initialize TinyMCE
-tinymce.init({
-    selector: '#content',
-    height: 400,
-    menubar: false,
-    plugins: [
-        'advlist autolink lists link image charmap print preview anchor',
-        'searchreplace visualblocks code fullscreen',
-        'insertdatetime media table paste code help wordcount'
-    ],
-    toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-    content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; }',
-    language: 'tr'
+// Initialize Quill Editor
+document.addEventListener('DOMContentLoaded', function() {
+    const quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'align': [] }],
+                ['blockquote', 'code-block'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['link', 'image'],
+                ['clean']
+            ]
+        },
+        placeholder: 'Haber içeriğini buraya yazın...'
+    });
+
+    // Update hidden textarea when content changes
+    quill.on('text-change', function() {
+        const content = quill.root.innerHTML;
+        document.getElementById('content').value = content;
+        
+        // Validate content
+        const contentTextarea = document.getElementById('content');
+        if (content.trim() === '<p><br></p>' || content.trim() === '' || content.trim() === '<p></p>') {
+            contentTextarea.setCustomValidity('İçerik gereklidir');
+        } else {
+            contentTextarea.setCustomValidity('');
+        }
+    });
+
+    // Set initial content if editing
+    {% if news and news.content %}
+        quill.root.innerHTML = {{ news.content|tojson }};
+        document.getElementById('content').value = quill.root.innerHTML;
+    {% endif %}
+    
+    // Form submission handler
+    const form = document.getElementById('news-form');
+    form.addEventListener('submit', function(e) {
+        // Update content before submit
+        const content = quill.root.innerHTML;
+        document.getElementById('content').value = content;
+        
+        // Validate required fields
+        const title = document.getElementById('title').value.trim();
+        const category = document.getElementById('category_id').value;
+        
+        if (!title) {
+            e.preventDefault();
+            alert('Başlık alanı zorunludur');
+            document.getElementById('title').focus();
+            return false;
+        }
+        
+        if (!category) {
+            e.preventDefault();
+            alert('Kategori seçimi zorunludur');
+            document.getElementById('category_id').focus();
+            return false;
+        }
+        
+        if (content.trim() === '<p><br></p>' || content.trim() === '' || content.trim() === '<p></p>') {
+            e.preventDefault();
+            alert('İçerik alanı zorunludur');
+            quill.focus();
+            return false;
+        }
+    });
 });
 
 // Character counters

@@ -101,6 +101,7 @@ def save_trt_news_to_db(news_items):
             
         except Exception as e:
             logging.error(f"Error saving TRT news item: {e}")
+            db.session.rollback()
             continue
     
     try:

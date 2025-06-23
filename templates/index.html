@@ -21,7 +21,7 @@
                         <div class="col-lg-4 col-md-6 mb-4 d-flex">
                             <div class="news-card featured-card fade-in w-100">
                                 {% if news.featured_image %}
-                                <img src="{{ news.featured_image }}" class="card-img-top" alt="{{ news.title }}">
+                                <img src="{{ news.featured_image }}" class="card-img-top" alt="{{ news.title }}" loading="lazy" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDQwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNjAgMTAwSDI0MFY4MEgxNjBWMTAwWiIgZmlsbD0iIzlDQTNBRiIvPgo8cGF0aCBkPSJNMTYwIDEyMEgyNDBWMTA4SDE2MFYxMjBaIiBmaWxsPSIjOUNBM0FGIi8+CjxwYXRoIGQ9Ik0xNjAgNjBIMjQwVjQ4SDE2MFY2MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+'; this.style.backgroundColor='#f8f9fa';">
                                 {% else %}
                                 <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
                                     <i class="fas fa-newspaper fa-3x text-muted"></i>
@@ -59,7 +59,7 @@
                     <div class="col-lg-6 col-md-6 mb-4 d-flex">
                         <div class="news-card slide-up w-100">
                             {% if news.featured_image %}
-                            <img src="{{ news.featured_image }}" class="card-img-top" alt="{{ news.title }}">
+                            <img src="{{ news.featured_image }}" class="card-img-top" alt="{{ news.title }}" loading="lazy" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDQwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNjAgMTAwSDI0MFY4MEgxNjBWMTAwWiIgZmlsbD0iIzlDQTNBRiIvPgo8cGF0aCBkPSJNMTYwIDEyMEgyNDBWMTA4SDE2MFYxMjBaIiBmaWxsPSIjOUNBM0FGIi8+CjxwYXRoIGQ9Ik0xNjAgNjBIMjQwVjQ4SDE2MFY2MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+'; this.style.backgroundColor='#f8f9fa';">
                             {% else %}
                             <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
                                 <i class="fas fa-newspaper fa-2x text-muted"></i>
@@ -110,7 +110,10 @@
                     {% for news in popular_news %}
                     <div class="popular-news-item">
                         {% if news.featured_image %}
-                        <img src="{{ news.featured_image }}" alt="{{ news.title }}">
+                        <img src="{{ news.featured_image }}" alt="{{ news.title }}" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div style="width: 60px; height: 60px; background: #f8f9fa; display: none; align-items: center; justify-content: center; border-radius: 5px; margin-right: 15px;">
+                            <i class="fas fa-newspaper text-muted"></i>
+                        </div>
                         {% else %}
                         <div style="width: 60px; height: 60px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border-radius: 5px; margin-right: 15px;">
                             <i class="fas fa-newspaper text-muted"></i>

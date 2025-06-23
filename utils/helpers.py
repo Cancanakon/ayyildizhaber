@@ -110,7 +110,7 @@ def get_popular_news(limit=5, days=7):
         if len(popular) < limit:
             recent = News.query.filter(
                 News.status == 'published'
-            ).order_by(News.published_at.desc()).limit(limit).all()
+            ).order_by(News.published_at.desc()).limit(limit * 2).all()
             
             # Combine and deduplicate
             popular_ids = [n.id for n in popular]

@@ -83,14 +83,28 @@ def save_external_news_to_db(news_items):
             category = Category.query.filter_by(name=category_name).first()
             
             if not category:
-                category = Category(
-                    name=category_name,
-                    slug=create_slug(category_name),
-                    description=f"{category_name} kategorisi",
-                    color='#dc2626'
-                )
-                db.session.add(category)
-                db.session.flush()  # Get the ID
+                # Check if category with this slug already exists
+                slug = create_slug(category_name)
+                existing_category = Category.query.filter_by(slug=slug).first()
+                
+                if existing_category:
+                    category = existing_category
+                else:
+                    try:
+                        category = Category(
+                            name=category_name,
+                            slug=slug,
+                            description=f"{category_name} kategorisi",
+                            color='#dc2626'
+                        )
+                        db.session.add(category)
+                        db.session.flush()  # Get the ID
+                    except Exception as e:
+                        # If category creation fails, use default category
+                        category = Category.query.filter_by(name='Gündem').first()
+                        if not category:
+                            db.session.rollback()
+                            continue
             
             # Clean content
             content = clean_html_content(item['content'])
@@ -121,6 +135,7 @@ def save_external_news_to_db(news_items):
             
         except Exception as e:
             logging.error(f"Error saving external news item: {e}")
+            db.session.rollback()
             continue
     
     try:

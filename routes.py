@@ -68,6 +68,9 @@ def news_detail(slug):
         News.status == 'published'
     ).order_by(News.published_at.desc()).limit(5).all()
     
+    # Get popular news for sidebar
+    popular_news = get_popular_news(limit=5)
+    
     # Parse images and videos
     images = json.loads(news.images) if news.images else []
     videos = json.loads(news.videos) if news.videos else []
@@ -75,6 +78,7 @@ def news_detail(slug):
     return render_template('news_detail.html',
                          news=news,
                          related_news=related_news,
+                         popular_news=popular_news,
                          images=images,
                          videos=videos)
 

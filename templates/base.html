@@ -103,7 +103,12 @@
                     {% if categories %}
                         {% for category in categories %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('main.category_news', slug=category.slug) }}">{{ category.name }}</a>
+                            <a class="nav-link {% if category.slug == 'yerel-haberler' %}nav-yerel-link{% endif %}" href="{{ url_for('main.category_news', slug=category.slug) }}">
+                                {% if category.slug == 'yerel-haberler' %}
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                {% endif %}
+                                {{ category.name }}
+                            </a>
                         </li>
                         {% endfor %}
                     {% endif %}

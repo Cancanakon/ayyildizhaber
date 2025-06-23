@@ -159,6 +159,7 @@ def news_create():
             images=json.dumps(images),
             videos=json.dumps(videos),
             admin_id=current_user.id,
+            source='manual',  # Admin panelinden eklenen haberler için
             published_at=datetime.utcnow() if status == 'published' else None
         )
         

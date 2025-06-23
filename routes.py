@@ -28,6 +28,13 @@ def index():
     categories = Category.query.filter_by(is_active=True).all()
     latest_news = News.query.filter_by(status='published').order_by(News.published_at.desc()).limit(12).all()
     
+    # Yerel haberler (sadece manuel eklenenler)
+    yerel_news = News.query.join(Category).filter(
+        Category.slug == 'yerel-haberler',
+        News.status == 'published',
+        News.source == 'manual'
+    ).order_by(News.published_at.desc()).limit(4).all()
+    
     # Get popular news
     popular_news = get_popular_news(limit=5)
     
@@ -45,6 +52,7 @@ def index():
                          breaking_news=breaking_news,
                          featured_news=featured_news,
                          latest_news=latest_news,
+                         yerel_news=yerel_news,
                          popular_news=popular_news,
                          categories=categories,
                          currency_data=currency_data,
@@ -96,10 +104,18 @@ def category_news(slug):
     page = request.args.get('page', 1, type=int)
     category = Category.query.filter_by(slug=slug, is_active=True).first_or_404()
     
-    news_query = News.query.filter_by(
-        category_id=category.id,
-        status='published'
-    ).order_by(News.published_at.desc())
+    # Yerel Haberler kategorisi için sadece manuel haberleri göster
+    if slug == 'yerel-haberler':
+        news_query = News.query.filter_by(
+            category_id=category.id,
+            status='published',
+            source='manual'  # Sadece admin panelinden eklenen haberler
+        ).order_by(News.published_at.desc())
+    else:
+        news_query = News.query.filter_by(
+            category_id=category.id,
+            status='published'
+        ).order_by(News.published_at.desc())
     
     news = news_query.paginate(
         page=page, per_page=12, error_out=False

@@ -65,6 +65,7 @@ with app.app_context():
         {'name': 'Eğitim', 'slug': 'egitim', 'description': 'Eğitim haberleri ve gelişmeleri', 'color': '#ea580c'},
         {'name': 'Kültür-Sanat', 'slug': 'kultur-sanat', 'description': 'Kültür ve sanat haberleri', 'color': '#be185d'},
         {'name': 'Dünya', 'slug': 'dunya', 'description': 'Dünya haberleri ve uluslararası gelişmeler', 'color': '#0891b2'},
+        {'name': 'Yerel Haberler', 'slug': 'yerel-haberler', 'description': 'Hatay ve çevre bölge haberleri', 'color': '#16a34a'},
     ]
     
     for cat_data in default_categories:

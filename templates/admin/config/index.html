@@ -1,0 +1,143 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Konfigürasyon Yönetimi - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-cogs me-2"></i>
+                        Konfigürasyon Yönetimi
+                    </h4>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#importModal">
+                            <i class="fas fa-upload me-1"></i>İçe Aktar
+                        </button>
+                        <a href="{{ url_for('config.export') }}" class="btn btn-outline-success">
+                            <i class="fas fa-download me-1"></i>Dışa Aktar
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for section_key, section_data in sections.items() %}
+                        <div class="col-lg-6 col-xl-4 mb-4">
+                            <div class="card h-100 config-section-card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="config-icon me-3">
+                                            <i class="{{ section_data.icon }} fa-2x text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1">{{ section_data.title }}</h5>
+                                            <small class="text-muted">{{ section_data.config|length }} ayar</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="config-preview mb-3">
+                                        {% for key, value in section_data.config.items()[:3] %}
+                                        <div class="d-flex justify-content-between small">
+                                            <span class="text-muted">{{ key }}:</span>
+                                            <span class="fw-medium">
+                                                {% if value is sameas true %}
+                                                    <span class="badge bg-success">Aktif</span>
+                                                {% elif value is sameas false %}
+                                                    <span class="badge bg-secondary">Pasif</span>
+                                                {% elif value is number %}
+                                                    {{ value }}
+                                                {% else %}
+                                                    {{ value[:20] }}{% if value|length > 20 %}...{% endif %}
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                        {% endfor %}
+                                        {% if section_data.config|length > 3 %}
+                                        <div class="text-center mt-2">
+                                            <small class="text-muted">+{{ section_data.config|length - 3 }} daha fazla</small>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="d-grid">
+                                        <a href="{{ url_for('config.section', section=section_key) }}" class="btn btn-outline-primary">
+                                            <i class="fas fa-edit me-1"></i>Düzenle
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Import Modal -->
+<div class="modal fade" id="importModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ url_for('config.import_config') }}" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title">Konfigürasyon İçe Aktar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="config_file" class="form-label">JSON Dosyası</label>
+                        <input type="file" class="form-control" id="config_file" name="config_file" accept=".json" required>
+                        <div class="form-text">Sadece JSON formatında dosyalar kabul edilir.</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="merge" name="merge" value="true" checked>
+                            <label class="form-check-label" for="merge">
+                                Mevcut ayarlarla birleştir
+                            </label>
+                            <div class="form-text">İşaretli değilse mevcut tüm ayarlar değiştirilir.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-primary">İçe Aktar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.config-section-card {
+    transition: transform 0.2s ease-in-out;
+    border: 1px solid #e3e6f0;
+}
+
+.config-section-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.config-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(78, 115, 223, 0.1);
+    border-radius: 10px;
+}
+
+.config-preview {
+    background: #f8f9fc;
+    padding: 15px;
+    border-radius: 8px;
+    max-height: 120px;
+    overflow-y: auto;
+}
+</style>
+{% endblock %}

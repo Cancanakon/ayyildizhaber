@@ -98,6 +98,10 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
+- June 23, 2025: Implemented dynamic environment configuration manager with web interface
+- June 23, 2025: Added real-time configuration updates, validation, and import/export functionality
+- June 23, 2025: Created admin config management pages with section-based organization
+- June 23, 2025: Integrated configuration manager with Flask app initialization
 - June 23, 2025: Fixed Nginx configuration error by removing invalid "http" directive from site config file
 - June 23, 2025: Moved security headers inside server block for proper Nginx syntax compliance
 - June 23, 2025: Fixed dependency conflict between lxml and trafilatura packages by using flexible version constraints

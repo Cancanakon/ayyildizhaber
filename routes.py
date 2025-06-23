@@ -141,9 +141,14 @@ def search():
 def api_currency():
     """API endpoint for currency data"""
     try:
+        from services.currency_service import get_currency_data
         data = get_currency_data()
-        return jsonify(data)
+        if data:
+            return jsonify(data)
+        else:
+            return jsonify({'error': 'Currency data not available'}), 500
     except Exception as e:
+        logging.error(f"Currency API error: {e}")
         return jsonify({'error': str(e)}), 500
 
 @main_bp.route('/api/weather')

@@ -20,8 +20,15 @@
                         {% for news in featured_news[:6] %}
                         <div class="col-lg-4 col-md-6 mb-4 d-flex">
                             <div class="news-card featured-card fade-in w-100">
-                                {% if news.featured_image and news.featured_image.startswith('http') %}
-                                <img src="{{ news.featured_image }}" class="card-img-top" alt="{{ news.title }}" loading="lazy" style="height: 200px; object-fit: cover;" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=&quot;card-img-top bg-light d-flex align-items-center justify-content-center&quot; style=&quot;height: 200px;&quot;><i class=&quot;fas fa-newspaper fa-3x text-muted&quot;></i></div>';">
+                                {% if news.featured_image and (news.featured_image.startswith('http') or news.featured_image.startswith('//')) %}
+                                <div class="image-container" style="height: 200px; overflow: hidden;">
+                                    <img src="{{ news.featured_image if news.featured_image.startswith('http') else 'https:' + news.featured_image }}" 
+                                         class="card-img-top" 
+                                         alt="{{ news.title }}" 
+                                         loading="lazy" 
+                                         style="height: 200px; width: 100%; object-fit: cover;" 
+                                         onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=&quot;card-img-top bg-light d-flex align-items-center justify-content-center&quot; style=&quot;height: 200px;&quot;><i class=&quot;fas fa-newspaper fa-3x text-muted&quot;></i></div>';">
+                                </div>
                                 {% else %}
                                 <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
                                     <i class="fas fa-newspaper fa-3x text-muted"></i>
@@ -58,8 +65,15 @@
                     {% for news in latest_news %}
                     <div class="col-lg-6 col-md-6 mb-4 d-flex">
                         <div class="news-card slide-up w-100">
-                            {% if news.featured_image and news.featured_image.startswith('http') %}
-                            <img src="{{ news.featured_image }}" class="card-img-top" alt="{{ news.title }}" loading="lazy" style="height: 200px; object-fit: cover;" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=&quot;card-img-top bg-light d-flex align-items-center justify-content-center&quot; style=&quot;height: 200px;&quot;><i class=&quot;fas fa-newspaper fa-2x text-muted&quot;></i></div>';">
+                            {% if news.featured_image and (news.featured_image.startswith('http') or news.featured_image.startswith('//')) %}
+                            <div class="image-container" style="height: 200px; overflow: hidden;">
+                                <img src="{{ news.featured_image if news.featured_image.startswith('http') else 'https:' + news.featured_image }}" 
+                                     class="card-img-top" 
+                                     alt="{{ news.title }}" 
+                                     loading="lazy" 
+                                     style="height: 200px; width: 100%; object-fit: cover;" 
+                                     onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=&quot;card-img-top bg-light d-flex align-items-center justify-content-center&quot; style=&quot;height: 200px;&quot;><i class=&quot;fas fa-newspaper fa-2x text-muted&quot;></i></div>';">
+                            </div>
                             {% else %}
                             <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
                                 <i class="fas fa-newspaper fa-2x text-muted"></i>
@@ -167,7 +181,7 @@
                     <div class="currency-item">
                         <div class="currency-symbol">{{ symbol }}</div>
                         <div class="currency-values">
-                            <div class="text-primary fw-bold">{{ "{:,}".format(data.price) }} {{ data.symbol }}</div>
+                            <div class="text-primary fw-bold">{{ "{:,}".format(data.price) if data.price else 'N/A' }} {{ data.symbol if data.symbol else '' }}</div>
                         </div>
                     </div>
                     {% endfor %}

@@ -127,20 +127,13 @@
                                     {% endif %}
                                 {% endif %}
                                 
-                                <!-- Debug: Featured image: {{ news.featured_image or 'None' }}, Final URL: {{ image_url or 'None' }} -->
-                                
-                                <div class="image-container" style="height: 200px; overflow: hidden; position: relative;" data-content-images="{% if content_images %}{{ content_images|join(',') }}{% endif %}">
-                                    {% if image_url %}
-                                    <img src="{% if image_url.startswith('http') %}{{ image_url }}{% elif image_url.startswith('//') %}https:{{ image_url }}{% else %}{{ url_for('static', filename='uploads/' + image_url) }}{% endif %}" 
-                                         class="card-img-top img-with-fallback" 
+                                <div class="image-container" style="height: 200px; overflow: hidden; position: relative;">
+                                    <img src="{{ image_url or url_for('static', filename='images/logo.png') }}" 
+                                         class="card-img-top" 
                                          alt="{{ news.title }}" 
                                          loading="lazy" 
-                                         style="height: 200px; width: 100%; object-fit: cover;"
-                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                    {% endif %}
-                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center fallback-image" style="height: 200px; {% if image_url %}display: none;{% else %}display: flex;{% endif %} position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
-                                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" style="width: 80px; height: 80px; object-fit: contain;">
-                                    </div>
+                                         style="height: 200px; width: 100%; object-fit: {% if image_url %}cover{% else %}contain{% endif %}; {% if not image_url %}padding: 20px;{% endif %}"
+                                         data-has-real-image="{{ 'true' if image_url else 'false' }}">
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title">
@@ -187,21 +180,13 @@
                                 {% endif %}
                             {% endif %}
                             
-                            <!-- Debug: Show what image URL we have -->
-                            <!-- Image URL: {{ latest_image_url or 'No image found' }} -->
-                            
-                            <div class="image-container" style="height: 200px; overflow: hidden; position: relative;" data-content-images="{% if latest_content_images %}{{ latest_content_images|join(',') }}{% endif %}">
-                                {% if latest_image_url %}
-                                <img src="{% if latest_image_url.startswith('http') %}{{ latest_image_url }}{% elif latest_image_url.startswith('//') %}https:{{ latest_image_url }}{% else %}{{ url_for('static', filename='uploads/' + latest_image_url) }}{% endif %}" 
-                                     class="card-img-top img-with-fallback" 
+                            <div class="image-container" style="height: 200px; overflow: hidden; position: relative;">
+                                <img src="{{ latest_image_url or url_for('static', filename='images/logo.png') }}" 
+                                     class="card-img-top" 
                                      alt="{{ news.title }}" 
                                      loading="lazy" 
-                                     style="height: 200px; width: 100%; object-fit: cover;"
-                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                {% endif %}
-                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center fallback-image" style="height: 200px; {% if latest_image_url %}display: none;{% else %}display: flex;{% endif %} position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
-                                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" style="width: 80px; height: 80px; object-fit: contain;">
-                                </div>
+                                     style="height: 200px; width: 100%; object-fit: {% if latest_image_url %}cover{% else %}contain{% endif %}; {% if not latest_image_url %}padding: 20px;{% endif %}"
+                                     data-has-real-image="{{ 'true' if latest_image_url else 'false' }}">
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">
@@ -261,18 +246,10 @@
                             {% endif %}
                         {% endif %}
                         
-                        <div class="image-container" data-content-images="{% if pop_content_images %}{{ pop_content_images|join(',') }}{% endif %}">
-                            {% if pop_image_url %}
-                            <img src="{% if pop_image_url.startswith('http') %}{{ pop_image_url }}{% elif pop_image_url.startswith('//') %}https:{{ pop_image_url }}{% else %}{{ url_for('static', filename='uploads/' + pop_image_url) }}{% endif %}" 
-                                 alt="{{ news.title }}" 
-                                 class="img-with-fallback"
-                                 style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px; margin-right: 15px;"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            {% endif %}
-                            <div class="fallback-image" style="width: 60px; height: 60px; background: #f8f9fa; {% if pop_image_url %}display: none;{% else %}display: flex;{% endif %} align-items: center; justify-content: center; border-radius: 5px; margin-right: 15px;">
-                                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 30px; height: 30px; object-fit: contain;">
-                            </div>
-                        </div>
+                        <img src="{{ pop_image_url or url_for('static', filename='images/logo.png') }}" 
+                             alt="{{ news.title }}" 
+                             style="width: 60px; height: 60px; object-fit: {% if pop_image_url %}cover{% else %}contain{% endif %}; border-radius: 5px; margin-right: 15px; {% if not pop_image_url %}padding: 10px; background: #f8f9fa;{% endif %}"
+                             data-has-real-image="{{ 'true' if pop_image_url else 'false' }}">
                         <div class="content">
                             <div class="title">
                                 <a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title[:60] }}{% if news.title|length > 60 %}...{% endif %}</a>

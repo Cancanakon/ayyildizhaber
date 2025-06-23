@@ -94,6 +94,10 @@ with app.app_context():
     print("Default admin user created: admin@gmail.com / admin123")
     print("Default categories created")
 
+# Register template filters
+from utils.helpers import register_template_filters
+register_template_filters(app)
+
 # Import routes
 from routes import main_bp
 from admin_routes import admin_bp

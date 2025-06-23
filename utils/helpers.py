@@ -1,5 +1,6 @@
 import re
 import unicodedata
+import time
 from werkzeug.utils import secure_filename
 from flask import current_app
 from models import News

@@ -98,29 +98,18 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
-- June 23, 2025: Fixed image display issues across all news sections (featured, popular, latest, slider)
-- June 23, 2025: Enhanced image extraction to use images from content when featured_image is missing
-- June 23, 2025: Added regex filter for extracting images from news content automatically
+- June 23, 2025: Completely removed all external news sources except TRT Haber per user request
+- June 23, 2025: Disabled all RSS feeds and external APIs (CNN Türk, Habertürk, Sözcü, etc.)
+- June 23, 2025: Cleaned database of all non-TRT news items to maintain only TRT content
+- June 23, 2025: Enhanced image extraction system for better real news image display
+- June 23, 2025: Added JavaScript-based smart image fallback system
+- June 23, 2025: Fixed template filter errors for regex-based image extraction
+- June 23, 2025: Improved news card image display to show actual news images instead of logo
 - June 23, 2025: Added news slider with 15 rotating news items on homepage
-- June 23, 2025: Implemented carousel with image fallbacks, category badges, and responsive design
-- June 23, 2025: Redesigned website layout inspired by Yeni Şafak with modern header, navigation, and card styles
-- June 23, 2025: Added top bar with date/time and social links, updated color scheme and typography
-- June 23, 2025: Completely removed all external webscraping except TRT Haber per user request
-- June 23, 2025: Disabled external news API and RSS sources (Hürriyet, Milliyet, Sabah, etc.)
-- June 23, 2025: Cleaned database of non-TRT external news items
-- June 23, 2025: Removed aa.com.tr (Anadolu Ajansı) from news sources per user request
-- June 23, 2025: Switched to TRT Haber only as external news source for better image reliability
-- June 23, 2025: Enhanced image extraction for news sources with multiple fallback methods
-- June 23, 2025: Improved homepage image display with better URL handling and fallback logic
-- June 23, 2025: Replaced TinyMCE with Quill.js (free rich text editor, no API key required)
-- June 23, 2025: Removed categories and users management from admin panel per user request
-- June 23, 2025: Comprehensive image display fix across all templates (homepage, category, search, admin, news detail)
-- June 23, 2025: Enhanced protocol-relative URL handling (// prefixed URLs)
-- June 23, 2025: Standardized logo fallback implementation across all image references
-- June 23, 2025: Added Turkish translations for gold prices (Çeyrek Altın, Yarım Altın, Tam Altın)
-- June 23, 2025: Fixed currency service to use Kapali Carsi API for accurate Turkish market data
-- June 23, 2025: Adjusted logo size to optimal 52px after user feedback iterations
-- June 23, 2025: Added official logo to website header with proper integration
+- June 23, 2025: Redesigned website layout inspired by Yeni Şafak with modern styling
+- June 23, 2025: Implemented TRT-only news fetching with enhanced image processing
+- June 23, 2025: Added intelligent image URL filtering to prefer high-quality images
+- June 23, 2025: Enhanced regex patterns for better image extraction from HTML content
 
 ## Changelog
 - June 23, 2025: Initial setup and deployment

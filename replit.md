@@ -98,6 +98,9 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
+- June 23, 2025: Fixed image display issues across all news sections (featured, popular, latest, slider)
+- June 23, 2025: Enhanced image extraction to use images from content when featured_image is missing
+- June 23, 2025: Added regex filter for extracting images from news content automatically
 - June 23, 2025: Added news slider with 15 rotating news items on homepage
 - June 23, 2025: Implemented carousel with image fallbacks, category badges, and responsive design
 - June 23, 2025: Redesigned website layout inspired by Yeni Şafak with modern header, navigation, and card styles

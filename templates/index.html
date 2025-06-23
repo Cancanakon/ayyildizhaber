@@ -23,9 +23,23 @@
                         <div class="slider-news-item">
                             <div class="row align-items-center">
                                 <div class="col-md-6">
-                                    {% if news.featured_image %}
+                                    {% set slider_image_url = news.featured_image %}
+                                    {% if not slider_image_url and news.images %}
+                                        {% set slider_images_list = news.images | from_json %}
+                                        {% if slider_images_list and slider_images_list|length > 0 %}
+                                            {% set slider_image_url = slider_images_list[0] %}
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if not slider_image_url and news.content %}
+                                        {% set slider_content_images = news.content | regex_findall('https?://[^\\s<>"]+\\.(jpg|jpeg|png|gif|webp)') %}
+                                        {% if slider_content_images %}
+                                            {% set slider_image_url = slider_content_images[0] %}
+                                        {% endif %}
+                                    {% endif %}
+                                    
+                                    {% if slider_image_url %}
                                     <div class="slider-image">
-                                        <img src="{% if news.featured_image.startswith('http') %}{{ news.featured_image }}{% elif news.featured_image.startswith('//') %}https:{{ news.featured_image }}{% else %}{{ url_for('static', filename='uploads/' + news.featured_image) }}{% endif %}" 
+                                        <img src="{% if slider_image_url.startswith('http') %}{{ slider_image_url }}{% elif slider_image_url.startswith('//') %}https:{{ slider_image_url }}{% else %}{{ url_for('static', filename='uploads/' + slider_image_url) }}{% endif %}" 
                                              alt="{{ news.title }}" 
                                              class="img-fluid"
                                              onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -99,9 +113,23 @@
                         {% for news in featured_news[:6] %}
                         <div class="col-lg-4 col-md-6 mb-4 d-flex">
                             <div class="news-card featured-card fade-in w-100">
-                                {% if news.featured_image %}
+                                {% set image_url = news.featured_image %}
+                                {% if not image_url and news.images %}
+                                    {% set images_list = news.images | from_json %}
+                                    {% if images_list and images_list|length > 0 %}
+                                        {% set image_url = images_list[0] %}
+                                    {% endif %}
+                                {% endif %}
+                                {% if not image_url and news.content %}
+                                    {% set content_images = news.content | regex_findall('https?://[^\\s<>"]+\\.(jpg|jpeg|png|gif|webp)') %}
+                                    {% if content_images %}
+                                        {% set image_url = content_images[0] %}
+                                    {% endif %}
+                                {% endif %}
+                                
+                                {% if image_url %}
                                 <div class="image-container" style="height: 200px; overflow: hidden; position: relative;">
-                                    <img src="{% if news.featured_image.startswith('http') %}{{ news.featured_image }}{% elif news.featured_image.startswith('//') %}https:{{ news.featured_image }}{% else %}{{ url_for('static', filename='uploads/' + news.featured_image) }}{% endif %}" 
+                                    <img src="{% if image_url.startswith('http') %}{{ image_url }}{% elif image_url.startswith('//') %}https:{{ image_url }}{% else %}{{ url_for('static', filename='uploads/' + image_url) }}{% endif %}" 
                                          class="card-img-top" 
                                          alt="{{ news.title }}" 
                                          loading="lazy" 
@@ -147,18 +175,35 @@
                     {% for news in latest_news %}
                     <div class="col-lg-6 col-md-6 mb-4 d-flex">
                         <div class="news-card slide-up w-100">
-                            {% if news.featured_image and (news.featured_image.startswith('http') or news.featured_image.startswith('//')) %}
-                            <div class="image-container" style="height: 200px; overflow: hidden;">
-                                <img src="{{ news.featured_image if news.featured_image.startswith('http') else 'https:' + news.featured_image }}" 
+                            {% set latest_image_url = news.featured_image %}
+                            {% if not latest_image_url and news.images %}
+                                {% set latest_images_list = news.images | from_json %}
+                                {% if latest_images_list and latest_images_list|length > 0 %}
+                                    {% set latest_image_url = latest_images_list[0] %}
+                                {% endif %}
+                            {% endif %}
+                            {% if not latest_image_url and news.content %}
+                                {% set latest_content_images = news.content | regex_findall('https?://[^\\s<>"]+\\.(jpg|jpeg|png|gif|webp)') %}
+                                {% if latest_content_images %}
+                                    {% set latest_image_url = latest_content_images[0] %}
+                                {% endif %}
+                            {% endif %}
+                            
+                            {% if latest_image_url %}
+                            <div class="image-container" style="height: 200px; overflow: hidden; position: relative;">
+                                <img src="{% if latest_image_url.startswith('http') %}{{ latest_image_url }}{% elif latest_image_url.startswith('//') %}https:{{ latest_image_url }}{% else %}{{ url_for('static', filename='uploads/' + latest_image_url) }}{% endif %}" 
                                      class="card-img-top" 
                                      alt="{{ news.title }}" 
                                      loading="lazy" 
                                      style="height: 200px; width: 100%; object-fit: cover;" 
-                                     onerror="this.src='{{ url_for('static', filename='images/logo.png') }}'; this.style.objectFit='contain'; this.style.padding='20px';">
+                                     onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px; display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+                                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" style="width: 80px; height: 80px; object-fit: contain;">
+                                </div>
                             </div>
                             {% else %}
                             <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" style="width: 60px; height: 60px; object-fit: contain;">
+                                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" style="width: 80px; height: 80px; object-fit: contain;">
                             </div>
                             {% endif %}
                             <div class="card-body">
@@ -205,8 +250,22 @@
                 <div class="section-content">
                     {% for news in popular_news %}
                     <div class="popular-news-item">
-                        {% if news.featured_image %}
-                        <img src="{% if news.featured_image.startswith('http') %}{{ news.featured_image }}{% elif news.featured_image.startswith('//') %}https:{{ news.featured_image }}{% else %}{{ url_for('static', filename='uploads/' + news.featured_image) }}{% endif %}" 
+                        {% set pop_image_url = news.featured_image %}
+                        {% if not pop_image_url and news.images %}
+                            {% set pop_images_list = news.images | from_json %}
+                            {% if pop_images_list and pop_images_list|length > 0 %}
+                                {% set pop_image_url = pop_images_list[0] %}
+                            {% endif %}
+                        {% endif %}
+                        {% if not pop_image_url and news.content %}
+                            {% set pop_content_images = news.content | regex_findall('https?://[^\\s<>"]+\\.(jpg|jpeg|png|gif|webp)') %}
+                            {% if pop_content_images %}
+                                {% set pop_image_url = pop_content_images[0] %}
+                            {% endif %}
+                        {% endif %}
+                        
+                        {% if pop_image_url %}
+                        <img src="{% if pop_image_url.startswith('http') %}{{ pop_image_url }}{% elif pop_image_url.startswith('//') %}https:{{ pop_image_url }}{% else %}{{ url_for('static', filename='uploads/' + pop_image_url) }}{% endif %}" 
                              alt="{{ news.title }}" 
                              style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px; margin-right: 15px;"
                              onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">

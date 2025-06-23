@@ -27,11 +27,11 @@
                                          alt="{{ news.title }}" 
                                          loading="lazy" 
                                          style="height: 200px; width: 100%; object-fit: cover;" 
-                                         onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=&quot;card-img-top bg-light d-flex align-items-center justify-content-center&quot; style=&quot;height: 200px;&quot;><i class=&quot;fas fa-newspaper fa-3x text-muted&quot;></i></div>';">
+                                         onerror="this.src='{{ url_for('static', filename='images/logo.png') }}'; this.style.objectFit='contain'; this.style.padding='20px';">
                                 </div>
                                 {% else %}
                                 <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                                    <i class="fas fa-newspaper fa-3x text-muted"></i>
+                                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" style="width: 80px; height: 80px; object-fit: contain;">
                                 </div>
                                 {% endif %}
                                 <div class="card-body">
@@ -72,11 +72,11 @@
                                      alt="{{ news.title }}" 
                                      loading="lazy" 
                                      style="height: 200px; width: 100%; object-fit: cover;" 
-                                     onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=&quot;card-img-top bg-light d-flex align-items-center justify-content-center&quot; style=&quot;height: 200px;&quot;><i class=&quot;fas fa-newspaper fa-2x text-muted&quot;></i></div>';">
+                                     onerror="this.src='{{ url_for('static', filename='images/logo.png') }}'; this.style.objectFit='contain'; this.style.padding='20px';">
                             </div>
                             {% else %}
                             <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                                <i class="fas fa-newspaper fa-2x text-muted"></i>
+                                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" style="width: 60px; height: 60px; object-fit: contain;">
                             </div>
                             {% endif %}
                             <div class="card-body">
@@ -148,46 +148,51 @@
             </div>
             {% endif %}
 
-            <!-- Currency Widget -->
-            {% if currency_data and currency_data.currencies %}
+            <!-- Döviz Kurları -->
             <div class="sidebar-section">
                 <div class="section-header">
-                    <i class="fas fa-coins me-2"></i>
+                    <i class="fas fa-chart-line me-2"></i>
                     Döviz Kurları
                 </div>
                 <div class="section-content">
-                    {% for symbol, rates in currency_data.currencies.items() %}
-                    <div class="currency-item">
-                        <div class="currency-symbol">{{ symbol }}/TL</div>
-                        <div class="currency-values">
-                            <div class="buy">Alış: {{ "%.2f"|format(rates.buying) }}</div>
-                            <div class="sell">Satış: {{ "%.2f"|format(rates.selling) }}</div>
+                    {% if currency_data and currency_data.currency %}
+                        {% for code, data in currency_data.currency.items() %}
+                        <div class="currency-item d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <div class="fw-bold">{{ code }}</div>
+                            <div class="text-end">
+                                <div class="text-success">{{ data.buying }} TRY</div>
+                                <small class="text-muted">Alış</small>
+                            </div>
                         </div>
-                    </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-muted text-center py-3">Döviz verileri yükleniyor...</div>
+                    {% endif %}
                 </div>
             </div>
-            {% endif %}
 
-            <!-- Crypto Currency Widget -->
-            {% if currency_data and currency_data.crypto %}
+            <!-- Kripto Para -->
             <div class="sidebar-section">
                 <div class="section-header">
                     <i class="fab fa-bitcoin me-2"></i>
                     Kripto Para
                 </div>
                 <div class="section-content">
-                    {% for symbol, data in currency_data.crypto.items() %}
-                    <div class="currency-item">
-                        <div class="currency-symbol">{{ symbol }}</div>
-                        <div class="currency-values">
-                            <div class="text-primary fw-bold">{{ "{:,}".format(data.price) if data.price else 'N/A' }} {{ data.symbol if data.symbol else '' }}</div>
+                    {% if currency_data and currency_data.crypto %}
+                        {% for code, data in currency_data.crypto.items() %}
+                        <div class="crypto-item d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <div class="fw-bold">{{ code }}</div>
+                            <div class="text-end">
+                                <div class="text-primary">{{ "{:,}".format(data.buying|int) }} TRY</div>
+                                <small class="text-muted">Alış</small>
+                            </div>
                         </div>
-                    </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-muted text-center py-3">Kripto verileri yükleniyor...</div>
+                    {% endif %}
                 </div>
             </div>
-            {% endif %}
 
             <!-- Gold Prices Widget -->
             {% if currency_data and currency_data.gold %}

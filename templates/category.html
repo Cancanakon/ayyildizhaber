@@ -34,11 +34,15 @@
                 {% for article in news.items %}
                 <div class="col-lg-6 col-md-6 mb-4 d-flex">
                     <article class="news-card slide-up w-100">
-                        {% if article.featured_image and article.featured_image.startswith('http') %}
-                        <img src="{{ article.featured_image }}" class="card-img-top" alt="{{ article.title }}" style="height: 200px; object-fit: cover;" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=&quot;card-img-top bg-light d-flex align-items-center justify-content-center&quot; style=&quot;height: 200px;&quot;><i class=&quot;fas fa-newspaper fa-2x text-muted&quot;></i></div>';">
+                        {% if article.featured_image and (article.featured_image.startswith('http') or article.featured_image.startswith('//')) %}
+                        <img src="{{ article.featured_image if article.featured_image.startswith('http') else 'https:' + article.featured_image }}" 
+                             class="card-img-top" 
+                             alt="{{ article.title }}" 
+                             style="height: 200px; object-fit: cover;" 
+                             onerror="this.src='{{ url_for('static', filename='images/logo.png') }}'; this.style.objectFit='contain'; this.style.padding='20px';">
                         {% else %}
                         <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                            <i class="fas fa-newspaper fa-2x text-muted"></i>
+                            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" style="width: 60px; height: 60px; object-fit: contain;">
                         </div>
                         {% endif %}
                         

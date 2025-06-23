@@ -98,6 +98,8 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
+- June 23, 2025: Added news slider with 15 rotating news items on homepage
+- June 23, 2025: Implemented carousel with image fallbacks, category badges, and responsive design
 - June 23, 2025: Redesigned website layout inspired by Yeni Şafak with modern header, navigation, and card styles
 - June 23, 2025: Added top bar with date/time and social links, updated color scheme and typography
 - June 23, 2025: Completely removed all external webscraping except TRT Haber per user request

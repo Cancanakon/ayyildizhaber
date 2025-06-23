@@ -98,14 +98,14 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
+- June 23, 2025: Created functional footer pages (About, Contact, Advertising, Privacy Policy, Terms of Use)
+- June 23, 2025: Implemented contact page with Hatay, İskenderun location details
+- June 23, 2025: Added comprehensive legal pages with KVKK compliance information
+- June 23, 2025: Enhanced slider category styling with softer rounded corners and transparency
 - June 23, 2025: Fixed admin profile page error by correcting SQLAlchemy relationship configuration
 - June 23, 2025: Fixed admin statistics page by implementing direct data queries instead of missing function
 - June 23, 2025: Resolved news content editor issues by replacing TinyMCE with working Quill editor
 - June 23, 2025: Fixed news publishing workflow - drafts now correctly transition to published status
-- June 23, 2025: Enhanced admin panel with real traffic statistics and user management system
-- June 23, 2025: Added comprehensive user management with add/edit/delete admin functionality
-- June 23, 2025: Implemented password change functionality and super admin authorization
-- June 23, 2025: Fixed admin user creation with proper password hashing using werkzeug.security
 - June 23, 2025: Successfully resolved all image display issues in news cards across entire website
 - June 23, 2025: Implemented simplified template logic for consistent image rendering
 - June 23, 2025: All news cards now display actual TRT news images instead of default logo

@@ -177,3 +177,24 @@ def api_prayer():
         return jsonify(data)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# Footer Pages
+@main_bp.route('/hakkimizda')
+def about():
+    return render_template('pages/about.html')
+
+@main_bp.route('/iletisim')
+def contact():
+    return render_template('pages/contact.html')
+
+@main_bp.route('/reklam')
+def advertising():
+    return render_template('pages/advertising.html')
+
+@main_bp.route('/gizlilik-politikasi')
+def privacy():
+    return render_template('pages/privacy.html')
+
+@main_bp.route('/kullanim-sartlari')
+def terms():
+    return render_template('pages/terms.html')

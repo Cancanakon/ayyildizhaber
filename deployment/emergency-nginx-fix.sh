@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Nginx configuration fix script
-# Bu script mevcut problemli Nginx konfigürasyonunu düzeltir
+# Emergency Nginx Configuration Fix
+# Bu script sunucudaki problemli Nginx konfigürasyonunu acil olarak düzeltir
 
 set -e
 
@@ -19,23 +19,17 @@ if [ "$EUID" -ne 0 ]; then
     error "Bu script root olarak çalıştırılmalıdır"
 fi
 
-log "Nginx configuration fix başlatılıyor..."
+log "Emergency Nginx configuration fix başlatılıyor..."
 
-# Mevcut problemli config'i kaldır
-log "Problemli Nginx konfigürasyonu kaldırılıyor..."
+# 1. Problemli config dosyalarını kaldır
+log "Problemli Nginx konfigürasyonları kaldırılıyor..."
 rm -f /etc/nginx/sites-enabled/ayyildizhaber
-rm -f /etc/nginx/sites-available/ayyildizhaber
+rm -f /etc/nginx/sites-available/ayyildizhaber*
+rm -f /etc/nginx/sites-enabled/default
 
-# Doğru config'i kopyala
-log "Doğru Nginx konfigürasyonu kopyalanıyor..."
-if [ -f "/opt/ayyildizhaber/deployment/nginx-site.conf" ]; then
-    cp /opt/ayyildizhaber/deployment/nginx-site.conf /etc/nginx/sites-available/ayyildizhaber
-elif [ -f "/var/www/ayyildizhaber/deployment/nginx-site.conf" ]; then
-    cp /var/www/ayyildizhaber/deployment/nginx-site.conf /etc/nginx/sites-available/ayyildizhaber
-else
-    # Create a working config directly
-    log "Creating basic Nginx configuration..."
-    cat > /etc/nginx/sites-available/ayyildizhaber << 'EOF'
+# 2. Doğru HTTP konfigürasyonunu oluştur
+log "Temel HTTP konfigürasyonu oluşturuluyor..."
+cat > /etc/nginx/sites-available/ayyildizhaber << 'EOF'
 server {
     listen 80;
     server_name 69.62.110.158 ayyildizajans.com www.ayyildizajans.com;
@@ -94,23 +88,48 @@ server {
         image/svg+xml;
 }
 EOF
-fi
 
-# Symlink oluştur
-log "Nginx site aktifleştiriliyor..."
+# 3. Site'ı aktifleştir
+log "Site aktifleştiriliyor..."
 ln -sf /etc/nginx/sites-available/ayyildizhaber /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
 
-# Nginx test
+# 4. Nginx test
 log "Nginx konfigürasyonu test ediliyor..."
-nginx -t
-
-if [ $? -eq 0 ]; then
-    log "Nginx konfigürasyonu başarılı!"
+if nginx -t; then
+    log "✓ Nginx konfigürasyonu başarılı!"
+    
+    # 5. Nginx reload
+    log "Nginx reload ediliyor..."
     systemctl reload nginx
-    log "Nginx reload edildi"
+    
+    # 6. Status kontrol
+    log "Nginx status kontrol ediliyor..."
+    systemctl status nginx --no-pager
+    
+    log "✓ Emergency Nginx fix tamamlandı!"
+    log "Site şu adreslerden erişilebilir olmalı:"
+    log "  - http://69.62.110.158"
+    log "  - http://ayyildizajans.com"
+    log "  - http://www.ayyildizajans.com"
+    
 else
     error "Nginx konfigürasyonu hala hatalı!"
 fi
 
-log "Nginx fix tamamlandı!"
+# 7. Ayyıldız Haber servis durumunu kontrol et
+log "Ayyıldız Haber servis durumu kontrol ediliyor..."
+if systemctl is-active --quiet ayyildizhaber.service; then
+    log "✓ Ayyıldız Haber servisi çalışıyor"
+else
+    log "⚠ Ayyıldız Haber servisi çalışmıyor, başlatılıyor..."
+    systemctl start ayyildizhaber.service
+    sleep 3
+    if systemctl is-active --quiet ayyildizhaber.service; then
+        log "✓ Ayyıldız Haber servisi başlatıldı"
+    else
+        log "✗ Ayyıldız Haber servisi başlatılamadı"
+        systemctl status ayyildizhaber.service --no-pager
+    fi
+fi
+
+log "Emergency fix completed!"

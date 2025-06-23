@@ -98,6 +98,9 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
+- June 23, 2025: Fixed persistent Nginx "http directive" error by removing invalid http wrapper from config files
+- June 23, 2025: Created emergency-nginx-fix.sh script for direct server configuration repair
+- June 23, 2025: Updated domain configuration for IP 69.62.110.158 and ayyildizajans.com
 - June 23, 2025: Implemented dynamic environment configuration manager with web interface
 - June 23, 2025: Added real-time configuration updates, validation, and import/export functionality
 - June 23, 2025: Created admin config management pages with section-based organization

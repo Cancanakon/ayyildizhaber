@@ -156,15 +156,7 @@ function createBackToTopButton() {
     const button = document.createElement('button');
     button.innerHTML = '<i class="fas fa-chevron-up"></i>';
     button.className = 'btn btn-primary position-fixed';
-    button.style.cssText = `
-        bottom: 20px;
-        right: 20px;
-        z-index: 1000;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        display: none;
-    `;
+    button.style.cssText = 'position: fixed; bottom: 20px; right: 20px; z-index: 1000; border-radius: 50%; width: 50px; height: 50px; display: none;';
     
     document.body.appendChild(button);
     

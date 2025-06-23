@@ -96,9 +96,27 @@ def category_news(slug):
         page=page, per_page=12, error_out=False
     )
     
+    # Get other categories
+    other_categories = Category.query.filter(
+        Category.id != category.id,
+        Category.is_active == True
+    ).all()
+    
+    # Get recent news from other categories
+    recent_news = News.query.filter(
+        News.category_id != category.id,
+        News.status == 'published'
+    ).order_by(News.published_at.desc()).limit(5).all()
+    
+    # Get popular news
+    popular_news = get_popular_news(limit=5)
+    
     return render_template('category.html',
                          category=category,
-                         news=news)
+                         news=news,
+                         other_categories=other_categories,
+                         recent_news=recent_news,
+                         popular_news=popular_news)
 
 @main_bp.route('/arama')
 def search():

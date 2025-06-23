@@ -34,15 +34,54 @@
                 {% for article in news.items %}
                 <div class="col-lg-6 col-md-6 mb-4 d-flex">
                     <article class="news-card slide-up w-100">
-                        {% if article.featured_image and (article.featured_image.startswith('http') or article.featured_image.startswith('//')) %}
-                        <img src="{{ article.featured_image if article.featured_image.startswith('http') else 'https:' + article.featured_image }}" 
-                             class="card-img-top" 
-                             alt="{{ article.title }}" 
-                             style="height: 200px; object-fit: cover;" 
-                             onerror="this.src='{{ url_for('static', filename='images/logo.png') }}'; this.style.objectFit='contain'; this.style.padding='20px';">
+                        {% set article_image_url = article.featured_image %}
+                        
+                        <!-- Try to get image from multiple sources -->
+                        {% if not article_image_url and article.images %}
+                            {% set article_images_list = article.images | from_json %}
+                            {% if article_images_list and article_images_list|length > 0 %}
+                                {% set article_image_url = article_images_list[0] %}
+                            {% endif %}
+                        {% endif %}
+                        
+                        {% if not article_image_url and article.content %}
+                            {% set article_content_images = article.content | regex_findall('https?://[^\\s<>"]+\\.(jpg|jpeg|png|gif|webp)') %}
+                            {% if article_content_images %}
+                                {% set article_image_url = article_content_images[0] %}
+                            {% endif %}
+                        {% endif %}
+                        
+                        {% if article_image_url and (article_image_url.startswith('http') or article_image_url.startswith('//')) %}
+                        <div class="news-image" style="height: 200px; overflow: hidden; position: relative;">
+                            <img src="{{ article_image_url if article_image_url.startswith('http') else 'https:' + article_image_url }}" 
+                                 class="card-img-top" 
+                                 alt="{{ article.title }}" 
+                                 style="height: 200px; width: 100%; object-fit: cover;" 
+                                 onerror="this.src='{{ url_for('static', filename='images/logo.png') }}'; this.style.objectFit='contain'; this.style.padding='20px'; this.style.background='#f8f9fa';">
+                            
+                            {% if category.slug == 'yerel-haberler' %}
+                            <span class="category-badge" style="background-color: {{ category.color }}; position: absolute; top: 10px; left: 10px; z-index: 2;">
+                                <i class="fas fa-map-marker-alt me-1"></i>{{ category.name }}
+                            </span>
+                            {% else %}
+                            <span class="category-badge" style="background-color: {{ category.color }}; position: absolute; top: 10px; left: 10px; z-index: 2;">
+                                {{ category.name }}
+                            </span>
+                            {% endif %}
+                        </div>
                         {% else %}
-                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <div class="news-image bg-light d-flex align-items-center justify-content-center" style="height: 200px; position: relative;">
                             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" style="width: 60px; height: 60px; object-fit: contain;">
+                            
+                            {% if category.slug == 'yerel-haberler' %}
+                            <span class="category-badge" style="background-color: {{ category.color }}; position: absolute; top: 10px; left: 10px; z-index: 2;">
+                                <i class="fas fa-map-marker-alt me-1"></i>{{ category.name }}
+                            </span>
+                            {% else %}
+                            <span class="category-badge" style="background-color: {{ category.color }}; position: absolute; top: 10px; left: 10px; z-index: 2;">
+                                {{ category.name }}
+                            </span>
+                            {% endif %}
                         </div>
                         {% endif %}
                         

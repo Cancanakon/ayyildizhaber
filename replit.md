@@ -98,6 +98,8 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
+- June 23, 2025: Fixed dependency conflict between lxml and trafilatura packages by using flexible version constraints
+- June 23, 2025: Updated requirements.txt and pyproject.toml to use >= for lxml and trafilatura versions
 - June 23, 2025: Fixed Yerel Haberler category image display issue by adding local file path support (/static/)
 - June 23, 2025: Updated template logic to handle both local uploads and external image URLs properly
 - June 23, 2025: Enhanced image fallback system for category pages with proper error handling
@@ -106,8 +108,6 @@ This is a comprehensive news website application built with Flask, featuring a T
 - June 23, 2025: Implemented automatic SSL certificate generation with Let's Encrypt integration
 - June 23, 2025: Created ssl-setup.sh script for one-command SSL installation with domain verification
 - June 23, 2025: Added ssl-renew.sh and ssl-status.sh for automated renewal and monitoring
-- June 23, 2025: Enhanced Nginx configuration with TLS 1.2/1.3 support and security headers
-- June 23, 2025: Implemented automatic SSL renewal with zero-downtime deployment
 
 ## Changelog
 - June 23, 2025: Initial setup and deployment

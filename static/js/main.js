@@ -11,7 +11,9 @@ document.addEventListener('DOMContentLoaded', function() {
     createBackToTopButton();
     loadFontSizePreference();
     initializeStoriesScroll();
-    initializeLivePlayer();
+    
+    // Initialize live player after a short delay to ensure DOM is ready
+    setTimeout(initializeLivePlayer, 100);
     
     // Update date/time every minute
     setInterval(updateDateTime, 60000);
@@ -485,6 +487,244 @@ window.addEventListener('error', function(e) {
     console.error('JavaScript Error:', e.error);
     // Could send error reports to server
 });
+
+// Live Player Functionality
+function initializeLivePlayer() {
+    console.log('Starting live player initialization...');
+    
+    const playerContainer = document.getElementById('live-player-container');
+    const playerToggle = document.getElementById('live-player-toggle');
+    const minimizeBtn = document.getElementById('minimize-player');
+    const closeBtn = document.getElementById('close-player');
+    const openBtn = document.getElementById('open-player');
+    const playerHeader = playerContainer ? playerContainer.querySelector('.live-player-header') : null;
+    
+    console.log('Live player elements:', {
+        playerContainer: !!playerContainer,
+        playerToggle: !!playerToggle,
+        minimizeBtn: !!minimizeBtn,
+        closeBtn: !!closeBtn,
+        openBtn: !!openBtn,
+        playerHeader: !!playerHeader
+    });
+    
+    if (!playerContainer || !playerToggle) {
+        console.log('Required live player elements not found');
+        return;
+    }
+    
+    // Check user preferences
+    const playerClosed = localStorage.getItem('livePlayerClosed') === 'true';
+    const playerMinimized = localStorage.getItem('livePlayerMinimized') === 'true';
+    
+    console.log('Player state from localStorage:', { playerClosed, playerMinimized });
+    
+    // Set initial state
+    if (!playerClosed) {
+        playerContainer.style.display = 'block';
+        playerToggle.style.display = 'none';
+        
+        if (playerMinimized) {
+            playerContainer.classList.add('minimized');
+        }
+    } else {
+        playerContainer.style.display = 'none';
+        playerToggle.style.display = 'block';
+    }
+    
+    // Drag functionality
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let playerStartX = 0;
+    let playerStartY = 0;
+    
+    if (playerHeader) {
+        playerHeader.style.cursor = 'move';
+        
+        playerHeader.addEventListener('mousedown', function(e) {
+            if (e.target.closest('.btn-player-control')) return; // Don't drag when clicking buttons
+            
+            isDragging = true;
+            dragStartX = e.clientX;
+            dragStartY = e.clientY;
+            
+            const rect = playerContainer.getBoundingClientRect();
+            playerStartX = rect.left;
+            playerStartY = rect.top;
+            
+            playerContainer.style.position = 'fixed';
+            playerContainer.style.right = 'auto';
+            playerContainer.style.bottom = 'auto';
+            playerContainer.style.left = playerStartX + 'px';
+            playerContainer.style.top = playerStartY + 'px';
+            
+            document.addEventListener('mousemove', handleDrag);
+            document.addEventListener('mouseup', stopDrag);
+            
+            e.preventDefault();
+        });
+        
+        function handleDrag(e) {
+            if (!isDragging) return;
+            
+            const deltaX = e.clientX - dragStartX;
+            const deltaY = e.clientY - dragStartY;
+            
+            let newX = playerStartX + deltaX;
+            let newY = playerStartY + deltaY;
+            
+            // Keep player within viewport
+            const maxX = window.innerWidth - playerContainer.offsetWidth;
+            const maxY = window.innerHeight - playerContainer.offsetHeight;
+            
+            newX = Math.max(0, Math.min(newX, maxX));
+            newY = Math.max(0, Math.min(newY, maxY));
+            
+            playerContainer.style.left = newX + 'px';
+            playerContainer.style.top = newY + 'px';
+        }
+        
+        function stopDrag() {
+            isDragging = false;
+            document.removeEventListener('mousemove', handleDrag);
+            document.removeEventListener('mouseup', stopDrag);
+        }
+    }
+    
+    // Minimize functionality
+    if (minimizeBtn) {
+        minimizeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('Minimize button clicked');
+            
+            playerContainer.classList.toggle('minimized');
+            const isMinimized = playerContainer.classList.contains('minimized');
+            localStorage.setItem('livePlayerMinimized', isMinimized.toString());
+            
+            // Update button icon
+            const icon = minimizeBtn.querySelector('i');
+            if (icon) {
+                icon.className = isMinimized ? 'fas fa-window-maximize' : 'fas fa-minus';
+            }
+        });
+    }
+    
+    // Close functionality
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('Close button clicked');
+            
+            playerContainer.style.display = 'none';
+            playerToggle.style.display = 'block';
+            localStorage.setItem('livePlayerClosed', 'true');
+            
+            // Reset position to default
+            playerContainer.style.position = 'fixed';
+            playerContainer.style.right = '20px';
+            playerContainer.style.bottom = '20px';
+            playerContainer.style.left = 'auto';
+            playerContainer.style.top = 'auto';
+        });
+    }
+    
+    // Open functionality
+    if (openBtn) {
+        openBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            console.log('Open button clicked');
+            
+            playerContainer.style.display = 'block';
+            playerToggle.style.display = 'none';
+            playerContainer.classList.remove('minimized');
+            localStorage.setItem('livePlayerClosed', 'false');
+            localStorage.setItem('livePlayerMinimized', 'false');
+            
+            // Update minimize button icon
+            const icon = minimizeBtn ? minimizeBtn.querySelector('i') : null;
+            if (icon) {
+                icon.className = 'fas fa-minus';
+            }
+        });
+    }
+    
+    // Auto-fade toggle button when player is closed
+    if (playerClosed && playerToggle) {
+        setTimeout(() => {
+            if (playerToggle.style.display === 'block') {
+                playerToggle.style.opacity = '0.7';
+            }
+        }, 10000);
+        
+        playerToggle.addEventListener('mouseenter', function() {
+            this.style.opacity = '1';
+        });
+        
+        playerToggle.addEventListener('mouseleave', function() {
+            this.style.opacity = '0.7';
+        });
+    }
+    
+    console.log('Live player initialization completed');
+}
+
+// Recommendation tracking functions
+function trackRecommendationClick(newsId) {
+    fetch('/api/track-interaction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            news_id: newsId,
+            interaction_type: 'click'
+        })
+    }).catch(error => console.log('Tracking error:', error));
+}
+
+function trackScrollDepth() {
+    let maxScroll = 0;
+    let newsId = null;
+    
+    const metaNewsId = document.querySelector('meta[name="news-id"]');
+    if (metaNewsId) {
+        newsId = parseInt(metaNewsId.content);
+    }
+    
+    if (!newsId) return;
+    
+    let startTime = Date.now();
+    
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = scrollTop / docHeight;
+        
+        maxScroll = Math.max(maxScroll, scrollPercent);
+    });
+    
+    window.addEventListener('beforeunload', function() {
+        const duration = Math.floor((Date.now() - startTime) / 1000);
+        
+        if (duration > 5 && maxScroll > 0.1) {
+            navigator.sendBeacon('/api/track-interaction', JSON.stringify({
+                news_id: newsId,
+                interaction_type: 'scroll',
+                duration: duration,
+                scroll_depth: maxScroll
+            }));
+        }
+    });
+}
+
+// Initialize tracking on news detail pages
+if (window.location.pathname.includes('/haber/')) {
+    trackScrollDepth();
+}
 
 // Service Worker Registration (for offline functionality)
 if ('serviceWorker' in navigator) {

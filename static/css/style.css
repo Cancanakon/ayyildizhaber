@@ -569,6 +569,7 @@ body {
     overflow: hidden;
     transition: all 0.3s ease;
     border: 2px solid var(--primary-blue);
+    user-select: none;
 }
 
 .live-player-container.minimized {
@@ -588,6 +589,8 @@ body {
     justify-content: space-between;
     font-size: 0.85rem;
     font-weight: 600;
+    cursor: move;
+    user-select: none;
 }
 
 .live-indicator {
@@ -635,6 +638,8 @@ body {
     cursor: pointer;
     transition: background 0.3s ease;
     font-size: 0.7rem;
+    position: relative;
+    z-index: 10001;
 }
 
 .btn-player-control:hover {

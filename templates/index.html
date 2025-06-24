@@ -274,11 +274,11 @@
                 <div class="section-content">
                     {% if currency_data and currency_data.currency %}
                         {% for code, data in currency_data.currency.items() %}
-                        <div class="currency-item d-flex justify-content-between align-items-center py-2 border-bottom">
-                            <div class="fw-bold">{{ code }}</div>
-                            <div class="text-end">
-                                <div class="text-success">{{ data.buying }} TRY</div>
-                                <small class="text-muted">Alış</small>
+                        <div class="currency-item">
+                            <div class="currency-symbol">{{ code }}/TRY</div>
+                            <div class="currency-values">
+                                <div class="buy">{{ data.buying }}</div>
+                                <div class="sell">{{ data.selling }}</div>
                             </div>
                         </div>
                         {% endfor %}
@@ -297,11 +297,11 @@
                 <div class="section-content">
                     {% if currency_data and currency_data.crypto %}
                         {% for code, data in currency_data.crypto.items() %}
-                        <div class="crypto-item d-flex justify-content-between align-items-center py-2 border-bottom">
-                            <div class="fw-bold">{{ code }}</div>
-                            <div class="text-end">
-                                <div class="text-primary">{{ "{:,}".format(data.buying|int) }} TRY</div>
-                                <small class="text-muted">Alış</small>
+                        <div class="currency-item">
+                            <div class="currency-symbol">{{ code }}/TRY</div>
+                            <div class="currency-values">
+                                <div class="buy">{{ "{:,}".format(data.buying|int) }} TL</div>
+                                <div class="sell">{{ "{:,}".format(data.selling|int) }} TL</div>
                             </div>
                         </div>
                         {% endfor %}

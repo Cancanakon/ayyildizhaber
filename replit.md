@@ -98,7 +98,7 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
-- June 24, 2025: Added TRT Haber live TV player with auto-start and toggle functionality
+- June 24, 2025: Added YouTube live player with auto-start and toggle functionality (https://www.youtube.com/watch?v=TNax9QRxK40)
 - June 24, 2025: Mini player shows at bottom-right, user can minimize/close/reopen
 - June 24, 2025: Player state is remembered using localStorage
 - June 24, 2025: Mobile responsive design for live player

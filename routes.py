@@ -258,3 +258,84 @@ def privacy():
 @main_bp.route('/kullanim-sartlari')
 def terms():
     return render_template('pages/terms.html')
+
+# Recommendation Engine API Endpoints
+@main_bp.route('/api/track-interaction', methods=['POST'])
+def track_interaction():
+    """API endpoint to track user interactions"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        # Get user session
+        user_session = recommendation_engine.get_or_create_session(request)
+        if not user_session:
+            return jsonify({'error': 'Could not create session'}), 500
+        
+        # Track interaction
+        success = recommendation_engine.track_interaction(
+            user_session.session_id,
+            data.get('news_id'),
+            data.get('interaction_type', 'view'),
+            data.get('duration', 0),
+            data.get('scroll_depth', 0.0)
+        )
+        
+        if success:
+            return jsonify({'status': 'success'})
+        else:
+            return jsonify({'error': 'Failed to track interaction'}), 500
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@main_bp.route('/api/recommendations')
+def get_recommendations():
+    """API endpoint to get personalized recommendations"""
+    try:
+        user_session = recommendation_engine.get_or_create_session(request)
+        if not user_session:
+            return jsonify({'recommendations': []})
+        
+        limit = int(request.args.get('limit', 5))
+        exclude_ids = request.args.getlist('exclude_ids', type=int)
+        
+        recommendations = recommendation_engine.get_recommended_news(
+            user_session.session_id,
+            limit=limit,
+            exclude_ids=exclude_ids
+        )
+        
+        # Convert to JSON format
+        rec_data = []
+        for news in recommendations:
+            rec_data.append({
+                'id': news.id,
+                'title': news.title,
+                'slug': news.slug,
+                'summary': news.summary,
+                'category': news.category.name,
+                'published_at': news.published_at.isoformat() if news.published_at else None,
+                'featured_image': news.featured_image,
+                'view_count': news.view_count
+            })
+        
+        return jsonify({'recommendations': rec_data})
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@main_bp.route('/api/user-interests')
+def get_user_interests():
+    """API endpoint to get user interests"""
+    try:
+        user_session = recommendation_engine.get_or_create_session(request)
+        if not user_session:
+            return jsonify({'interests': {}})
+        
+        interests = recommendation_engine.get_user_interests(user_session.session_id)
+        return jsonify({'interests': interests})
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

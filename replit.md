@@ -98,6 +98,11 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes
+- June 23, 2025: Enhanced design with dynamic animations, improved mobile widget layout, and professional styling
+- June 23, 2025: Added mobile-first widget system with top scroll bar for currency, weather, crypto, and prayer times
+- June 23, 2025: Implemented advanced CSS animations, scroll-triggered effects, and enhanced card hover states
+- June 23, 2025: Created comprehensive animation system with AOS library integration and custom keyframes
+- June 23, 2025: Improved template structure with richer content, better loading states, and enhanced user experience
 - June 23, 2025: Fixed persistent Nginx "http directive" error by removing invalid http wrapper from config files
 - June 23, 2025: Created emergency-nginx-fix.sh script for direct server configuration repair
 - June 23, 2025: Updated domain configuration for IP 69.62.110.158 and ayyildizajans.com

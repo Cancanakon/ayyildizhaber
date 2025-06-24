@@ -98,6 +98,7 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- June 24, 2025: Fixed navbar toggler icon color to white for better mobile visibility
 - June 24, 2025: Fixed mobile category icons issue - added proper Font Awesome icons for all categories
 - June 24, 2025: Enhanced mobile category layout with improved styling and hover effects
 - June 24, 2025: Added category-specific icons (politics, economy, sports, tech, health, culture, world, local)

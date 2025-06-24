@@ -1,10 +1,19 @@
-/* Ayyıldız Haber Ajansı - Red Theme Styles */
+/* Ayyıldız Haber Ajansı - Blue Theme Styles */
 
 :root {
-    --primary-red: #dc2626;
-    --dark-red: #991b1b;
-    --light-red: #fef2f2;
-    --accent-red: #f87171;
+    /* Blue Theme Colors */
+    --primary-blue: #1e40af;
+    --dark-blue: #1e3a8a;
+    --light-blue: #dbeafe;
+    --accent-blue: #3b82f6;
+    
+    /* Legacy red variables now pointing to blue */
+    --primary-red: #1e40af;
+    --dark-red: #1e3a8a;
+    --light-red: #dbeafe;
+    --accent-red: #3b82f6;
+    
+    /* Common colors */
     --text-dark: #1f2937;
     --text-light: #6b7280;
     --border-color: #e5e7eb;
@@ -31,7 +40,7 @@ body {
 
 /* Header Styles */
 .header-top {
-    background: var(--primary-red);
+    background: var(--primary-blue);
     color: white;
     padding: 8px 0;
     font-size: 0.9rem;
@@ -55,7 +64,7 @@ body {
 
 .main-header {
     background: white;
-    border-bottom: 3px solid var(--primary-red);
+    border-bottom: 3px solid var(--primary-blue);
     padding: 15px 0;
 }
 
@@ -66,7 +75,7 @@ body {
 }
 
 .logo h1 {
-    color: var(--primary-red);
+    color: var(--primary-blue);
     font-weight: bold;
     font-size: 2.2rem;
     margin: 0;
@@ -136,14 +145,14 @@ body {
 
 /* Breaking News Ticker */
 .breaking-news {
-    background: var(--primary-red);
+    background: var(--primary-blue);
     color: white;
     padding: 10px 0;
     overflow: hidden;
 }
 
 .breaking-news .breaking-label {
-    background: var(--dark-red);
+    background: var(--dark-blue);
     padding: 5px 15px;
     font-weight: bold;
     border-radius: 3px;
@@ -323,7 +332,7 @@ body {
 }
 
 .currency-values .sell {
-    color: #dc2626;
+    color: #1e40af;
     font-weight: 500;
 }
 
@@ -407,7 +416,7 @@ body {
 }
 
 .footer h5 {
-    color: var(--primary-red);
+    color: var(--primary-blue);
     margin-bottom: 20px;
 }
 
@@ -427,7 +436,7 @@ body {
 }
 
 .footer .footer-links a:hover {
-    color: var(--primary-red);
+    color: var(--primary-blue);
 }
 
 .footer-bottom {

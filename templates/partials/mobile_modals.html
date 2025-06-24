@@ -10,11 +10,28 @@
             </div>
             <div class="modal-body">
                 <div id="mobile-currency-content">
-                    <div class="text-center py-3">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Yükleniyor...</span>
+                    <div class="mobile-currency-tabs mb-3">
+                        <div class="btn-group w-100" role="group">
+                            <button type="button" class="btn btn-outline-primary active" onclick="showMobileCurrencyTable()">
+                                <i class="fas fa-list"></i> Liste
+                            </button>
+                            <button type="button" class="btn btn-outline-primary" onclick="showMobileCurrencyChart()">
+                                <i class="fas fa-chart-pie"></i> Grafik
+                            </button>
                         </div>
-                        <p class="mt-2 text-muted">Döviz kurları yükleniyor...</p>
+                    </div>
+                    
+                    <div id="mobile-currency-table">
+                        <div class="text-center py-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Yükleniyor...</span>
+                            </div>
+                            <p class="mt-2 text-muted">Döviz kurları yükleniyor...</p>
+                        </div>
+                    </div>
+                    
+                    <div id="mobile-currency-chart" style="display: none;">
+                        <canvas id="mobileCurrencyChart" width="100%" height="250"></canvas>
                     </div>
                 </div>
             </div>

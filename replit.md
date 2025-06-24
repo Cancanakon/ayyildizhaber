@@ -98,6 +98,8 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- June 24, 2025: Changed color scheme from red to subtle closed blue throughout the system
+- June 24, 2025: Updated all UI elements, buttons, headers, and accents to use blue theme
 - June 24, 2025: Added Instagram stories-style featured news section at top of homepage
 - June 24, 2025: Implemented horizontal scrollable story cards with category badges and hover effects
 - June 24, 2025: Created responsive design for both desktop and mobile story viewing

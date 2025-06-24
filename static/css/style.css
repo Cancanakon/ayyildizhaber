@@ -80,7 +80,7 @@ body {
 
 /* Navigation */
 .main-nav {
-    background: var(--dark-red);
+    background: var(--dark-blue);
     padding: 0;
 }
 
@@ -94,7 +94,7 @@ body {
 
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-link.active {
-    background-color: var(--primary-red);
+    background-color: var(--primary-blue);
     color: white !important;
 }
 
@@ -128,7 +128,7 @@ body {
 
 .search-form .btn {
     border-radius: 0 20px 20px 0;
-    background: var(--primary-red);
+    background: var(--primary-blue);
     border: none;
     color: white;
     padding: 8px 15px;
@@ -209,7 +209,7 @@ body {
 }
 
 .news-card .card-title a:hover {
-    color: var(--primary-red);
+    color: var(--primary-blue);
 }
 
 .news-card .card-text {
@@ -330,14 +330,14 @@ body {
 /* Weather Widget */
 .weather-item-widget .weather-icon {
     font-size: 1.5rem;
-    color: var(--primary-red);
+    color: var(--primary-blue);
     margin-right: 10px;
 }
 
 .weather-temp {
     font-size: 1.2rem;
     font-weight: bold;
-    color: var(--primary-red);
+    color: var(--primary-blue);
 }
 
 /* Prayer Times Widget */
@@ -347,7 +347,7 @@ body {
 
 .prayer-item .prayer-time {
     font-weight: bold;
-    color: var(--primary-red);
+    color: var(--primary-blue);
 }
 
 /* Popular News */
@@ -390,7 +390,7 @@ body {
 }
 
 .popular-news-item .title a:hover {
-    color: var(--primary-red);
+    color: var(--primary-blue);
 }
 
 .popular-news-item .meta {

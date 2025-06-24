@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     createBackToTopButton();
     loadFontSizePreference();
     initializeStoriesScroll();
+    initializeLivePlayer();
     
     // Update date/time every minute
     setInterval(updateDateTime, 60000);

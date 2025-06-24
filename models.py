@@ -103,3 +103,45 @@ class SystemSettings(db.Model):
     value = db.Column(db.Text)
     description = db.Column(db.Text)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class UserSession(db.Model):
+    __tablename__ = 'user_sessions'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    session_id = db.Column(db.String(64), unique=True, nullable=False)
+    ip_address = db.Column(db.String(45))
+    user_agent = db.Column(db.String(500))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    last_activity = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationship with user interactions
+    interactions = db.relationship('UserInteraction', backref='session', lazy='dynamic')
+
+class UserInteraction(db.Model):
+    __tablename__ = 'user_interactions'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    session_id = db.Column(db.String(64), db.ForeignKey('user_sessions.session_id'), nullable=False)
+    news_id = db.Column(db.Integer, db.ForeignKey('news.id'), nullable=False)
+    interaction_type = db.Column(db.String(20), nullable=False)  # 'view', 'click', 'scroll', 'share'
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
+    duration = db.Column(db.Integer, default=0)  # seconds spent reading
+    scroll_depth = db.Column(db.Float, default=0.0)  # percentage of article scrolled
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    news = db.relationship('News', backref='interactions')
+    category = db.relationship('Category', backref='interactions')
+
+class UserPreference(db.Model):
+    __tablename__ = 'user_preferences'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    session_id = db.Column(db.String(64), db.ForeignKey('user_sessions.session_id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
+    interest_score = db.Column(db.Float, default=0.0)  # 0.0 to 1.0
+    last_updated = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    session = db.relationship('UserSession', backref='preferences')
+    category = db.relationship('Category', backref='user_preferences')

@@ -4,6 +4,7 @@ from app import db
 from services.currency_service import get_currency_data
 from services.weather_service import get_weather_data
 from services.prayer_service import get_prayer_times
+from services.recommendation_engine import recommendation_engine
 from utils.helpers import create_slug, get_popular_news
 from datetime import datetime
 import json
@@ -64,6 +65,7 @@ def index():
                          latest_news=latest_news,
                          yerel_news=yerel_news,
                          popular_news=popular_news,
+                         recommended_news=recommended_news,
                          categories=categories,
                          currency_data=currency_data,
                          weather_data=weather_data,
@@ -87,6 +89,15 @@ def news_detail(slug):
         view = NewsView(news_id=news.id, ip_address=ip_address, user_agent=user_agent)
         db.session.add(view)
         news.increment_view_count()
+        
+        # Track interaction for recommendation engine
+        user_session = recommendation_engine.get_or_create_session(request)
+        if user_session:
+            recommendation_engine.track_interaction(
+                user_session.session_id, 
+                news.id, 
+                'view'
+            )
     
     # Get related news
     related_news = News.query.filter(
@@ -102,10 +113,21 @@ def news_detail(slug):
     images = json.loads(news.images) if news.images else []
     videos = json.loads(news.videos) if news.videos else []
     
+    # Get personalized recommendations for this user
+    user_session = recommendation_engine.get_or_create_session(request)
+    recommended_news = []
+    if user_session:
+        recommended_news = recommendation_engine.get_recommended_news(
+            user_session.session_id,
+            limit=4,
+            exclude_ids=[news.id] + [r.id for r in related_news]
+        )
+    
     return render_template('news_detail.html',
                          news=news,
                          related_news=related_news,
                          popular_news=popular_news,
+                         recommended_news=recommended_news,
                          images=images,
                          videos=videos)
 

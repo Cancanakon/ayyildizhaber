@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 
 {% block title %}{{ news.title }} - Ayyıldız Haber Ajansı{% endblock %}
+
+{% block head %}
+<meta name="news-id" content="{{ news.id }}">
+{% endblock %}
 {% block description %}{{ news.summary[:160] if news.summary else news.content[:160] }}{% endblock %}
 
 {% block og_title %}{{ news.title }}{% endblock %}

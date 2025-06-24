@@ -98,6 +98,11 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- June 24, 2025: Implemented personalized news recommendation engine with user behavior tracking
+- June 24, 2025: Added "Size Özel Haberler" section with AI-powered recommendations
+- June 24, 2025: User interaction tracking (views, clicks, scroll depth, reading time)
+- June 24, 2025: Machine learning-based interest scoring and category preferences
+- June 24, 2025: Real-time recommendation API endpoints
 - June 24, 2025: Added YouTube live player with auto-start and toggle functionality (https://www.youtube.com/watch?v=TNax9QRxK40)
 - June 24, 2025: Mini player shows at bottom-right, user can minimize/close/reopen
 - June 24, 2025: Player state is remembered using localStorage

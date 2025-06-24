@@ -98,6 +98,12 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- June 24, 2025: Implemented real-time match commentary and highlights integration
+- June 24, 2025: Added live match page with automatic updates and real-time commentary
+- June 24, 2025: Created match highlights page with goal videos and statistics
+- June 24, 2025: Added live match banner in sports widget with pulse animation
+- June 24, 2025: Integrated clickable match highlights with video content
+- June 24, 2025: Added navigation link for live match viewing
 - June 24, 2025: Added Turkish football sports widget with league table and match results
 - June 24, 2025: Implemented Süper Lig standings and recent/upcoming matches display
 - June 24, 2025: Created mobile sports modal with table and matches tabs

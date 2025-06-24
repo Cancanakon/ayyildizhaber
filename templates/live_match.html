@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+
+{% block title %}Canlı Maç - {{ live_match.home_team }} vs {{ live_match.away_team }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Live Match Header -->
+    <div class="live-match-header">
+        <div class="live-indicator">
+            <span class="live-dot"></span>
+            CANLI
+        </div>
+        <h2>{{ live_match.competition }}</h2>
+        <p class="text-muted">{{ live_match.stadium }} - {{ live_match.date }}</p>
+    </div>
+
+    <!-- Match Score Board -->
+    <div class="match-scoreboard">
+        <div class="team home-team">
+            <div class="team-logo">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>{{ live_match.home_team }}</h3>
+            <div class="score">{{ live_match.home_score }}</div>
+        </div>
+        
+        <div class="match-info">
+            <div class="time">{{ live_match.minute }}'</div>
+            <div class="vs">VS</div>
+            <div class="status">{{ live_match.status|upper }}</div>
+        </div>
+        
+        <div class="team away-team">
+            <div class="team-logo">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>{{ live_match.away_team }}</h3>
+            <div class="score">{{ live_match.away_score }}</div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Live Commentary -->
+        <div class="col-lg-8">
+            <div class="live-commentary-widget">
+                <div class="widget-header">
+                    <h5><i class="fas fa-microphone me-2"></i>Canlı Anlatım</h5>
+                    <button class="btn btn-sm btn-outline-primary" onclick="toggleAutoUpdate()">
+                        <i class="fas fa-sync" id="auto-update-icon"></i>
+                        Otomatik Güncelleme
+                    </button>
+                </div>
+                <div class="commentary-timeline" id="commentary-timeline">
+                    {% for comment in live_match.commentary %}
+                    <div class="commentary-item {{ comment.type }}">
+                        <div class="minute-badge">{{ comment.minute }}'</div>
+                        <div class="comment-text">{{ comment.event }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Match Stats & Key Events -->
+        <div class="col-lg-4">
+            <!-- Key Events -->
+            <div class="widget key-events-widget mb-4">
+                <div class="widget-header">
+                    <h5><i class="fas fa-star me-2"></i>Önemli Olaylar</h5>
+                </div>
+                <div class="key-events-list">
+                    {% for event in live_match.key_events %}
+                    <div class="key-event {{ event.type }}">
+                        <div class="event-minute">{{ event.minute }}'</div>
+                        <div class="event-icon">
+                            {% if event.type == 'goal' %}
+                                <i class="fas fa-futbol"></i>
+                            {% elif event.type == 'card' %}
+                                <i class="fas fa-square"></i>
+                            {% else %}
+                                <i class="fas fa-circle"></i>
+                            {% endif %}
+                        </div>
+                        <div class="event-details">
+                            <strong>{{ event.player }}</strong> ({{ event.team }})
+                            <div class="event-desc">{{ event.description }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Match Progress -->
+            <div class="widget match-progress-widget">
+                <div class="widget-header">
+                    <h5><i class="fas fa-clock me-2"></i>Maç Durumu</h5>
+                </div>
+                <div class="match-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ (live_match.minute / 90 * 100)|round }}%"></div>
+                    </div>
+                    <div class="progress-text">
+                        {{ live_match.minute }} / 90 dakika
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.live-match-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.live-indicator {
+    display: inline-flex;
+    align-items: center;
+    background: #dc2626;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.match-scoreboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    padding: 30px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.team {
+    text-align: center;
+    flex: 1;
+}
+
+.team-logo {
+    font-size: 3rem;
+    color: var(--primary-red);
+    margin-bottom: 10px;
+}
+
+.team h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.score {
+    font-size: 4rem;
+    font-weight: bold;
+    color: var(--primary-red);
+}
+
+.match-info {
+    text-align: center;
+    margin: 0 40px;
+}
+
+.time {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-red);
+}
+
+.vs {
+    font-size: 1.2rem;
+    color: #6b7280;
+    margin: 10px 0;
+}
+
+.status {
+    background: #10b981;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+}
+
+.live-commentary-widget {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.commentary-timeline {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.commentary-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.commentary-item.goal {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+}
+
+.commentary-item.warning {
+    background: #fed7d7;
+    border-left: 4px solid #f56565;
+}
+
+.commentary-item.info {
+    background: #e0f2fe;
+    border-left: 4px solid #0284c7;
+}
+
+.minute-badge {
+    background: var(--primary-red);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin-right: 12px;
+    min-width: 35px;
+    text-align: center;
+}
+
+.comment-text {
+    flex: 1;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.key-event {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.key-event:last-child {
+    border-bottom: none;
+}
+
+.event-minute {
+    background: var(--primary-red);
+    color: white;
+    padding: 3px 6px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-right: 10px;
+    min-width: 30px;
+    text-align: center;
+}
+
+.event-icon {
+    margin-right: 10px;
+    color: var(--primary-red);
+}
+
+.event-details {
+    flex: 1;
+}
+
+.event-desc {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+.match-progress {
+    padding: 20px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #059669);
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    text-align: center;
+    font-weight: bold;
+    color: var(--primary-red);
+}
+</style>
+
+<script>
+let autoUpdate = true;
+
+function toggleAutoUpdate() {
+    autoUpdate = !autoUpdate;
+    const icon = document.getElementById('auto-update-icon');
+    if (autoUpdate) {
+        icon.classList.remove('fa-pause');
+        icon.classList.add('fa-sync');
+        startAutoUpdate();
+    } else {
+        icon.classList.remove('fa-sync');
+        icon.classList.add('fa-pause');
+        stopAutoUpdate();
+    }
+}
+
+let updateInterval;
+
+function startAutoUpdate() {
+    updateInterval = setInterval(updateMatchData, 30000); // Update every 30 seconds
+}
+
+function stopAutoUpdate() {
+    if (updateInterval) {
+        clearInterval(updateInterval);
+    }
+}
+
+function updateMatchData() {
+    if (!autoUpdate) return;
+    
+    // Simulate live updates
+    fetch('/api/live-match-update')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update commentary
+                updateCommentary(data.new_comments);
+                // Update score if changed
+                updateScore(data.score);
+                // Update minute
+                updateMinute(data.minute);
+            }
+        })
+        .catch(error => console.error('Error updating match:', error));
+}
+
+function updateCommentary(newComments) {
+    const timeline = document.getElementById('commentary-timeline');
+    newComments.forEach(comment => {
+        const commentDiv = document.createElement('div');
+        commentDiv.className = `commentary-item ${comment.type}`;
+        commentDiv.innerHTML = `
+            <div class="minute-badge">${comment.minute}'</div>
+            <div class="comment-text">${comment.event}</div>
+        `;
+        timeline.insertBefore(commentDiv, timeline.firstChild);
+    });
+}
+
+// Start auto-update when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    if (autoUpdate) {
+        startAutoUpdate();
+    }
+});
+</script>
+{% endblock %}

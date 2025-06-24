@@ -452,6 +452,97 @@ body {
     padding: 6px 12px;
 }
 
+/* Live Match Features */
+.live-match-banner {
+    background: linear-gradient(135deg, #dc2626, #991b1b);
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.live-match-banner:hover {
+    border-color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
+}
+
+.live-indicator {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.live-dot {
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    margin-right: 6px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.live-match-info .teams {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 3px;
+}
+
+.live-score {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.live-minute {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.match-item.clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.match-item.clickable:hover {
+    background-color: rgba(220, 38, 38, 0.05);
+    transform: translateX(5px);
+}
+
+.highlights-badge {
+    background: #10b981;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    margin-left: 8px;
+}
+
+/* Mobile Live Match Enhancements */
+@media (max-width: 768px) {
+    .live-match-banner {
+        padding: 12px;
+    }
+    
+    .live-match-info .teams {
+        font-size: 0.85rem;
+    }
+    
+    .live-score {
+        font-size: 1rem;
+    }
+}
+
 /* Popular News */
 .popular-news-item {
     display: flex;

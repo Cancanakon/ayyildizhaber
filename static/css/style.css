@@ -493,6 +493,181 @@ body {
     margin-bottom: 20px;
 }
 
+/* Live TV Player */
+.live-player-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 320px;
+    height: 240px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    z-index: 9999;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 2px solid var(--primary-blue);
+}
+
+.live-player-container.minimized {
+    height: 50px;
+}
+
+.live-player-container.minimized .live-player-content {
+    display: none;
+}
+
+.live-player-header {
+    background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+    color: white;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.live-indicator .fa-circle {
+    font-size: 0.7rem;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.live-text {
+    font-size: 0.7rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.channel-name {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.player-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.btn-player-control {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-size: 0.7rem;
+}
+
+.btn-player-control:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.live-player-content {
+    width: 100%;
+    height: calc(100% - 34px);
+    position: relative;
+}
+
+.live-player-content iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.live-player-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9998;
+}
+
+.btn-live-toggle {
+    background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(30, 64, 175, 0.4);
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.btn-live-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(30, 64, 175, 0.5);
+}
+
+.btn-live-toggle i {
+    font-size: 0.9rem;
+}
+
+/* Mobile responsiveness for live player */
+@media (max-width: 768px) {
+    .live-player-container {
+        width: 280px;
+        height: 200px;
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .btn-live-toggle {
+        padding: 10px 14px;
+        font-size: 0.8rem;
+    }
+    
+    .live-player-header {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .channel-name {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .live-player-container {
+        width: 250px;
+        height: 180px;
+        bottom: 10px;
+        right: 10px;
+    }
+    
+    .btn-live-toggle span {
+        display: none;
+    }
+    
+    .btn-live-toggle {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        padding: 0;
+        justify-content: center;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .logo h1 {

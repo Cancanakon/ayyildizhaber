@@ -5,43 +5,6 @@
 
 {% block content %}
 
-    <!-- Instagram Stories Style Featured News -->
-    {% if featured_news %}
-    <div class="featured-stories-container">
-        <div class="container">
-            <div class="stories-header">
-                <h6><i class="fas fa-star me-2"></i>Öne Çıkan Haberler</h6>
-            </div>
-            <div class="stories-scroll-container">
-                <div class="stories-wrapper">
-                    {% for news in featured_news %}
-                    <div class="story-item" onclick="window.location.href='{{ url_for('main.news_detail', slug=news.slug) }}'">
-                        <div class="story-image-container">
-                            {% if news.featured_image %}
-                                <img src="{{ news.featured_image }}" alt="{{ news.title }}" class="story-image">
-                            {% else %}
-                                <div class="story-placeholder">
-                                    <i class="fas fa-newspaper"></i>
-                                </div>
-                            {% endif %}
-                            <div class="story-gradient"></div>
-                            <div class="story-category">{{ news.category.name }}</div>
-                        </div>
-                        <div class="story-content">
-                            <h6 class="story-title">{{ news.title[:50] }}{% if news.title|length > 50 %}...{% endif %}</h6>
-                            <div class="story-meta">
-                                <span class="story-time">{{ news.published_at.strftime('%H:%M') if news.published_at }}</span>
-                                <span class="story-views"><i class="fas fa-eye"></i> {{ news.view_count }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
     <!-- News Slider -->
     {% if slider_news %}
     <div class="news-slider-section">
@@ -436,85 +399,6 @@
                         <span class="prayer-time">{{ istanbul_prayer.isha }}</span>
                     </div>
                     {% endif %}
-                </div>
-            </div>
-            {% endif %}
-
-            <!-- Sports Widget -->
-            {% if sports_data and sports_data.turkish_football %}
-            <div class="sidebar-section">
-                <div class="section-header">
-                    <i class="fas fa-futbol me-2"></i>
-                    Türk Futbolu
-                </div>
-                <div class="section-content">
-                    <div class="sports-tabs">
-                        <div class="btn-group btn-group-sm w-100 mb-3" role="group">
-                            <button type="button" class="btn btn-outline-primary active" onclick="showSportsTable()">
-                                <i class="fas fa-table"></i> Puan
-                            </button>
-                            <button type="button" class="btn btn-outline-primary" onclick="showSportsMatches()">
-                                <i class="fas fa-calendar"></i> Maçlar
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- League Table -->
-                    <div id="sports-table-view">
-                        <div class="league-table">
-                            {% for team in sports_data.turkish_football.standings[:5] %}
-                            <div class="team-row">
-                                <div class="team-position">{{ team.position }}</div>
-                                <div class="team-info">
-                                    <span class="team-name">{{ team.name }}</span>
-                                    <span class="team-stats">{{ team.played }}M {{ team.points }}P</span>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    
-                    <!-- Matches -->
-                    <div id="sports-matches-view" style="display: none;">
-                        {% if sports_data.turkish_football.live_match %}
-                        <div class="live-match-banner" onclick="window.location.href='{{ url_for('main.live_match') }}'">
-                            <div class="live-indicator">
-                                <span class="live-dot"></span>
-                                CANLI
-                            </div>
-                            <div class="live-match-info">
-                                <div class="teams">{{ sports_data.turkish_football.live_match.home_team }} vs {{ sports_data.turkish_football.live_match.away_team }}</div>
-                                <div class="live-score">{{ sports_data.turkish_football.live_match.home_score }}-{{ sports_data.turkish_football.live_match.away_score }}</div>
-                                <div class="live-minute">{{ sports_data.turkish_football.live_match.minute }}'</div>
-                            </div>
-                        </div>
-                        {% endif %}
-                        
-                        <div class="matches-list">
-                            {% for match in sports_data.turkish_football.recent_matches %}
-                            <div class="match-item {% if match.get('highlights') %}clickable{% endif %}" 
-                                 {% if match.get('highlights') and match.get('id') %}onclick="window.location.href='{{ url_for('main.match_highlights', match_id=match.id) }}'"{% endif %}>
-                                <div class="match-teams">
-                                    <span class="home-team">{{ match.home_team }}</span>
-                                    <span class="match-score">
-                                        {% if match.status == 'finished' %}
-                                            {{ match.score }}
-                                        {% else %}
-                                            {{ match.time }}
-                                        {% endif %}
-                                    </span>
-                                    <span class="away-team">{{ match.away_team }}</span>
-                                </div>
-                                <div class="match-date">
-                                    {{ match.date }}
-                                    {% if match.get('highlights') %}
-                                        <span class="highlights-badge"><i class="fas fa-video"></i></span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
                 </div>
             </div>
             {% endif %}

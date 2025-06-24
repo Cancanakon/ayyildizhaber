@@ -44,9 +44,10 @@ def index():
         currency_data = get_currency_data()
         weather_data = get_weather_data()
         prayer_data = get_prayer_times()
+        sports_data = get_sports_data()
     except Exception as e:
         print(f"Error fetching external data: {e}")
-        currency_data = weather_data = prayer_data = None
+        currency_data = weather_data = prayer_data = sports_data = None
     
     return render_template('index.html',
                          slider_news=slider_news,
@@ -58,7 +59,8 @@ def index():
                          categories=categories,
                          currency_data=currency_data,
                          weather_data=weather_data,
-                         prayer_data=prayer_data)
+                         prayer_data=prayer_data,
+                         sports_data=sports_data)
 
 @main_bp.route('/haber/<slug>')
 def news_detail(slug):
@@ -215,3 +217,79 @@ def privacy():
 @main_bp.route('/kullanim-sartlari')
 def terms():
     return render_template('pages/terms.html')
+
+@main_bp.route('/api/sports')
+def api_sports():
+    """API endpoint for sports data"""
+    try:
+        sports_data = get_sports_data()
+        if sports_data:
+            return jsonify({
+                'success': True,
+                'data': sports_data
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': 'Sports data not available'
+            }), 500
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@main_bp.route('/live-match')
+def live_match():
+    """Live match page with commentary"""
+    sports_data = get_sports_data()
+    if sports_data and sports_data.get('turkish_football', {}).get('live_match'):
+        live_match = sports_data['turkish_football']['live_match']
+        return render_template('live_match.html', live_match=live_match)
+    else:
+        flash('Şu anda canlı maç bulunmuyor.', 'info')
+        return redirect(url_for('main.index'))
+
+@main_bp.route('/api/live-match-update')
+def api_live_match_update():
+    """API endpoint for live match updates"""
+    try:
+        import random
+        
+        sample_comments = [
+            {"minute": 79, "event": "Oyun durdu, ofsayt.", "type": "info"},
+            {"minute": 80, "event": "Köşe vuruşu Galatasaray lehine.", "type": "info"},
+            {"minute": 81, "event": "Güzel bir orta ama gol olmadı.", "type": "info"},
+        ]
+        
+        new_comments = [random.choice(sample_comments)] if random.random() > 0.7 else []
+        
+        return jsonify({
+            'success': True,
+            'new_comments': new_comments,
+            'minute': random.randint(78, 85),
+            'score': {'home': 1, 'away': 1}
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@main_bp.route('/match-highlights/<match_id>')
+def match_highlights(match_id):
+    """Match highlights page"""
+    sports_data = get_sports_data()
+    if sports_data and sports_data.get('turkish_football', {}).get('recent_matches'):
+        match = None
+        for m in sports_data['turkish_football']['recent_matches']:
+            if m.get('id') == match_id:
+                match = m
+                break
+        
+        if match:
+            return render_template('match_highlights.html', match=match)
+    
+    flash('Maç bulunamadı.', 'error')
+    return redirect(url_for('main.index'))

@@ -10,10 +10,113 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeImageFallback();
     createBackToTopButton();
     loadFontSizePreference();
+    initializeStoriesScroll();
     
     // Update date/time every minute
     setInterval(updateDateTime, 60000);
 });
+
+// Initialize Stories Scroll
+function initializeStoriesScroll() {
+    const storiesWrapper = document.querySelector('.stories-wrapper');
+    if (!storiesWrapper) return;
+    
+    // Add scroll navigation for desktop
+    if (window.innerWidth > 768) {
+        createStoriesNavigation();
+    }
+    
+    // Add touch scroll for mobile
+    let isScrolling = false;
+    let scrollX = 0;
+    let startX = 0;
+    
+    storiesWrapper.addEventListener('touchstart', (e) => {
+        isScrolling = true;
+        startX = e.touches[0].clientX - storiesWrapper.scrollLeft;
+    });
+    
+    storiesWrapper.addEventListener('touchmove', (e) => {
+        if (!isScrolling) return;
+        e.preventDefault();
+        scrollX = e.touches[0].clientX - startX;
+        storiesWrapper.scrollLeft = scrollX;
+    });
+    
+    storiesWrapper.addEventListener('touchend', () => {
+        isScrolling = false;
+    });
+}
+
+function createStoriesNavigation() {
+    const container = document.querySelector('.stories-scroll-container');
+    const wrapper = document.querySelector('.stories-wrapper');
+    
+    if (!container || !wrapper) return;
+    
+    // Create navigation buttons
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'stories-nav-btn stories-nav-prev';
+    prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+    prevBtn.style.cssText = `
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: white;
+        border: 2px solid var(--primary-red);
+        color: var(--primary-red);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        transition: all 0.3s ease;
+    `;
+    
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'stories-nav-btn stories-nav-next';
+    nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    nextBtn.style.cssText = prevBtn.style.cssText.replace('left: 10px', 'right: 10px');
+    
+    // Add hover effects
+    [prevBtn, nextBtn].forEach(btn => {
+        btn.addEventListener('mouseenter', () => {
+            btn.style.background = 'var(--primary-red)';
+            btn.style.color = 'white';
+        });
+        btn.addEventListener('mouseleave', () => {
+            btn.style.background = 'white';
+            btn.style.color = 'var(--primary-red)';
+        });
+    });
+    
+    // Add click handlers
+    prevBtn.addEventListener('click', () => {
+        wrapper.scrollBy({ left: -300, behavior: 'smooth' });
+    });
+    
+    nextBtn.addEventListener('click', () => {
+        wrapper.scrollBy({ left: 300, behavior: 'smooth' });
+    });
+    
+    container.appendChild(prevBtn);
+    container.appendChild(nextBtn);
+    
+    // Update button visibility based on scroll position
+    const updateNavButtons = () => {
+        const maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
+        prevBtn.style.opacity = wrapper.scrollLeft <= 0 ? '0.5' : '1';
+        nextBtn.style.opacity = wrapper.scrollLeft >= maxScroll ? '0.5' : '1';
+    };
+    
+    wrapper.addEventListener('scroll', updateNavButtons);
+    updateNavButtons();
+}
 
 // Breaking News Ticker
 function initializeBreakingNews() {

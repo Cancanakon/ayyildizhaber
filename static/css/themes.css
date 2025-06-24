@@ -178,37 +178,51 @@ body {
 /* Theme Switcher Styles */
 .theme-switcher {
     position: fixed;
-    top: 50%;
+    top: 20%;
     right: 20px;
-    transform: translateY(-50%);
     z-index: 1000;
-    background: var(--background-primary);
-    border: 2px solid var(--border-color);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    background: var(--primary-color);
+    color: white;
+    border: 3px solid rgba(255,255,255,0.9);
+    border-radius: 15px;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    animation: themeButtonPulse 2s infinite;
 }
 
 .theme-switcher:hover {
-    transform: translateY(-50%) scale(1.1);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    border-color: var(--primary-color);
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    border-color: rgba(255,255,255,1);
 }
 
 .theme-switcher i {
-    font-size: 1.2rem;
-    color: var(--primary-color);
+    font-size: 1.4rem;
+    color: white;
     transition: transform 0.3s ease;
 }
 
 .theme-switcher:hover i {
     transform: rotate(180deg);
+}
+
+/* Pulse animation for theme switcher */
+@keyframes themeButtonPulse {
+    0% {
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3), 0 0 0 0 var(--primary-color);
+    }
+    70% {
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3), 0 0 0 10px rgba(220, 38, 38, 0);
+    }
+    100% {
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3), 0 0 0 0 rgba(220, 38, 38, 0);
+    }
 }
 
 /* Theme Selection Modal */
@@ -271,12 +285,44 @@ body {
 @media (max-width: 768px) {
     .theme-switcher {
         right: 15px;
-        width: 45px;
-        height: 45px;
+        width: 55px;
+        height: 55px;
+        top: 15%;
     }
     
     .theme-switcher i {
-        font-size: 1rem;
+        font-size: 1.2rem;
+    }
+}
+
+/* Theme switcher visibility enhancement */
+.theme-switcher::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 20px;
+    height: 20px;
+    background: #ff6b6b;
+    border-radius: 50%;
+    border: 2px solid white;
+    font-size: 0.7rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    animation: themeBadgeAnimation 3s infinite;
+}
+
+@keyframes themeBadgeAnimation {
+    0%, 50%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    25%, 75% {
+        transform: scale(1.2);
+        opacity: 0.8;
     }
 }
 

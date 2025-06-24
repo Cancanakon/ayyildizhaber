@@ -4,6 +4,71 @@
 {% block description %}Türkiye'nin en güncel haberleri, son dakika gelişmeleri, politika, ekonomi, spor ve teknoloji haberlerini takip edin.{% endblock %}
 
 {% block content %}
+<!-- Featured Stories Section (Instagram-style) -->
+<section class="featured-stories-section py-4">
+    <div class="container-fluid">
+        <div class="stories-container">
+            <div class="stories-header d-flex align-items-center justify-content-between mb-3">
+                <h5 class="mb-0">
+                    <i class="fas fa-star text-warning me-2"></i>
+                    Öne Çıkan Haberler
+                </h5>
+                <div class="stories-navigation d-none d-md-block">
+                    <button class="btn btn-sm btn-outline-primary" id="stories-prev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary ms-1" id="stories-next">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="stories-scroll-wrapper">
+                <div class="stories-track" id="stories-track">
+                    {% if featured_news %}
+                        {% for news in featured_news %}
+                        <div class="story-card">
+                            <a href="{{ url_for('main.news_detail', slug=news.slug) }}" class="story-link">
+                                <div class="story-image-container">
+                                    {% if news.featured_image %}
+                                        <img src="{{ news.featured_image }}" alt="{{ news.title }}" class="story-image">
+                                    {% else %}
+                                        <div class="story-placeholder">
+                                            <i class="fas fa-newspaper"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div class="story-overlay">
+                                        <div class="story-category">
+                                            <span class="category-badge">{{ news.category.name }}</span>
+                                        </div>
+                                        <div class="story-title">
+                                            {{ news.title[:60] }}{% if news.title|length > 60 %}...{% endif %}
+                                        </div>
+                                        <div class="story-meta">
+                                            <span class="story-time">
+                                                <i class="fas fa-clock"></i>
+                                                {{ news.published_at.strftime('%H:%M') if news.published_at else news.created_at.strftime('%H:%M') }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Placeholder stories -->
+                        <div class="story-card">
+                            <div class="story-placeholder">
+                                <i class="fas fa-newspaper"></i>
+                                <p class="mt-2 mb-0">Öne çıkan haberler yükleniyor...</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
     <!-- News Slider -->
     {% if slider_news %}

@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update date/time every minute
     setInterval(updateDateTime, 60000);
+    
+    // Initialize theme system
+    initializeThemeSystem();
 });
 
 // Initialize Stories Scroll

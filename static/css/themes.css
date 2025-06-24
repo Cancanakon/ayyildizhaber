@@ -1,52 +1,59 @@
 /* Theme System for Ayyıldız Haber Ajansı */
 
-/* Default Theme (Anadolu Rengi - Current Red) */
+/* Base Theme Variables */
 :root {
+    /* Default Anadolu Rengi (Current Red Theme) */
     --primary-color: #dc2626;
-    --secondary-color: #b91c1c;
+    --secondary-color: #991b1b;
     --dark-color: #7f1d1d;
     --light-color: #fef2f2;
-    --accent-color: #991b1b;
+    --accent-color: #ef4444;
     --text-primary: #1f2937;
     --text-secondary: #6b7280;
-    --bg-primary: #ffffff;
-    --bg-secondary: #f9fafb;
+    --background-primary: #ffffff;
+    --background-secondary: #f9fafb;
     --border-color: #e5e7eb;
+    --gradient-start: #dc2626;
+    --gradient-end: #b91c1c;
     --theme-name: "Anadolu Rengi";
 }
 
-/* Faralya Mavisi - Blue Theme */
-[data-theme="faralya"] {
+/* Faralya Mavisi Theme */
+[data-theme="faralya-mavisi"] {
     --primary-color: #2563eb;
     --secondary-color: #1d4ed8;
     --dark-color: #1e40af;
     --light-color: #eff6ff;
     --accent-color: #3b82f6;
-    --text-primary: #1f2937;
-    --text-secondary: #6b7280;
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --background-primary: #ffffff;
+    --background-secondary: #f8fafc;
     --border-color: #e2e8f0;
+    --gradient-start: #2563eb;
+    --gradient-end: #1d4ed8;
     --theme-name: "Faralya Mavisi";
 }
 
-/* Oltu Rengi - Dark Theme */
-[data-theme="oltu"] {
+/* Oltu Rengi (Dark Theme) */
+[data-theme="oltu-rengi"] {
     --primary-color: #374151;
     --secondary-color: #1f2937;
     --dark-color: #111827;
-    --light-color: #f9fafb;
+    --light-color: #f3f4f6;
     --accent-color: #6b7280;
     --text-primary: #f9fafb;
     --text-secondary: #d1d5db;
-    --bg-primary: #1f2937;
-    --bg-secondary: #111827;
+    --background-primary: #1f2937;
+    --background-secondary: #111827;
     --border-color: #374151;
+    --gradient-start: #374151;
+    --gradient-end: #1f2937;
     --theme-name: "Oltu Rengi";
 }
 
-/* Çona Yeşili - Green Theme */
-[data-theme="cona"] {
+/* Çona Yeşili Theme */
+[data-theme="cona-yesili"] {
     --primary-color: #059669;
     --secondary-color: #047857;
     --dark-color: #065f46;
@@ -54,235 +61,176 @@
     --accent-color: #10b981;
     --text-primary: #1f2937;
     --text-secondary: #6b7280;
-    --bg-primary: #ffffff;
-    --bg-secondary: #f0fdf4;
+    --background-primary: #ffffff;
+    --background-secondary: #f0fdf4;
     --border-color: #d1fae5;
+    --gradient-start: #059669;
+    --gradient-end: #047857;
     --theme-name: "Çona Yeşili";
 }
 
-/* Apply theme colors to components */
+/* Apply theme colors throughout the site */
 body {
-    background-color: var(--bg-primary);
+    background-color: var(--background-primary);
     color: var(--text-primary);
     transition: all 0.3s ease;
 }
 
 /* Header and Navigation */
 .top-header {
-    background-color: var(--primary-color);
+    background: var(--dark-color) !important;
 }
 
 .main-nav {
-    background-color: var(--dark-color);
+    background: var(--dark-color) !important;
 }
 
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-link.active {
-    background-color: var(--primary-color);
+    background-color: var(--primary-color) !important;
+}
+
+/* Buttons and Interactive Elements */
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color) !important;
+    border-color: var(--secondary-color) !important;
+}
+
+.btn-outline-primary {
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Cards and Content */
+.card {
+    background-color: var(--background-primary);
+    border-color: var(--border-color);
+}
+
+.section-header {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)) !important;
+}
+
+/* Featured Stories */
+.story-image-container {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)) !important;
+}
+
+.story-placeholder {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)) !important;
 }
 
 /* Breaking News */
 .breaking-news {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)) !important;
 }
 
-.breaking-label {
-    color: var(--primary-color);
+/* Text Colors */
+.text-primary-theme {
+    color: var(--primary-color) !important;
 }
 
-/* Featured Stories */
-.featured-stories-section {
-    background: linear-gradient(135deg, var(--light-color), var(--bg-secondary));
-}
-
-.stories-header h5 {
-    color: var(--primary-color);
-}
-
-.stories-navigation button:hover {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.story-image-container,
-.story-placeholder {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-}
-
-/* Cards and Sections */
-.sidebar-section {
-    background-color: var(--bg-primary);
-    border: 1px solid var(--border-color);
-}
-
-.section-header {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-.news-card {
-    background-color: var(--bg-primary);
-    border: 1px solid var(--border-color);
-}
-
-.news-card:hover {
-    box-shadow: 0 4px 20px rgba(var(--primary-color-rgb), 0.1);
-}
-
-/* Currency Widget */
 .currency-code {
-    color: var(--primary-color);
-}
-
-.currency-item:hover {
-    background-color: rgba(var(--primary-color-rgb), 0.05);
-}
-
-.currency-header .btn-outline-primary {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-}
-
-.currency-header .btn-outline-primary.active {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-/* Weather Widget */
-.weather-icon {
-    color: var(--primary-color);
+    color: var(--primary-color) !important;
 }
 
 .weather-temp {
-    color: var(--primary-color);
+    color: var(--primary-color) !important;
 }
 
-/* Prayer Times */
-.prayer-time {
-    color: var(--primary-color);
+.prayer-item .prayer-time {
+    color: var(--primary-color) !important;
 }
 
-/* Buttons */
-.btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.btn-primary:hover {
+/* Dark theme specific adjustments */
+[data-theme="oltu-rengi"] .card {
     background-color: var(--secondary-color);
-    border-color: var(--secondary-color);
-}
-
-.btn-outline-primary {
-    color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.btn-outline-primary:hover {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-/* Links */
-a {
-    color: var(--primary-color);
-}
-
-a:hover {
-    color: var(--secondary-color);
-}
-
-/* Category badges */
-.category-badge {
-    background-color: var(--primary-color);
-}
-
-/* Form elements */
-.form-control:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.25);
-}
-
-/* Theme-specific adjustments for dark theme */
-[data-theme="oltu"] .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28249, 250, 251, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-}
-
-[data-theme="oltu"] .card {
-    background-color: var(--bg-primary);
     border-color: var(--border-color);
 }
 
-[data-theme="oltu"] .text-muted {
-    color: var(--text-secondary) !important;
+[data-theme="oltu-rengi"] .sidebar-section {
+    background-color: var(--secondary-color);
 }
 
-[data-theme="oltu"] .border {
-    border-color: var(--border-color) !important;
+[data-theme="oltu-rengi"] .currency-item:hover {
+    background-color: rgba(107, 114, 128, 0.1);
 }
 
-/* Smooth transitions for theme changes */
-* {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+[data-theme="oltu-rengi"] .news-card {
+    background-color: var(--secondary-color);
+    border-color: var(--border-color);
 }
 
-/* Theme Selector Styles */
-.theme-selector {
+[data-theme="oltu-rengi"] .news-card:hover {
+    border-color: var(--primary-color);
+}
+
+/* Theme Switcher Styles */
+.theme-switcher {
     position: fixed;
-    top: 120px;
+    top: 50%;
     right: 20px;
-    z-index: 1050;
-    background: var(--bg-primary);
+    transform: translateY(-50%);
+    z-index: 1000;
+    background: var(--background-primary);
     border: 2px solid var(--border-color);
-    border-radius: 15px;
-    padding: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    min-width: 200px;
-}
-
-.theme-selector.collapsed {
+    border-radius: 50%;
     width: 50px;
     height: 50px;
-    padding: 12px;
-    overflow: hidden;
-}
-
-.theme-toggle-btn {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-.theme-toggle-btn:hover {
-    background: var(--secondary-color);
-    transform: scale(1.1);
+.theme-switcher:hover {
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    border-color: var(--primary-color);
 }
 
-.theme-options {
-    margin-top: 15px;
+.theme-switcher i {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    transition: transform 0.3s ease;
+}
+
+.theme-switcher:hover i {
+    transform: rotate(180deg);
+}
+
+/* Theme Selection Modal */
+.theme-modal {
+    background-color: var(--background-primary);
+    border: 1px solid var(--border-color);
 }
 
 .theme-option {
-    display: flex;
-    align-items: center;
-    padding: 8px 12px;
-    margin: 5px 0;
-    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
-    border: 2px solid transparent;
+    text-align: center;
 }
 
 .theme-option:hover {
-    background-color: var(--light-color);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .theme-option.active {
@@ -290,40 +238,49 @@ a:hover {
     background-color: var(--light-color);
 }
 
-.theme-color {
-    width: 20px;
-    height: 20px;
+.theme-color-preview {
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    margin-right: 10px;
-    border: 2px solid rgba(255,255,255,0.5);
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
 }
 
-.theme-name {
-    font-size: 0.9rem;
-    font-weight: 500;
+.theme-anadolu .theme-color-preview {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
 }
 
-/* Theme color indicators */
-.theme-color.anadolu { background: linear-gradient(45deg, #dc2626, #b91c1c); }
-.theme-color.faralya { background: linear-gradient(45deg, #2563eb, #1d4ed8); }
-.theme-color.oltu { background: linear-gradient(45deg, #374151, #1f2937); }
-.theme-color.cona { background: linear-gradient(45deg, #059669, #047857); }
+.theme-faralya .theme-color-preview {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
 
-/* Mobile theme selector */
+.theme-oltu .theme-color-preview {
+    background: linear-gradient(135deg, #374151, #1f2937);
+}
+
+.theme-cona .theme-color-preview {
+    background: linear-gradient(135deg, #059669, #047857);
+}
+
+/* Mobile Adjustments */
 @media (max-width: 768px) {
-    .theme-selector {
-        top: 80px;
-        right: 10px;
-        min-width: 180px;
-    }
-    
-    .theme-selector.collapsed {
+    .theme-switcher {
+        right: 15px;
         width: 45px;
         height: 45px;
     }
     
-    .theme-toggle-btn {
-        width: 35px;
-        height: 35px;
+    .theme-switcher i {
+        font-size: 1rem;
     }
+}
+
+/* Animation for theme transitions */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }

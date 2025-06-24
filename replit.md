@@ -98,6 +98,10 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- June 24, 2025: Added interactive currency and gold price charts using Chart.js
+- June 24, 2025: Implemented chart toggle functionality for both desktop and mobile currency widgets
+- June 24, 2025: Created bar charts for desktop view and doughnut charts for mobile view
+- June 24, 2025: Enhanced currency widget styling with hover effects and better layout
 - June 24, 2025: Fixed navbar toggler icon color to white for better mobile visibility
 - June 24, 2025: Fixed mobile category icons issue - added proper Font Awesome icons for all categories
 - June 24, 2025: Enhanced mobile category layout with improved styling and hover effects

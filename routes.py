@@ -4,6 +4,7 @@ from app import db
 from services.currency_service import get_currency_data
 from services.weather_service import get_weather_data
 from services.prayer_service import get_prayer_times
+from services.sports_service import get_sports_data
 from utils.helpers import create_slug, get_popular_news
 from datetime import datetime
 import json

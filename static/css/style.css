@@ -350,6 +350,108 @@ body {
     color: var(--primary-red);
 }
 
+/* Sports Widget */
+.sports-widget .league-table {
+    margin-top: 10px;
+}
+
+.team-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.team-row:hover {
+    background-color: rgba(220, 38, 38, 0.05);
+    padding-left: 10px;
+    border-radius: 8px;
+}
+
+.team-row:last-child {
+    border-bottom: none;
+}
+
+.team-position {
+    width: 25px;
+    height: 25px;
+    background: var(--primary-red);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-right: 12px;
+}
+
+.team-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.team-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+}
+
+.team-stats {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin-top: 2px;
+}
+
+.match-item {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.match-item:last-child {
+    border-bottom: none;
+}
+
+.match-teams {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.home-team, .away-team {
+    font-size: 0.85rem;
+    font-weight: 500;
+    flex: 1;
+}
+
+.away-team {
+    text-align: right;
+}
+
+.match-score {
+    background: var(--primary-red);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+.match-date {
+    font-size: 0.7rem;
+    color: var(--text-light);
+    text-align: center;
+}
+
+.sports-tabs .btn-group .btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+}
+
 /* Popular News */
 .popular-news-item {
     display: flex;

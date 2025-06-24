@@ -153,3 +153,4 @@ This is a comprehensive news website application built with Flask, featuring a T
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+User feedback: Be more careful with implementation - ensure HTML templates actually display new features instead of just creating backend code. Focus on visible changes to the user interface.

@@ -100,6 +100,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.index') }}">Ana Sayfa</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.live_match') }}">
+                            <i class="fas fa-broadcast-tower me-1"></i>Canlı Maç
+                        </a>
+                    </li>
                     {% if categories %}
                         {% for category in categories %}
                         <li class="nav-item">

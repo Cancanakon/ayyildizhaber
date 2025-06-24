@@ -35,7 +35,7 @@
     
     {% block head %}{% endblock %}
 </head>
-<body data-theme="anadolu">
+<body>
     <!-- Header Top -->
     <div class="header-top">
         <div class="container">
@@ -219,71 +219,6 @@
     <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     
-    <!-- Theme Switcher -->
-    <div class="theme-switcher" id="themeSwitcher" title="Tema Değiştir">
-        <i class="fas fa-palette"></i>
-    </div>
-
-    <!-- Theme Selection Modal -->
-    <div class="modal fade" id="themeModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content theme-modal">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-palette me-2"></i>Tema Seçin
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-6 col-md-3">
-                            <div class="theme-option theme-anadolu" data-theme="anadolu-rengi">
-                                <div class="theme-color-preview">
-                                    <i class="fas fa-mountain"></i>
-                                </div>
-                                <h6 class="mb-1">Anadolu Rengi</h6>
-                                <small class="text-muted">Geleneksel Kırmızı</small>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <div class="theme-option theme-faralya" data-theme="faralya-mavisi">
-                                <div class="theme-color-preview">
-                                    <i class="fas fa-water"></i>
-                                </div>
-                                <h6 class="mb-1">Faralya Mavisi</h6>
-                                <small class="text-muted">Akdeniz Mavisi</small>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <div class="theme-option theme-oltu" data-theme="oltu-rengi">
-                                <div class="theme-color-preview">
-                                    <i class="fas fa-moon"></i>
-                                </div>
-                                <h6 class="mb-1">Oltu Rengi</h6>
-                                <small class="text-muted">Karanlık Tema</small>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <div class="theme-option theme-cona" data-theme="cona-yesili">
-                                <div class="theme-color-preview">
-                                    <i class="fas fa-leaf"></i>
-                                </div>
-                                <h6 class="mb-1">Çona Yeşili</h6>
-                                <small class="text-muted">Doğa Yeşili</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center mt-3">
-                        <small class="text-muted">
-                            <i class="fas fa-info-circle me-1"></i>
-                            Seçiminiz otomatik olarak kaydedilir
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     {% block scripts %}{% endblock %}
 </body>
 </html>

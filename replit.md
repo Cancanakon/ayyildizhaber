@@ -98,10 +98,6 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
-- June 24, 2025: Created comprehensive theme system with 4 Turkish-inspired themes
-- June 24, 2025: Added floating theme selector with smooth transitions
-- June 24, 2025: Implemented theme persistence using localStorage
-- June 24, 2025: Added themes: Anadolu Rengi (red), Faralya Mavisi (blue), Oltu Rengi (dark), Çona Yeşili (green)
 - June 24, 2025: Added Instagram stories-style featured news section at top of homepage
 - June 24, 2025: Implemented horizontal scrollable story cards with category badges and hover effects
 - June 24, 2025: Created responsive design for both desktop and mobile story viewing

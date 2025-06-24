@@ -231,14 +231,13 @@ a:hover {
     position: fixed;
     top: 120px;
     right: 20px;
-    z-index: 9999;
-    background: var(--bg-primary, #ffffff);
-    border: 2px solid var(--border-color, #e5e7eb);
+    z-index: 1050;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
     border-radius: 15px;
     padding: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     min-width: 200px;
-    transition: all 0.3s ease;
 }
 
 .theme-selector.collapsed {
@@ -249,7 +248,7 @@ a:hover {
 }
 
 .theme-toggle-btn {
-    background: var(--primary-color, #dc2626);
+    background: var(--primary-color);
     color: white;
     border: none;
     border-radius: 50%;
@@ -260,13 +259,11 @@ a:hover {
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 .theme-toggle-btn:hover {
-    background: var(--secondary-color, #b91c1c);
+    background: var(--secondary-color);
     transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
 .theme-options {

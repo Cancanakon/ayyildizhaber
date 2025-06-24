@@ -39,6 +39,18 @@ def index():
     # Get popular news
     popular_news = get_popular_news(limit=5)
     
+    # Get or create user session for recommendations
+    user_session = recommendation_engine.get_or_create_session(request)
+    
+    # Get personalized recommendations
+    recommended_news = []
+    if user_session:
+        recommended_news = recommendation_engine.get_recommended_news(
+            user_session.session_id, 
+            limit=6,
+            exclude_ids=[news.id for news in latest_news[:3]]  # Exclude already shown news
+        )
+    
     # Get external data - force fresh data
     try:
         # Clear cache and get fresh data

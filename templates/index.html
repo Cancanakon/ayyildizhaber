@@ -222,6 +222,55 @@
 
         <!-- Sidebar -->
         <div class="col-lg-4">
+            <!-- Recommended News Widget -->
+            {% if recommended_news %}
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-user-check me-2"></i>
+                    Size Özel Haberler
+                </div>
+                <div class="section-content">
+                    {% for news in recommended_news %}
+                    <div class="recommended-news-item" data-news-id="{{ news.id }}">
+                        {% set rec_image_url = news.featured_image %}
+                        {% if not rec_image_url and news.images %}
+                            {% set rec_images_list = news.images | from_json %}
+                            {% if rec_images_list and rec_images_list|length > 0 %}
+                                {% set rec_image_url = rec_images_list[0] %}
+                            {% endif %}
+                        {% endif %}
+                        {% if not rec_image_url and news.content %}
+                            {% set rec_content_images = news.content | regex_findall('https?://[^\\s<>"]+\\.(jpg|jpeg|png|gif|webp)') %}
+                            {% if rec_content_images %}
+                                {% set rec_image_url = rec_content_images[0] %}
+                            {% endif %}
+                        {% endif %}
+                        
+                        <img src="{{ rec_image_url or url_for('static', filename='images/logo.png') }}" 
+                             alt="{{ news.title }}" 
+                             onerror="showFallbackImage(this)">
+                        <div class="content">
+                            <div class="title">
+                                <a href="{{ url_for('main.news_detail', slug=news.slug) }}" 
+                                   onclick="trackRecommendationClick({{ news.id }})">
+                                   {{ news.title[:60] }}{% if news.title|length > 60 %}...{% endif %}
+                                </a>
+                            </div>
+                            <div class="meta">
+                                <span class="category-badge" style="background-color: {{ news.category.color }};">
+                                    {{ news.category.name }}
+                                </span>
+                                <small class="text-muted ms-2">
+                                    {{ news.published_at.strftime('%d.%m.%Y') if news.published_at }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
             <!-- Popular News Widget -->
             {% if popular_news %}
             <div class="sidebar-section">

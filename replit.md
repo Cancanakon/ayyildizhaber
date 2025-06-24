@@ -97,7 +97,10 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Session management with secure keys
 - Proxy configuration for reverse proxy deployment
 
-## Recent Changes
+## Recent Changes  
+- June 24, 2025: Fixed mobile category icons issue - added proper Font Awesome icons for all categories
+- June 24, 2025: Enhanced mobile category layout with improved styling and hover effects
+- June 24, 2025: Added category-specific icons (politics, economy, sports, tech, health, culture, world, local)
 - June 23, 2025: Enhanced design with dynamic animations, improved mobile widget layout, and professional styling
 - June 23, 2025: Added mobile-first widget system with top scroll bar for currency, weather, crypto, and prayer times
 - June 23, 2025: Implemented advanced CSS animations, scroll-triggered effects, and enhanced card hover states

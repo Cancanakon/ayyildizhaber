@@ -370,6 +370,12 @@
     align-items: center;
     justify-content: center;
     margin-right: 15px;
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+.enhanced-category:hover .category-icon {
+    transform: scale(1.1);
 }
 
 .category-color {
@@ -401,6 +407,31 @@
 
 .enhanced-category:hover .category-arrow {
     transform: translateX(5px);
+}
+
+/* Mobile Category Improvements */
+.mobile-categories {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.mobile-categories::-webkit-scrollbar {
+    width: 4px;
+}
+
+.mobile-categories::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.mobile-categories::-webkit-scrollbar-thumb {
+    background: var(--primary-red);
+    border-radius: 4px;
+}
+
+.mobile-categories::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-red);
 }
 
 /* Media Queries for Animations */

@@ -38,11 +38,21 @@ def index():
     # Get popular news
     popular_news = get_popular_news(limit=5)
     
-    # Get external data
+    # Get external data - force fresh data
     try:
+        # Clear cache and get fresh data
+        import os
+        cache_file = 'cache/currency_data.json'
+        if os.path.exists(cache_file):
+            os.remove(cache_file)
+        
         currency_data = get_currency_data()
         weather_data = get_weather_data()
         prayer_data = get_prayer_times()
+        
+        # Debug: print what we got
+        print(f"Currency data in routes: {currency_data}")
+        
     except Exception as e:
         print(f"Error fetching external data: {e}")
         currency_data = weather_data = prayer_data = None

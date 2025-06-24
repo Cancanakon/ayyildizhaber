@@ -272,18 +272,28 @@
                     Döviz Kurları
                 </div>
                 <div class="section-content">
-                    {% if currency_data and currency_data.currency %}
+                    {% if currency_data and currency_data.currency and currency_data.currency|length > 0 %}
                         {% for code, data in currency_data.currency.items() %}
                         <div class="currency-item">
                             <div class="currency-symbol">{{ code }}/TRY</div>
                             <div class="currency-values">
-                                <div class="buy">{{ data.buying }}</div>
-                                <div class="sell">{{ data.selling }}</div>
+                                <div class="buy">{{ "%.2f"|format(data.buying) }}</div>
+                                <div class="sell">{{ "%.2f"|format(data.selling) }}</div>
                             </div>
                         </div>
                         {% endfor %}
                     {% else %}
-                        <div class="text-muted text-center py-3">Döviz verileri yükleniyor...</div>
+                        <div class="text-muted text-center py-3">
+                            Döviz verileri yükleniyor...
+                        </div>
+                        <!-- Debug info -->
+                        <div class="small text-muted mt-2">
+                            {% if currency_data %}
+                                Debug: currency_data exists, currency: {{ currency_data.currency|length if currency_data.currency else 'None' }} items
+                            {% else %}
+                                Debug: No currency_data
+                            {% endif %}
+                        </div>
                     {% endif %}
                 </div>
             </div>
@@ -307,6 +317,7 @@
                         {% endfor %}
                     {% else %}
                         <div class="text-muted text-center py-3">Kripto verileri yükleniyor...</div>
+                        <!-- Debug: crypto data: {{ currency_data.crypto if currency_data else 'No data' }} -->
                     {% endif %}
                 </div>
             </div>

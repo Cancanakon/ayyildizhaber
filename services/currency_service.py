@@ -5,7 +5,7 @@ import logging
 from datetime import datetime, timedelta
 
 CACHE_FILE = 'cache/currency_data.json'
-CACHE_DURATION = timedelta(hours=3)  # Cache for 3 hours
+CACHE_DURATION = timedelta(minutes=30)  # Cache for 30 minutes
 
 def ensure_cache_dir():
     """Ensure cache directory exists"""

@@ -1,0 +1,329 @@
+/* Theme System for Ayyıldız Haber Ajansı */
+
+/* Default Theme (Anadolu Rengi - Current Red) */
+:root {
+    --primary-color: #dc2626;
+    --secondary-color: #b91c1c;
+    --dark-color: #7f1d1d;
+    --light-color: #fef2f2;
+    --accent-color: #991b1b;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --border-color: #e5e7eb;
+    --theme-name: "Anadolu Rengi";
+}
+
+/* Faralya Mavisi - Blue Theme */
+[data-theme="faralya"] {
+    --primary-color: #2563eb;
+    --secondary-color: #1d4ed8;
+    --dark-color: #1e40af;
+    --light-color: #eff6ff;
+    --accent-color: #3b82f6;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --border-color: #e2e8f0;
+    --theme-name: "Faralya Mavisi";
+}
+
+/* Oltu Rengi - Dark Theme */
+[data-theme="oltu"] {
+    --primary-color: #374151;
+    --secondary-color: #1f2937;
+    --dark-color: #111827;
+    --light-color: #f9fafb;
+    --accent-color: #6b7280;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --bg-primary: #1f2937;
+    --bg-secondary: #111827;
+    --border-color: #374151;
+    --theme-name: "Oltu Rengi";
+}
+
+/* Çona Yeşili - Green Theme */
+[data-theme="cona"] {
+    --primary-color: #059669;
+    --secondary-color: #047857;
+    --dark-color: #065f46;
+    --light-color: #ecfdf5;
+    --accent-color: #10b981;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f0fdf4;
+    --border-color: #d1fae5;
+    --theme-name: "Çona Yeşili";
+}
+
+/* Apply theme colors to components */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+/* Header and Navigation */
+.top-header {
+    background-color: var(--primary-color);
+}
+
+.main-nav {
+    background-color: var(--dark-color);
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    background-color: var(--primary-color);
+}
+
+/* Breaking News */
+.breaking-news {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.breaking-label {
+    color: var(--primary-color);
+}
+
+/* Featured Stories */
+.featured-stories-section {
+    background: linear-gradient(135deg, var(--light-color), var(--bg-secondary));
+}
+
+.stories-header h5 {
+    color: var(--primary-color);
+}
+
+.stories-navigation button:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.story-image-container,
+.story-placeholder {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+/* Cards and Sections */
+.sidebar-section {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+}
+
+.section-header {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.news-card {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+}
+
+.news-card:hover {
+    box-shadow: 0 4px 20px rgba(var(--primary-color-rgb), 0.1);
+}
+
+/* Currency Widget */
+.currency-code {
+    color: var(--primary-color);
+}
+
+.currency-item:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.05);
+}
+
+.currency-header .btn-outline-primary {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.currency-header .btn-outline-primary.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Weather Widget */
+.weather-icon {
+    color: var(--primary-color);
+}
+
+.weather-temp {
+    color: var(--primary-color);
+}
+
+/* Prayer Times */
+.prayer-time {
+    color: var(--primary-color);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Links */
+a {
+    color: var(--primary-color);
+}
+
+a:hover {
+    color: var(--secondary-color);
+}
+
+/* Category badges */
+.category-badge {
+    background-color: var(--primary-color);
+}
+
+/* Form elements */
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.25);
+}
+
+/* Theme-specific adjustments for dark theme */
+[data-theme="oltu"] .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28249, 250, 251, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+[data-theme="oltu"] .card {
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="oltu"] .text-muted {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="oltu"] .border {
+    border-color: var(--border-color) !important;
+}
+
+/* Smooth transitions for theme changes */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Theme Selector Styles */
+.theme-selector {
+    position: fixed;
+    top: 120px;
+    right: 20px;
+    z-index: 1050;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    min-width: 200px;
+}
+
+.theme-selector.collapsed {
+    width: 50px;
+    height: 50px;
+    padding: 12px;
+    overflow: hidden;
+}
+
+.theme-toggle-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+    background: var(--secondary-color);
+    transform: scale(1.1);
+}
+
+.theme-options {
+    margin-top: 15px;
+}
+
+.theme-option {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    margin: 5px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.theme-option:hover {
+    background-color: var(--light-color);
+}
+
+.theme-option.active {
+    border-color: var(--primary-color);
+    background-color: var(--light-color);
+}
+
+.theme-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid rgba(255,255,255,0.5);
+}
+
+.theme-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Theme color indicators */
+.theme-color.anadolu { background: linear-gradient(45deg, #dc2626, #b91c1c); }
+.theme-color.faralya { background: linear-gradient(45deg, #2563eb, #1d4ed8); }
+.theme-color.oltu { background: linear-gradient(45deg, #374151, #1f2937); }
+.theme-color.cona { background: linear-gradient(45deg, #059669, #047857); }
+
+/* Mobile theme selector */
+@media (max-width: 768px) {
+    .theme-selector {
+        top: 80px;
+        right: 10px;
+        min-width: 180px;
+    }
+    
+    .theme-selector.collapsed {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .theme-toggle-btn {
+        width: 35px;
+        height: 35px;
+    }
+}

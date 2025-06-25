@@ -54,11 +54,15 @@
                                     <label for="image" class="form-label">Reklam Görseli</label>
                                     <input type="file" class="form-control" id="image" name="image" accept="image/*">
                                     <div class="form-text">
-                                        <strong>Kenar Reklamları:</strong> 300x600px (Banner/Flama oranı) önerilir<br>
-                                        <strong>Popup Reklamları:</strong> 600x400px veya benzer oranlar<br>
-                                        <strong>Formatlar:</strong> JPG, PNG, GIF, WebP<br>
-                                        <strong>Maksimum boyut:</strong> 2MB<br>
-                                        <em>Yeni görsel seçmezseniz mevcut görsel korunur</em>
+                                        <div class="alert alert-info">
+                                            <strong><i class="fas fa-info-circle"></i> Zorunlu Özellikler:</strong><br>
+                                            <strong>Kenar Reklamları:</strong> Tam olarak 160x600px (Dikey banner format)<br>
+                                            <strong>Popup Reklamları:</strong> 600x400px veya benzer oranlar<br>
+                                            <strong>Formatlar:</strong> JPG, PNG, GIF, WebP<br>
+                                            <strong>Maksimum boyut:</strong> 2MB<br>
+                                            <em class="text-danger">Not: Yanlış boyutlar haberlerin üzerine binebilir!</em><br>
+                                            <em>Yeni görsel seçmezseniz mevcut görsel korunur</em>
+                                        </div>
                                     </div>
                                     {% if ad.image_path %}
                                     <div class="mt-2">

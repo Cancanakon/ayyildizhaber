@@ -98,6 +98,9 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- June 25, 2025: Created ultimate-fix.sh script to resolve persistent SQLAlchemy "primary mapper already defined" errors in production VPS deployment
+- June 25, 2025: Implemented application factory pattern and separated database initialization to prevent circular imports
+- June 25, 2025: Added comprehensive 20-stage testing system for VPS deployment validation
 - June 25, 2025: Created multiple deployment options - simple-install.sh, root-install.sh, and one-command-install.sh
 - June 25, 2025: Added GitHub integration for direct VPS deployment from repository
 - June 25, 2025: Fixed root user installation restrictions with automatic user creation

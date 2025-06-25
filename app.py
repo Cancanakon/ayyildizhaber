@@ -101,13 +101,6 @@ with app.app_context():
 from utils.helpers import register_template_filters
 register_template_filters(app)
 
-# Import routes
-from routes import main_bp
-from admin_routes import admin_bp
-
-app.register_blueprint(main_bp)
-app.register_blueprint(admin_bp, url_prefix='/admin')
-
 # Background scheduler for fetching news
 scheduler = BackgroundScheduler()
 
@@ -151,10 +144,10 @@ atexit.register(lambda: scheduler.shutdown())
 # Register blueprints
 from routes import main_bp
 from admin_routes import admin_bp
-from admin_config_routes import admin_config_bp
+from admin_config_routes import config_bp
 from ad_routes import ad_bp
 
 app.register_blueprint(main_bp)
-app.register_blueprint(admin_bp)
-app.register_blueprint(admin_config_bp)
+app.register_blueprint(admin_bp, url_prefix='/admin')
+app.register_blueprint(config_bp)
 app.register_blueprint(ad_bp)

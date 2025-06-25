@@ -46,10 +46,12 @@ def logout():
 @login_required
 def dashboard():
     # Statistics
+    from models import Advertisement
     total_news = News.query.count()
     published_news = News.query.filter_by(status='published').count()
     draft_news = News.query.filter_by(status='draft').count()
     total_categories = Category.query.count()
+    total_ads = Advertisement.query.count()
     
     # Recent news
     recent_news = News.query.order_by(News.created_at.desc()).limit(5).all()
@@ -73,6 +75,7 @@ def dashboard():
                          published_news=published_news,
                          draft_news=draft_news,
                          total_categories=total_categories,
+                         total_ads=total_ads,
                          recent_news=recent_news,
                          popular_news=popular_news,
                          daily_stats=daily_stats)

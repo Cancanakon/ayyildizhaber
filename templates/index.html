@@ -526,24 +526,7 @@
 
 
 
-            <!-- Popular News -->
-            {% if popular_news %}
-            <div class="widget-card mb-4">
-                <div class="widget-header">
-                    <h5><i class="fas fa-fire me-2"></i>Popüler Haberler</h5>
-                </div>
-                <div class="widget-content">
-                    {% for news in popular_news %}
-                    <div class="popular-news-item">
-                        <a href="{{ url_for('main.news_detail', slug=news.slug) }}" class="news-link">
-                            <div class="news-title">{{ news.title }}</div>
-                            <small class="news-views"><i class="fas fa-eye"></i> {{ news.view_count }}</small>
-                        </a>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
+
 
 
         </div>

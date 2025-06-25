@@ -597,9 +597,8 @@
             {% set istanbul_prayer = None %}
             {% if prayer_cities and prayer_cities is iterable %}
                 {% for city_prayer in prayer_cities %}
-                    {% if city_prayer.city == 'İstanbul' %}
+                    {% if city_prayer.city == 'İstanbul' and not istanbul_prayer %}
                         {% set istanbul_prayer = city_prayer %}
-                        {% break %}
                     {% endif %}
                 {% endfor %}
             {% endif %}

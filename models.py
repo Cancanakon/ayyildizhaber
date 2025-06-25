@@ -145,3 +145,44 @@ class UserPreference(db.Model):
     # Relationships
     session = db.relationship('UserSession', backref='preferences')
     category = db.relationship('Category', backref='user_preferences')
+
+class Advertisement(db.Model):
+    __tablename__ = 'advertisements'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    ad_type = db.Column(db.String(20), nullable=False)  # 'sidebar', 'popup'
+    position = db.Column(db.String(20))  # 'left', 'right' (for sidebar ads)
+    title = db.Column(db.String(255))
+    image_path = db.Column(db.String(500), nullable=False)
+    link_url = db.Column(db.String(500))
+    is_active = db.Column(db.Boolean, default=True)
+    click_count = db.Column(db.Integer, default=0)
+    impression_count = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Foreign key to admin who created the ad
+    admin_id = db.Column(db.Integer, db.ForeignKey('admins.id'))
+    admin = db.relationship('Admin', backref=db.backref('advertisements', lazy='dynamic'))
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'ad_type': self.ad_type,
+            'position': self.position,
+            'title': self.title,
+            'image_path': self.image_path,
+            'link_url': self.link_url,
+            'is_active': self.is_active,
+            'click_count': self.click_count,
+            'impression_count': self.impression_count,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
+    
+    def increment_clicks(self):
+        self.click_count += 1
+        db.session.commit()
+    
+    def increment_impressions(self):
+        self.impression_count += 1
+        db.session.commit()

@@ -1,0 +1,187 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Yeni Reklam Ekle - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">Yeni Reklam Ekle</h1>
+                <a href="{{ url_for('ads.index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Geri Dön
+                </a>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Reklam Bilgileri</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" enctype="multipart/form-data">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="ad_type" class="form-label">Reklam Türü *</label>
+                                            <select class="form-select" id="ad_type" name="ad_type" required>
+                                                <option value="">Seçiniz...</option>
+                                                <option value="sidebar">Kenar Reklamı</option>
+                                                <option value="popup">Pop-up Reklam</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3" id="position-group" style="display: none;">
+                                            <label for="position" class="form-label">Pozisyon</label>
+                                            <select class="form-select" id="position" name="position">
+                                                <option value="">Seçiniz...</option>
+                                                <option value="left">Sol Kenar</option>
+                                                <option value="right">Sağ Kenar</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Reklam Başlığı</label>
+                                    <input type="text" class="form-control" id="title" name="title" 
+                                           placeholder="Reklam için açıklayıcı başlık">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="image" class="form-label">Reklam Görseli *</label>
+                                    <input type="file" class="form-control" id="image" name="image" 
+                                           accept="image/*" required>
+                                    <div class="form-text">
+                                        Desteklenen formatlar: JPG, PNG, GIF, WebP
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="link_url" class="form-label">Bağlantı URL'si</label>
+                                    <input type="url" class="form-control" id="link_url" name="link_url" 
+                                           placeholder="https://example.com">
+                                    <div class="form-text">
+                                        Reklama tıklandığında yönlendirilecek adres (isteğe bağlı)
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="is_active" 
+                                               name="is_active" checked>
+                                        <label class="form-check-label" for="is_active">
+                                            Reklamı aktif olarak yayınla
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Reklamı Kaydet
+                                    </button>
+                                    <a href="{{ url_for('ads.index') }}" class="btn btn-secondary">İptal</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Reklam Türleri</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <h6><i class="fas fa-columns text-info me-2"></i>Kenar Reklamları</h6>
+                                <p class="small text-muted">
+                                    Ana sayfanın sol veya sağ kenarlarında görüntülenen reklamlardır. 
+                                    Ziyaretçiler içeriği okurken sürekli görünür kalır.
+                                </p>
+                            </div>
+                            <div class="mb-3">
+                                <h6><i class="fas fa-window-restore text-warning me-2"></i>Pop-up Reklamlar</h6>
+                                <p class="small text-muted">
+                                    Ana sayfa açıldığında otomatik olarak açılan popup pencere reklamlarıdır. 
+                                    Ziyaretçi kapatana kadar görünür kalır.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5 class="mb-0">Öneriler</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled small">
+                                <li class="mb-2">
+                                    <i class="fas fa-lightbulb text-warning me-2"></i>
+                                    Kenar reklamları için 300x250px boyutları ideal
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-lightbulb text-warning me-2"></i>
+                                    Pop-up reklamlar için 600x400px boyutları önerilir
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-lightbulb text-warning me-2"></i>
+                                    Dosya boyutu 1MB'dan küçük olmalı
+                                </li>
+                                <li>
+                                    <i class="fas fa-lightbulb text-warning me-2"></i>
+                                    Çok fazla popup reklam kullanıcı deneyimini olumsuz etkiler
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('ad_type').addEventListener('change', function() {
+    const positionGroup = document.getElementById('position-group');
+    const positionSelect = document.getElementById('position');
+    
+    if (this.value === 'sidebar') {
+        positionGroup.style.display = 'block';
+        positionSelect.required = true;
+    } else {
+        positionGroup.style.display = 'none';
+        positionSelect.required = false;
+        positionSelect.value = '';
+    }
+});
+
+// Image preview
+document.getElementById('image').addEventListener('change', function(e) {
+    if (e.target.files.length > 0) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            // Create preview if doesn't exist
+            let preview = document.getElementById('image-preview');
+            if (!preview) {
+                preview = document.createElement('div');
+                preview.id = 'image-preview';
+                preview.className = 'mt-2';
+                e.target.parentNode.appendChild(preview);
+            }
+            
+            preview.innerHTML = `
+                <img src="${e.target.result}" class="img-thumbnail" style="max-width: 200px; max-height: 200px;">
+                <div class="small text-muted mt-1">Önizleme</div>
+            `;
+        };
+        
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+{% endblock %}

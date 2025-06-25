@@ -241,6 +241,9 @@ def export():
         logger.error(f"Config export error: {e}")
         return jsonify({'error': str(e)}), 500
 
+# Create blueprint
+admin_config_bp = Blueprint('admin_config', __name__, url_prefix='/admin/config')
+
 @config_bp.route('/import', methods=['POST'])
 @login_required
 @admin_required

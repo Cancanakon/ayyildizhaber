@@ -165,6 +165,14 @@
                             Kullanıcılar
                         </a>
                     </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if 'ads' in request.endpoint }}" 
+                           href="{{ url_for('ads.index') }}">
+                            <i class="fas fa-ad"></i>
+                            Reklam Yönetimi
+                        </a>
+                    </li>
                     {% endif %}
                     
                     <li class="nav-item">

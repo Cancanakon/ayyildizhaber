@@ -59,7 +59,7 @@ def create():
                 flash('Dosya seçilmedi', 'error')
                 return redirect(request.url)
             
-            if file and allowed_file(file.filename):
+            if file and file.filename and allowed_file(file.filename):
                 # Ensure upload directory exists
                 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
                 
@@ -115,7 +115,7 @@ def edit(id):
             # Handle new image upload if provided
             if 'image' in request.files and request.files['image'].filename != '':
                 file = request.files['image']
-                if file and allowed_file(file.filename):
+                if file and file.filename and allowed_file(file.filename):
                     # Delete old image
                     if ad.image_path and os.path.exists(ad.image_path.lstrip('/')):
                         os.remove(ad.image_path.lstrip('/'))

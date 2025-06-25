@@ -147,3 +147,14 @@ scheduler.add_job(
 # Start scheduler
 scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
+
+# Register blueprints
+from routes import main_bp
+from admin_routes import admin_bp
+from admin_config_routes import admin_config_bp
+from ad_routes import ad_bp
+
+app.register_blueprint(main_bp)
+app.register_blueprint(admin_bp)
+app.register_blueprint(admin_config_bp)
+app.register_blueprint(ad_bp)

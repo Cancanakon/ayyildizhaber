@@ -357,7 +357,6 @@ def track_ad_click():
         data = request.get_json()
         ad_id = data.get('ad_id')
         
-        from models import Advertisement
         ad = Advertisement.query.get(ad_id)
         if ad:
             ad.increment_clicks()
@@ -374,7 +373,6 @@ def track_ad_impression():
         data = request.get_json()
         ad_id = data.get('ad_id')
         
-        from models import Advertisement
         ad = Advertisement.query.get(ad_id)
         if ad:
             ad.increment_impressions()

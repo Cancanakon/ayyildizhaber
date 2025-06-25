@@ -98,6 +98,9 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- June 25, 2025: Fixed news detail page template errors - removed duplicate head blocks
+- June 25, 2025: Reorganized navigation menu - moved Yerel Haberler to rightmost position
+- June 25, 2025: Removed Yaşam and Çevre categories from navigation and homepage
 - June 25, 2025: Fixed mini live player functionality completely - all buttons now working properly
 - June 25, 2025: Added drag-and-drop functionality to mini player with viewport boundary constraints
 - June 25, 2025: Implemented proper JavaScript event handling with preventDefault and stopPropagation

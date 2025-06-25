@@ -99,41 +99,39 @@
 
 <div class="container-fluid py-4">
     <div class="row">
-        <!-- Left Sidebar Ads - 4 Ads Vertically -->
+        <!-- Left Sidebar Banner Ad -->
         {% if sidebar_ads %}
         {% set left_ads = sidebar_ads|selectattr("position", "equalto", "left")|list %}
-        {% if left_ads %}
+        {% if left_ads and left_ads[0] %}
         <div class="col-lg-2 d-none d-lg-block">
-            <div class="sidebar-ads-container">
-                {% for ad in left_ads[:4] %}
-                <div class="large-sidebar-ad" data-ad-id="{{ ad.id }}" onclick="trackAdImpression({{ ad.id }})">
-                    {% if ad.link_url %}
-                    <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
-                        <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
-                             class="sidebar-ad-image">
-                        {% if ad.title %}
-                        <div class="ad-title">{{ ad.title }}</div>
+            <div class="sidebar-banner-container">
+                <div class="banner-ad" data-ad-id="{{ left_ads[0].id }}" onclick="trackAdImpression({{ left_ads[0].id }})">
+                    {% if left_ads[0].link_url %}
+                    <a href="{{ left_ads[0].link_url }}" target="_blank" onclick="trackAdClick({{ left_ads[0].id }})">
+                        <img src="{{ left_ads[0].image_path }}" alt="{{ left_ads[0].title or 'Reklam' }}" 
+                             class="banner-ad-image">
+                        {% if left_ads[0].title %}
+                        <div class="banner-ad-title">{{ left_ads[0].title }}</div>
                         {% endif %}
                     </a>
                     {% else %}
-                    <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
-                         class="sidebar-ad-image">
-                    {% if ad.title %}
-                    <div class="ad-title">{{ ad.title }}</div>
+                    <img src="{{ left_ads[0].image_path }}" alt="{{ left_ads[0].title or 'Reklam' }}" 
+                         class="banner-ad-image">
+                    {% if left_ads[0].title %}
+                    <div class="banner-ad-title">{{ left_ads[0].title }}</div>
                     {% endif %}
                     {% endif %}
                 </div>
-                {% endfor %}
-                
-                <!-- Fill remaining slots if less than 4 ads -->
-                {% for i in range(4 - left_ads|length) %}
-                <div class="large-sidebar-ad placeholder-ad">
-                    <div class="ad-placeholder">
-                        <i class="fas fa-ad text-muted"></i>
-                        <small class="text-muted">Reklam Alanı</small>
-                    </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-lg-2 d-none d-lg-block">
+            <div class="sidebar-banner-container">
+                <div class="banner-ad-placeholder">
+                    <i class="fas fa-flag text-muted"></i>
+                    <small class="text-muted d-block">Sol Banner Alanı</small>
+                    <small class="text-muted">300x600px</small>
                 </div>
-                {% endfor %}
             </div>
         </div>
         {% endif %}
@@ -504,41 +502,39 @@
             {% endif %}
         </div>
 
-        <!-- Right Sidebar Ads - 4 Ads Vertically -->
+        <!-- Right Sidebar Banner Ad -->
         {% if sidebar_ads %}
         {% set right_ads = sidebar_ads|selectattr("position", "equalto", "right")|list %}
-        {% if right_ads %}
+        {% if right_ads and right_ads[0] %}
         <div class="col-lg-2 d-none d-lg-block">
-            <div class="sidebar-ads-container">
-                {% for ad in right_ads[:4] %}
-                <div class="large-sidebar-ad" data-ad-id="{{ ad.id }}" onclick="trackAdImpression({{ ad.id }})">
-                    {% if ad.link_url %}
-                    <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
-                        <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
-                             class="sidebar-ad-image">
-                        {% if ad.title %}
-                        <div class="ad-title">{{ ad.title }}</div>
+            <div class="sidebar-banner-container">
+                <div class="banner-ad" data-ad-id="{{ right_ads[0].id }}" onclick="trackAdImpression({{ right_ads[0].id }})">
+                    {% if right_ads[0].link_url %}
+                    <a href="{{ right_ads[0].link_url }}" target="_blank" onclick="trackAdClick({{ right_ads[0].id }})">
+                        <img src="{{ right_ads[0].image_path }}" alt="{{ right_ads[0].title or 'Reklam' }}" 
+                             class="banner-ad-image">
+                        {% if right_ads[0].title %}
+                        <div class="banner-ad-title">{{ right_ads[0].title }}</div>
                         {% endif %}
                     </a>
                     {% else %}
-                    <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
-                         class="sidebar-ad-image">
-                    {% if ad.title %}
-                    <div class="ad-title">{{ ad.title }}</div>
+                    <img src="{{ right_ads[0].image_path }}" alt="{{ right_ads[0].title or 'Reklam' }}" 
+                         class="banner-ad-image">
+                    {% if right_ads[0].title %}
+                    <div class="banner-ad-title">{{ right_ads[0].title }}</div>
                     {% endif %}
                     {% endif %}
                 </div>
-                {% endfor %}
-                
-                <!-- Fill remaining slots if less than 4 ads -->
-                {% for i in range(4 - right_ads|length) %}
-                <div class="large-sidebar-ad placeholder-ad">
-                    <div class="ad-placeholder">
-                        <i class="fas fa-ad text-muted"></i>
-                        <small class="text-muted">Reklam Alanı</small>
-                    </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-lg-2 d-none d-lg-block">
+            <div class="sidebar-banner-container">
+                <div class="banner-ad-placeholder">
+                    <i class="fas fa-flag text-muted"></i>
+                    <small class="text-muted d-block">Sağ Banner Alanı</small>
+                    <small class="text-muted">300x600px</small>
                 </div>
-                {% endfor %}
             </div>
         </div>
         {% endif %}

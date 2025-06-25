@@ -104,7 +104,7 @@
                                 <tr>
                                     <td>
                                         <img src="{{ ad.image_path }}" alt="{{ ad.title }}" 
-                                             class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+                                             class="img-thumbnail" style="width: 40px; height: 80px; object-fit: cover;">
                                     </td>
                                     <td>
                                         <strong>{{ ad.title or 'Başlıksız' }}</strong>
@@ -114,18 +114,29 @@
                                     </td>
                                     <td>
                                         {% if ad.ad_type == 'sidebar' %}
-                                            <span class="badge bg-info">Kenar Reklamı</span>
-                                        {% elif ad.ad_type == 'popup' %}
-                                            <span class="badge bg-warning">Pop-up</span>
+                                        <span class="badge bg-info">
+                                            {% if ad.position == 'left' %}
+                                            <i class="fas fa-flag"></i> Sol Banner
+                                            {% elif ad.position == 'right' %}
+                                            <i class="fas fa-flag"></i> Sağ Banner
+                                            {% endif %}
+                                        </span>
+                                        <small class="d-block text-muted mt-1">
+                                            300x600px (Flama)
+                                        </small>
+                                        {% else %}
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-window-restore"></i> Popup
+                                        </span>
                                         {% endif %}
                                     </td>
                                     <td>
                                         {% if ad.position == 'left' %}
-                                            <span class="badge bg-secondary">Sol</span>
+                                            <span class="badge bg-primary">Sol Kenar</span>
                                         {% elif ad.position == 'right' %}
-                                            <span class="badge bg-secondary">Sağ</span>
+                                            <span class="badge bg-success">Sağ Kenar</span>
                                         {% else %}
-                                            -
+                                            <span class="badge bg-secondary">Merkez</span>
                                         {% endif %}
                                     </td>
                                     <td>

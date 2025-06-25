@@ -54,11 +54,15 @@
                                     <label for="image" class="form-label">Reklam Görseli</label>
                                     <input type="file" class="form-control" id="image" name="image" accept="image/*">
                                     <div class="form-text">
-                                        Desteklenen formatlar: JPG, PNG, GIF, WebP (Yeni görsel seçmezseniz mevcut görsel korunur)
+                                        <strong>Kenar Reklamları:</strong> 300x600px (Banner/Flama oranı) önerilir<br>
+                                        <strong>Popup Reklamları:</strong> 600x400px veya benzer oranlar<br>
+                                        <strong>Formatlar:</strong> JPG, PNG, GIF, WebP<br>
+                                        <strong>Maksimum boyut:</strong> 2MB<br>
+                                        <em>Yeni görsel seçmezseniz mevcut görsel korunur</em>
                                     </div>
                                     {% if ad.image_path %}
                                     <div class="mt-2">
-                                        <img src="{{ ad.image_path }}" class="img-thumbnail" style="max-width: 200px; max-height: 200px;">
+                                        <img src="{{ ad.image_path }}" class="img-thumbnail" style="max-width: 150px; max-height: 300px; object-fit: cover;">
                                         <div class="small text-muted mt-1">Mevcut Görsel</div>
                                     </div>
                                     {% endif %}

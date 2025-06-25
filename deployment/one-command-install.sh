@@ -46,7 +46,8 @@ chown -R ayyildiz:ayyildiz /var/www/ayyildiz
 # Python setup
 cd /var/www/ayyildiz
 sudo -u ayyildiz python3 -m venv venv
-sudo -u ayyildiz ./venv/bin/pip install flask==2.3.3 flask-sqlalchemy==3.0.5 flask-login==0.6.3 gunicorn==21.2.0 psycopg2-binary==2.9.7 apscheduler==3.10.4 beautifulsoup4 lxml requests trafilatura email-validator feedparser python-dateutil werkzeug
+sudo -u ayyildiz ./venv/bin/pip install --upgrade pip
+sudo -u ayyildiz ./venv/bin/pip install flask==2.3.3 flask-sqlalchemy==3.0.5 flask-login==0.6.3 gunicorn==21.2.0 psycopg2-binary==2.9.7 apscheduler==3.10.4 beautifulsoup4 lxml requests trafilatura email-validator feedparser python-dateutil werkzeug==2.3.7
 
 # Database
 systemctl start postgresql
@@ -70,9 +71,11 @@ cat > /var/www/ayyildiz/run.sh << 'EOF'
 cd /var/www/ayyildiz
 source venv/bin/activate
 source .env
-gunicorn --bind 127.0.0.1:5000 --workers 4 main:app
+export DATABASE_URL SESSION_SECRET FLASK_ENV FLASK_APP
+exec gunicorn --bind 127.0.0.1:5000 --workers 4 --timeout 120 --keep-alive 5 --max-requests 1000 main:app
 EOF
 chmod +x /var/www/ayyildiz/run.sh
+chown ayyildiz:ayyildiz /var/www/ayyildiz/run.sh
 
 # Supervisor
 cat > /etc/supervisor/conf.d/ayyildiz.conf << EOF

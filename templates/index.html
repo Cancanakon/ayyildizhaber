@@ -494,31 +494,7 @@
 
         <!-- Right Sidebar Content and Widgets -->
         <div class="col-lg-4">
-            <!-- Currency Widget -->
-            {% if currency_data %}
-            <div class="widget-card mb-4">
-                <div class="widget-header">
-                    <h5><i class="fas fa-coins me-2"></i>Döviz Kurları</h5>
-                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="toggleChart('currency')">
-                        <i class="fas fa-chart-line"></i>
-                    </button>
-                </div>
-                <div class="widget-content">
-                    <div class="currency-list">
-                        {% for symbol, data in currency_data.currency.items() %}
-                        <div class="currency-item">
-                            <span class="currency-symbol">{{ symbol }}</span>
-                            <div class="currency-rates">
-                                <small>Alış: {{ "%.2f"|format(data.buying) }}</small>
-                                <small>Satış: {{ "%.2f"|format(data.selling) }}</small>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <canvas id="currencyChart" width="300" height="200" style="display: none;"></canvas>
-                </div>
-            </div>
-            {% endif %}
+
 
             <!-- Right Vertical Ads -->
             {% if sidebar_ads %}
@@ -548,29 +524,7 @@
             {% endif %}
             {% endif %}
 
-            <!-- Weather Widget -->
-            {% if weather_data and weather_data is iterable %}
-            <div class="widget-card mb-4">
-                <div class="widget-header">
-                    <h5><i class="fas fa-cloud-sun me-2"></i>Hava Durumu</h5>
-                </div>
-                <div class="widget-content">
-                    <div class="weather-cities">
-                        {% for weather in weather_data %}
-                        {% if loop.index <= 5 %}
-                        <div class="weather-item">
-                            <span class="city-name">{{ weather.city }}</span>
-                            <div class="weather-info">
-                                <span class="temperature">{{ weather.temperature }}°C</span>
-                                <i class="{{ weather.icon }}"></i>
-                            </div>
-                        </div>
-                        {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-            {% endif %}
+
 
             <!-- Popular News -->
             {% if popular_news %}
@@ -591,50 +545,7 @@
             </div>
             {% endif %}
 
-            <!-- Prayer Times -->
-            {% if prayer_data %}
-            {% set prayer_cities = prayer_data.cities if prayer_data.cities is defined else prayer_data %}
-            {% set istanbul_prayer = None %}
-            {% if prayer_cities and prayer_cities is iterable %}
-                {% for city_prayer in prayer_cities %}
-                    {% if city_prayer.city == 'İstanbul' and not istanbul_prayer %}
-                        {% set istanbul_prayer = city_prayer %}
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-            {% if istanbul_prayer %}
-            <div class="widget-card">
-                <div class="widget-header">
-                    <h5><i class="fas fa-mosque me-2"></i>Namaz Vakitleri</h5>
-                    <small>İstanbul</small>
-                </div>
-                <div class="widget-content">
-                    <div class="prayer-times">
-                        <div class="prayer-item">
-                            <span class="prayer-name">İmsak</span>
-                            <span class="prayer-time">{{ istanbul_prayer.fajr }}</span>
-                        </div>
-                        <div class="prayer-item">
-                            <span class="prayer-name">Öğle</span>
-                            <span class="prayer-time">{{ istanbul_prayer.dhuhr }}</span>
-                        </div>
-                        <div class="prayer-item">
-                            <span class="prayer-name">İkindi</span>
-                            <span class="prayer-time">{{ istanbul_prayer.asr }}</span>
-                        </div>
-                        <div class="prayer-item">
-                            <span class="prayer-name">Akşam</span>
-                            <span class="prayer-time">{{ istanbul_prayer.maghrib }}</span>
-                        </div>
-                        <div class="prayer-item">
-                            <span class="prayer-name">Yatsı</span>
-                            <span class="prayer-time">{{ istanbul_prayer.isha }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-            {% endif %}
+
         </div>
     </div>
 </div>

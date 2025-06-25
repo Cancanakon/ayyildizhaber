@@ -99,23 +99,39 @@
 
 <div class="container-fluid py-4">
     <div class="row">
-        <!-- Left Sidebar Ads -->
+        <!-- Left Sidebar Ads - 4 Ads Vertically -->
         {% if sidebar_ads %}
         {% set left_ads = sidebar_ads|selectattr("position", "equalto", "left")|list %}
         {% if left_ads %}
         <div class="col-lg-2 d-none d-lg-block">
-            <div class="sticky-top" style="top: 20px;">
-                {% for ad in left_ads %}
-                <div class="sidebar-ad mb-3" data-ad-id="{{ ad.id }}">
+            <div class="sidebar-ads-container">
+                {% for ad in left_ads[:4] %}
+                <div class="large-sidebar-ad" data-ad-id="{{ ad.id }}" onclick="trackAdImpression({{ ad.id }})">
                     {% if ad.link_url %}
                     <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
                         <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
-                             class="img-fluid rounded shadow-sm" style="width: 100%;">
+                             class="sidebar-ad-image">
+                        {% if ad.title %}
+                        <div class="ad-title">{{ ad.title }}</div>
+                        {% endif %}
                     </a>
                     {% else %}
                     <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
-                         class="img-fluid rounded shadow-sm" style="width: 100%;">
+                         class="sidebar-ad-image">
+                    {% if ad.title %}
+                    <div class="ad-title">{{ ad.title }}</div>
                     {% endif %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+                
+                <!-- Fill remaining slots if less than 4 ads -->
+                {% for i in range(4 - left_ads|length) %}
+                <div class="large-sidebar-ad placeholder-ad">
+                    <div class="ad-placeholder">
+                        <i class="fas fa-ad text-muted"></i>
+                        <small class="text-muted">Reklam Alanı</small>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
@@ -488,23 +504,39 @@
             {% endif %}
         </div>
 
-        <!-- Right Sidebar Ads -->
+        <!-- Right Sidebar Ads - 4 Ads Vertically -->
         {% if sidebar_ads %}
         {% set right_ads = sidebar_ads|selectattr("position", "equalto", "right")|list %}
         {% if right_ads %}
         <div class="col-lg-2 d-none d-lg-block">
-            <div class="sticky-top" style="top: 20px;">
-                {% for ad in right_ads %}
-                <div class="sidebar-ad mb-3" data-ad-id="{{ ad.id }}">
+            <div class="sidebar-ads-container">
+                {% for ad in right_ads[:4] %}
+                <div class="large-sidebar-ad" data-ad-id="{{ ad.id }}" onclick="trackAdImpression({{ ad.id }})">
                     {% if ad.link_url %}
                     <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
                         <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
-                             class="img-fluid rounded shadow-sm" style="width: 100%;">
+                             class="sidebar-ad-image">
+                        {% if ad.title %}
+                        <div class="ad-title">{{ ad.title }}</div>
+                        {% endif %}
                     </a>
                     {% else %}
                     <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
-                         class="img-fluid rounded shadow-sm" style="width: 100%;">
+                         class="sidebar-ad-image">
+                    {% if ad.title %}
+                    <div class="ad-title">{{ ad.title }}</div>
                     {% endif %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+                
+                <!-- Fill remaining slots if less than 4 ads -->
+                {% for i in range(4 - right_ads|length) %}
+                <div class="large-sidebar-ad placeholder-ad">
+                    <div class="ad-placeholder">
+                        <i class="fas fa-ad text-muted"></i>
+                        <small class="text-muted">Reklam Alanı</small>
+                    </div>
                 </div>
                 {% endfor %}
             </div>

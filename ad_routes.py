@@ -181,10 +181,18 @@ def toggle_status(id):
 def get_active_ads():
     """API endpoint to get active advertisements"""
     try:
-        sidebar_ads = Advertisement.query.filter_by(
+        # Get sidebar ads with 4 per side limit
+        left_ads = Advertisement.query.filter_by(
             is_active=True, 
-            ad_type='sidebar'
-        ).order_by(Advertisement.created_at.desc()).all()
+            ad_type='sidebar',
+            position='left'
+        ).order_by(Advertisement.created_at.desc()).limit(4).all()
+        
+        right_ads = Advertisement.query.filter_by(
+            is_active=True, 
+            ad_type='sidebar',
+            position='right'
+        ).order_by(Advertisement.created_at.desc()).limit(4).all()
         
         popup_ads = Advertisement.query.filter_by(
             is_active=True, 
@@ -192,8 +200,8 @@ def get_active_ads():
         ).order_by(Advertisement.created_at.desc()).limit(1).all()
         
         result = {
-            'sidebar_left': [ad.to_dict() for ad in sidebar_ads if ad.position == 'left'],
-            'sidebar_right': [ad.to_dict() for ad in sidebar_ads if ad.position == 'right'],
+            'sidebar_left': [ad.to_dict() for ad in left_ads],
+            'sidebar_right': [ad.to_dict() for ad in right_ads],
             'popup': [ad.to_dict() for ad in popup_ads]
         }
         

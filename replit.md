@@ -98,6 +98,11 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- June 25, 2025: Enhanced sidebar advertisements with large format design (180px height)
+- June 25, 2025: Redesigned sidebar layout to display 4 advertisements vertically on each side
+- June 25, 2025: Updated admin panel to support new 4-ads-per-side layout with position tracking
+- June 25, 2025: Added placeholder slots for empty advertisement positions
+- June 25, 2025: Improved advertisement styling with hover effects and better visual hierarchy
 - June 25, 2025: Implemented comprehensive advertisement management system with admin panel
 - June 25, 2025: Added sidebar ads (left/right positioning) and popup ads functionality  
 - June 25, 2025: Created ad tracking system with click and impression analytics

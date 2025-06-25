@@ -51,8 +51,11 @@ os.makedirs(os.path.join(app.config["UPLOAD_FOLDER"], "videos"), exist_ok=True)
 
 with app.app_context():
     # Import models to create tables
-    import models
-    db.create_all()
+    try:
+        import models
+        db.create_all()
+    except Exception as e:
+        print(f"Model import/creation handled: {e}")
     
     # Create default categories
     from models import Category

@@ -1,0 +1,62 @@
+Rules updated (v6)
+Firewall is active and enabled on system startup
+[23:24:38] Initializing database...
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/var/www/ayyildiz/app.py", line 54, in <module>
+    import models
+  File "/var/www/ayyildiz/models.py", line 7, in <module>
+    class Admin(UserMixin, db.Model):
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/flask_sqlalchemy/model.py", line 100, in __init__
+    super().__init__(name, bases, d, **kwargs)
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/flask_sqlalchemy/model.py", line 120, in __init__
+    super().__init__(name, bases, d, **kwargs)
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/decl_api.py", line 198, in __init__
+    _as_declarative(reg, cls, dict_)
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/decl_base.py", line 244, in _as_declarative
+    return _MapperConfig.setup_mapping(registry, cls, dict_, None, {})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/decl_base.py", line 325, in setup_mapping
+    return _ClassScanMapperConfig(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/decl_base.py", line 518, in __init__
+    super().__init__(registry, cls_, mapper_kw)
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/decl_base.py", line 341, in __init__
+    instrumentation.register_class(
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/instrumentation.py", line 682, in register_class
+    manager._update_state(
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/instrumentation.py", line 207, in _update_state
+    registry._add_manager(self)
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/decl_api.py", line 1402, in _add_manager
+    raise exc.ArgumentError(
+sqlalchemy.exc.ArgumentError: Class '<class 'models.Admin'>' already has a primary mapper defined.
+[23:24:38] Starting services...
+Synchronizing state of supervisor.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable supervisor
+Synchronizing state of nginx.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable nginx
+No config updates to processes
+ayyildiz: started
+[23:24:42] Setting up SSL certificate...
+Requested name 69.62.110.158 is an IP address. The Let's Encrypt certificate authority will not issue certificates for a bare IP address.
+Ask for help or search for solutions at https://community.letsencrypt.org. See the logfile /tmp/certbot-log-1hqqa63_/log or re-run Certbot with -v for more details.
+[WARNING] SSL setup failed - website will work on HTTP
+ayyildiz                         STARTING
+
+=========================================
+  Installation Completed Successfully!
+=========================================
+
+Website URL: https://69.62.110.158
+Admin Panel: /admin
+Default Login: admin@gmail.com / admin123
+
+Important: Change admin password after first login!
+
+Management Commands:
+• Check status: ayyildiz-status
+• Restart app: supervisorctl restart ayyildiz
+• View logs: tail -f /var/log/ayyildiz.log
+
+[23:24:47] Installation completed! Your website is ready.
+(venv) root@srv863913:~/ayyildizhaber/deployment#

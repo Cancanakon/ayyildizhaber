@@ -72,16 +72,39 @@ def create():
                 file_path = os.path.join(UPLOAD_FOLDER, unique_filename)
                 file.save(file_path)
                 
+                # Get additional form data
+                slot_number = request.form.get('slot_number', type=int) or 1
+                description = request.form.get('description', '')
+                
+                # Validate slot number for sidebar ads
+                if ad_type == 'sidebar' and (slot_number < 1 or slot_number > 4):
+                    flash('Slot numarası 1-4 arasında olmalıdır', 'error')
+                    return redirect(url_for('ads.create'))
+                
+                # Check if slot is already occupied
+                if ad_type == 'sidebar':
+                    existing_ad = Advertisement.query.filter_by(
+                        ad_type='sidebar',
+                        position=position,
+                        slot_number=slot_number,
+                        is_active=True
+                    ).first()
+                    
+                    if existing_ad:
+                        flash(f'{position.title()} tarafında {slot_number}. slot zaten dolu', 'error')
+                        return redirect(url_for('ads.create'))
+                
                 # Create advertisement record
-                ad = Advertisement(
-                    ad_type=ad_type,
-                    position=position,
-                    title=title,
-                    image_path=f'/static/uploads/ads/{unique_filename}',
-                    link_url=link_url,
-                    is_active=is_active,
-                    admin_id=current_user.id
-                )
+                ad = Advertisement()
+                ad.ad_type = ad_type
+                ad.position = position
+                ad.slot_number = slot_number if ad_type == 'sidebar' else None
+                ad.title = title
+                ad.description = description
+                ad.image_path = f'/static/uploads/ads/{unique_filename}'
+                ad.link_url = link_url
+                ad.is_active = is_active
+                ad.admin_id = current_user.id
                 
                 db.session.add(ad)
                 db.session.commit()
@@ -181,18 +204,18 @@ def toggle_status(id):
 def get_active_ads():
     """API endpoint to get active advertisements"""
     try:
-        # Get sidebar ads - 1 per side for banner layout
+        # Get sidebar ads - 4 per side for vertical layout
         left_ads = Advertisement.query.filter_by(
             is_active=True, 
             ad_type='sidebar',
             position='left'
-        ).order_by(Advertisement.created_at.desc()).limit(1).all()
+        ).order_by(Advertisement.slot_number.asc()).limit(4).all()
         
         right_ads = Advertisement.query.filter_by(
             is_active=True, 
             ad_type='sidebar',
             position='right'
-        ).order_by(Advertisement.created_at.desc()).limit(1).all()
+        ).order_by(Advertisement.slot_number.asc()).limit(4).all()
         
         popup_ads = Advertisement.query.filter_by(
             is_active=True, 

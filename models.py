@@ -152,7 +152,9 @@ class Advertisement(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ad_type = db.Column(db.String(20), nullable=False)  # 'sidebar', 'popup'
     position = db.Column(db.String(20))  # 'left', 'right' (for sidebar ads)
+    slot_number = db.Column(db.Integer, default=1)  # 1-4 for each side
     title = db.Column(db.String(255))
+    description = db.Column(db.Text)  # Enhanced description field
     image_path = db.Column(db.String(500), nullable=False)
     link_url = db.Column(db.String(500))
     is_active = db.Column(db.Boolean, default=True)
@@ -170,7 +172,9 @@ class Advertisement(db.Model):
             'id': self.id,
             'ad_type': self.ad_type,
             'position': self.position,
+            'slot_number': self.slot_number,
             'title': self.title,
+            'description': self.description,
             'image_path': self.image_path,
             'link_url': self.link_url,
             'is_active': self.is_active,

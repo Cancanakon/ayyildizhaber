@@ -99,43 +99,62 @@
 
 <div class="container-fluid py-4">
     <div class="row">
-        <!-- Left Sidebar Banner Ad -->
-        {% if sidebar_ads %}
-        {% set left_ads = sidebar_ads|selectattr("position", "equalto", "left")|list %}
-        {% if left_ads and left_ads[0] %}
+        <!-- Left Sidebar Banner Ads - 4 slots -->
         <div class="col-lg-2 d-none d-lg-block">
             <div class="sidebar-banner-container">
-                <div class="banner-ad" data-ad-id="{{ left_ads[0].id }}" onclick="trackAdImpression({{ left_ads[0].id }})">
-                    {% if left_ads[0].link_url %}
-                    <a href="{{ left_ads[0].link_url }}" target="_blank" onclick="trackAdClick({{ left_ads[0].id }})">
-                        <img src="{{ left_ads[0].image_path }}" alt="{{ left_ads[0].title or 'Reklam' }}" 
-                             class="banner-ad-image">
-                        {% if left_ads[0].title %}
-                        <div class="banner-ad-title">{{ left_ads[0].title }}</div>
+                <div class="banner-ads-column">
+                    {% if sidebar_ads %}
+                    {% set left_ads = sidebar_ads|selectattr("position", "equalto", "left")|list|sort(attribute="slot_number") %}
+                    {% for slot in range(1, 5) %}
+                        {% set slot_ad = left_ads|selectattr("slot_number", "equalto", slot)|list|first %}
+                        {% if slot_ad %}
+                        <div class="banner-ad" data-ad-id="{{ slot_ad.id }}" onclick="trackAdImpression({{ slot_ad.id }})">
+                            {% if slot_ad.link_url %}
+                            <a href="{{ slot_ad.link_url }}" target="_blank" onclick="trackAdClick({{ slot_ad.id }})">
+                                <img src="{{ slot_ad.image_path }}" alt="{{ slot_ad.title or 'Reklam' }}" 
+                                     class="banner-ad-image">
+                                <div class="banner-ad-content">
+                                    {% if slot_ad.title %}
+                                    <div class="banner-ad-title">{{ slot_ad.title }}</div>
+                                    {% endif %}
+                                    {% if slot_ad.description %}
+                                    <div class="banner-ad-description">{{ slot_ad.description }}</div>
+                                    {% endif %}
+                                </div>
+                            </a>
+                            {% else %}
+                            <img src="{{ slot_ad.image_path }}" alt="{{ slot_ad.title or 'Reklam' }}" 
+                                 class="banner-ad-image">
+                            <div class="banner-ad-content">
+                                {% if slot_ad.title %}
+                                <div class="banner-ad-title">{{ slot_ad.title }}</div>
+                                {% endif %}
+                                {% if slot_ad.description %}
+                                <div class="banner-ad-description">{{ slot_ad.description }}</div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <div class="banner-ad-placeholder">
+                            <i class="fas fa-image text-muted"></i>
+                            <small class="text-muted d-block">Sol Slot {{ slot }}</small>
+                            <small class="text-muted">160x150px</small>
+                        </div>
                         {% endif %}
-                    </a>
+                    {% endfor %}
                     {% else %}
-                    <img src="{{ left_ads[0].image_path }}" alt="{{ left_ads[0].title or 'Reklam' }}" 
-                         class="banner-ad-image">
-                    {% if left_ads[0].title %}
-                    <div class="banner-ad-title">{{ left_ads[0].title }}</div>
-                    {% endif %}
+                    {% for slot in range(1, 5) %}
+                    <div class="banner-ad-placeholder">
+                        <i class="fas fa-image text-muted"></i>
+                        <small class="text-muted d-block">Sol Slot {{ slot }}</small>
+                        <small class="text-muted">160x150px</small>
+                    </div>
+                    {% endfor %}
                     {% endif %}
                 </div>
             </div>
         </div>
-        {% else %}
-        <div class="col-lg-2 d-none d-lg-block">
-            <div class="sidebar-banner-container">
-                <div class="banner-ad-placeholder">
-                    <i class="fas fa-flag text-muted"></i>
-                    <small class="text-muted d-block">Sol Banner Alanı</small>
-                    <small class="text-muted">160x600px</small>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-        {% endif %}
 
         <!-- Main Content -->
         <div class="{% if sidebar_ads %}{% set left_ads = sidebar_ads|selectattr('position', 'equalto', 'left')|list %}{% set right_ads = sidebar_ads|selectattr('position', 'equalto', 'right')|list %}{% if left_ads and right_ads %}col-lg-8 offset-lg-0{% elif left_ads or right_ads %}col-lg-10{% else %}col-lg-12{% endif %}{% else %}col-lg-8{% endif %} px-4">
@@ -502,43 +521,62 @@
             {% endif %}
         </div>
 
-        <!-- Right Sidebar Banner Ad -->
-        {% if sidebar_ads %}
-        {% set right_ads = sidebar_ads|selectattr("position", "equalto", "right")|list %}
-        {% if right_ads and right_ads[0] %}
+        <!-- Right Sidebar Banner Ads - 4 slots -->
         <div class="col-lg-2 d-none d-lg-block">
             <div class="sidebar-banner-container">
-                <div class="banner-ad" data-ad-id="{{ right_ads[0].id }}" onclick="trackAdImpression({{ right_ads[0].id }})">
-                    {% if right_ads[0].link_url %}
-                    <a href="{{ right_ads[0].link_url }}" target="_blank" onclick="trackAdClick({{ right_ads[0].id }})">
-                        <img src="{{ right_ads[0].image_path }}" alt="{{ right_ads[0].title or 'Reklam' }}" 
-                             class="banner-ad-image">
-                        {% if right_ads[0].title %}
-                        <div class="banner-ad-title">{{ right_ads[0].title }}</div>
+                <div class="banner-ads-column">
+                    {% if sidebar_ads %}
+                    {% set right_ads = sidebar_ads|selectattr("position", "equalto", "right")|list|sort(attribute="slot_number") %}
+                    {% for slot in range(1, 5) %}
+                        {% set slot_ad = right_ads|selectattr("slot_number", "equalto", slot)|list|first %}
+                        {% if slot_ad %}
+                        <div class="banner-ad" data-ad-id="{{ slot_ad.id }}" onclick="trackAdImpression({{ slot_ad.id }})">
+                            {% if slot_ad.link_url %}
+                            <a href="{{ slot_ad.link_url }}" target="_blank" onclick="trackAdClick({{ slot_ad.id }})">
+                                <img src="{{ slot_ad.image_path }}" alt="{{ slot_ad.title or 'Reklam' }}" 
+                                     class="banner-ad-image">
+                                <div class="banner-ad-content">
+                                    {% if slot_ad.title %}
+                                    <div class="banner-ad-title">{{ slot_ad.title }}</div>
+                                    {% endif %}
+                                    {% if slot_ad.description %}
+                                    <div class="banner-ad-description">{{ slot_ad.description }}</div>
+                                    {% endif %}
+                                </div>
+                            </a>
+                            {% else %}
+                            <img src="{{ slot_ad.image_path }}" alt="{{ slot_ad.title or 'Reklam' }}" 
+                                 class="banner-ad-image">
+                            <div class="banner-ad-content">
+                                {% if slot_ad.title %}
+                                <div class="banner-ad-title">{{ slot_ad.title }}</div>
+                                {% endif %}
+                                {% if slot_ad.description %}
+                                <div class="banner-ad-description">{{ slot_ad.description }}</div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <div class="banner-ad-placeholder">
+                            <i class="fas fa-image text-muted"></i>
+                            <small class="text-muted d-block">Sağ Slot {{ slot }}</small>
+                            <small class="text-muted">160x150px</small>
+                        </div>
                         {% endif %}
-                    </a>
+                    {% endfor %}
                     {% else %}
-                    <img src="{{ right_ads[0].image_path }}" alt="{{ right_ads[0].title or 'Reklam' }}" 
-                         class="banner-ad-image">
-                    {% if right_ads[0].title %}
-                    <div class="banner-ad-title">{{ right_ads[0].title }}</div>
-                    {% endif %}
+                    {% for slot in range(1, 5) %}
+                    <div class="banner-ad-placeholder">
+                        <i class="fas fa-image text-muted"></i>
+                        <small class="text-muted d-block">Sağ Slot {{ slot }}</small>
+                        <small class="text-muted">160x150px</small>
+                    </div>
+                    {% endfor %}
                     {% endif %}
                 </div>
             </div>
         </div>
-        {% else %}
-        <div class="col-lg-2 d-none d-lg-block">
-            <div class="sidebar-banner-container">
-                <div class="banner-ad-placeholder">
-                    <i class="fas fa-flag text-muted"></i>
-                    <small class="text-muted d-block">Sağ Banner Alanı</small>
-                    <small class="text-muted">160x600px</small>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-        {% endif %}
     </div>
 </div>
 

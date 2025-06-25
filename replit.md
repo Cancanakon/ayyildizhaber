@@ -98,6 +98,9 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- June 25, 2025: Created multiple deployment options - simple-install.sh, root-install.sh, and one-command-install.sh
+- June 25, 2025: Added GitHub integration for direct VPS deployment from repository
+- June 25, 2025: Fixed root user installation restrictions with automatic user creation
 - June 25, 2025: Created comprehensive Ubuntu 24.04 VPS deployment system with SSL support
 - June 25, 2025: Fixed popup advertisement system with modal design and backdrop blur
 - June 25, 2025: Resolved widget duplication issues - removed duplicate currency, weather, prayer widgets

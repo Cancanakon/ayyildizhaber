@@ -2,24 +2,39 @@
 
 Bu rehber Ubuntu 24.04 VPS sunucunuzda Ayyıldız Haber Ajansı'nı kurmanız için hazırlanmıştır.
 
-## Hızlı Kurulum (Önerilen)
+## Basit Kurulum (Önerilen)
+
+GitHub'dan direkt kurulum için:
 
 ```bash
-# 1. Dosyaları sunucunuza yükleyin
-scp -r . user@your-server-ip:/home/user/ayyildiz/
-
-# 2. Sunucuda deployment klasörüne gidin
-cd /home/user/ayyildiz/deployment
-
-# 3. Tek komutla kurulum yapın
-chmod +x quick-install.sh
-./quick-install.sh
+# VPS'inizde root olarak:
+wget https://raw.githubusercontent.com/username/repo/main/deployment/simple-install.sh
+chmod +x simple-install.sh
+./simple-install.sh
 ```
 
-## Manuel Kurulum
+Veya projeyi indirip kurulum yapın:
 
 ```bash
-cd deployment
+# 1. Projeyi GitHub'dan klonlayın
+git clone https://github.com/username/ayyildiz-news.git
+cd ayyildiz-news/deployment
+
+# 2. Root kullanıcısı ile kurulum yapın
+chmod +x simple-install.sh
+sudo ./simple-install.sh
+```
+
+## Alternatif Kurulum Yöntemleri
+
+### Root Install Script
+```bash
+chmod +x root-install.sh
+./root-install.sh
+```
+
+### Standart Kurulum
+```bash
 chmod +x ubuntu24-deploy.sh
 ./ubuntu24-deploy.sh
 ```

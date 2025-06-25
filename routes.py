@@ -51,11 +51,19 @@ def index():
             exclude_ids=[news.id for news in latest_news[:3]]  # Exclude already shown news
         )
     
-    # Get active advertisements
+    # Get active advertisements - 4 per side sorted by slot number
     try:
-        sidebar_ads = Advertisement.query.filter_by(is_active=True, ad_type='sidebar').all()
-        popup_ads = Advertisement.query.filter_by(is_active=True, ad_type='popup').first()
-    except:
+        sidebar_ads = Advertisement.query.filter_by(
+            is_active=True, 
+            ad_type='sidebar'
+        ).order_by(Advertisement.position.asc(), Advertisement.slot_number.asc()).all()
+        
+        popup_ads = Advertisement.query.filter_by(
+            is_active=True, 
+            ad_type='popup'
+        ).order_by(Advertisement.created_at.desc()).limit(1).all()
+    except Exception as e:
+        print(f"Error fetching ads: {e}")
         sidebar_ads = []
         popup_ads = None
     

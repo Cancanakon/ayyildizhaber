@@ -44,10 +44,31 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="title" class="form-label">Reklam Başlığı</label>
-                                    <input type="text" class="form-control" id="title" name="title" 
-                                           placeholder="Reklam için açıklayıcı başlık">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="title" class="form-label">Reklam Başlığı</label>
+                                        <input type="text" class="form-control" id="title" name="title" 
+                                               placeholder="Reklam için açıklayıcı başlık">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="description" class="form-label">Açıklama</label>
+                                        <textarea class="form-control" id="description" name="description" rows="2" 
+                                                  placeholder="Reklam açıklaması (opsiyonel)"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3" id="slot-selection" style="display: none;">
+                                    <label for="slot_number" class="form-label">Slot Numarası</label>
+                                    <select class="form-select" id="slot_number" name="slot_number">
+                                        <option value="1">1. Slot (En Üst)</option>
+                                        <option value="2">2. Slot</option>
+                                        <option value="3">3. Slot</option>
+                                        <option value="4">4. Slot (En Alt)</option>
+                                    </select>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle text-primary"></i>
+                                        Her kenarda 4 adet reklam alt alta sıralanır. Zorunlu boyut: 160x150px
+                                    </div>
                                 </div>
 
                                 <div class="mb-3">

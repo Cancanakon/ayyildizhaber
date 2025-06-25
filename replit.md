@@ -98,6 +98,11 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- June 25, 2025: Implemented comprehensive advertisement management system with admin panel
+- June 25, 2025: Added sidebar ads (left/right positioning) and popup ads functionality  
+- June 25, 2025: Created ad tracking system with click and impression analytics
+- June 25, 2025: Added advertisement model with image upload and URL linking capabilities
+- June 25, 2025: Integrated ads into homepage with responsive design and mobile support
 - June 25, 2025: Fixed news detail page template errors - removed duplicate head blocks
 - June 25, 2025: Reorganized navigation menu - moved Yerel Haberler to rightmost position
 - June 25, 2025: Removed Yaşam and Çevre categories from navigation and homepage

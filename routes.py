@@ -81,7 +81,9 @@ def index():
                          categories=categories,
                          currency_data=currency_data,
                          weather_data=weather_data,
-                         prayer_data=prayer_data)
+                         prayer_data=prayer_data,
+                         sidebar_ads=sidebar_ads,
+                         popup_ads=popup_ads)
 
 @main_bp.route('/haber/<slug>')
 def news_detail(slug):
@@ -337,5 +339,39 @@ def get_user_interests():
         interests = recommendation_engine.get_user_interests(user_session.session_id)
         return jsonify({'interests': interests})
         
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@main_bp.route('/api/track-ad-click', methods=['POST'])
+def track_ad_click():
+    """Track advertisement clicks"""
+    try:
+        data = request.get_json()
+        ad_id = data.get('ad_id')
+        
+        from models import Advertisement
+        ad = Advertisement.query.get(ad_id)
+        if ad:
+            ad.increment_clicks()
+            return jsonify({'status': 'success'})
+        
+        return jsonify({'error': 'Ad not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@main_bp.route('/api/track-ad-impression', methods=['POST'])
+def track_ad_impression():
+    """Track advertisement impressions"""
+    try:
+        data = request.get_json()
+        ad_id = data.get('ad_id')
+        
+        from models import Advertisement
+        ad = Advertisement.query.get(ad_id)
+        if ad:
+            ad.increment_impressions()
+            return jsonify({'status': 'success'})
+        
+        return jsonify({'error': 'Ad not found'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500

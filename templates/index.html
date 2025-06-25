@@ -99,8 +99,32 @@
 
 <div class="container-fluid py-4">
     <div class="row">
+        <!-- Left Sidebar Ads -->
+        {% if sidebar_ads %}
+        {% set left_ads = sidebar_ads|selectattr("position", "equalto", "left")|list %}
+        {% if left_ads %}
+        <div class="col-lg-2 d-none d-lg-block">
+            <div class="sticky-top" style="top: 20px;">
+                {% for ad in left_ads %}
+                <div class="sidebar-ad mb-3" data-ad-id="{{ ad.id }}">
+                    {% if ad.link_url %}
+                    <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
+                        <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
+                             class="img-fluid rounded shadow-sm" style="width: 100%;">
+                    </a>
+                    {% else %}
+                    <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
+                         class="img-fluid rounded shadow-sm" style="width: 100%;">
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+
         <!-- Main Content -->
-        <div class="col-lg-8">
+        <div class="{% if sidebar_ads %}{% set left_ads = sidebar_ads|selectattr('position', 'equalto', 'left')|list %}{% set right_ads = sidebar_ads|selectattr('position', 'equalto', 'right')|list %}{% if left_ads and right_ads %}col-lg-8{% elif left_ads or right_ads %}col-lg-10{% else %}col-lg-12{% endif %}{% else %}col-lg-8{% endif %}">
             <!-- Featured News Section -->
             {% if featured_news %}
             <section class="featured-news">
@@ -463,8 +487,55 @@
             </div>
             {% endif %}
         </div>
+
+        <!-- Right Sidebar Ads -->
+        {% if sidebar_ads %}
+        {% set right_ads = sidebar_ads|selectattr("position", "equalto", "right")|list %}
+        {% if right_ads %}
+        <div class="col-lg-2 d-none d-lg-block">
+            <div class="sticky-top" style="top: 20px;">
+                {% for ad in right_ads %}
+                <div class="sidebar-ad mb-3" data-ad-id="{{ ad.id }}">
+                    {% if ad.link_url %}
+                    <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
+                        <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
+                             class="img-fluid rounded shadow-sm" style="width: 100%;">
+                    </a>
+                    {% else %}
+                    <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
+                         class="img-fluid rounded shadow-sm" style="width: 100%;">
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
     </div>
 </div>
+
+<!-- Popup Advertisement -->
+{% if popup_ads %}
+<div id="popup-ad-overlay" class="popup-ad-overlay" style="display: none;">
+    <div class="popup-ad-container">
+        <div class="popup-ad-header">
+            <button type="button" class="popup-ad-close" onclick="closePopupAd()">&times;</button>
+        </div>
+        <div class="popup-ad-content" data-ad-id="{{ popup_ads.id }}">
+            {% if popup_ads.link_url %}
+            <a href="{{ popup_ads.link_url }}" target="_blank" onclick="trackAdClick({{ popup_ads.id }})">
+                <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
+                     class="img-fluid">
+            </a>
+            {% else %}
+            <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
+                 class="img-fluid">
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
 {% endblock %}
 
 {% block scripts %}
@@ -473,5 +544,64 @@
 setInterval(function() {
     // You could implement AJAX refresh here if needed
 }, 300000);
+
+// Advertisement tracking and popup functionality
+function trackAdClick(adId) {
+    fetch('/api/track-ad-click', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ad_id: adId })
+    }).catch(error => console.log('Ad tracking error:', error));
+}
+
+function trackAdImpression(adId) {
+    fetch('/api/track-ad-impression', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ad_id: adId })
+    }).catch(error => console.log('Ad tracking error:', error));
+}
+
+// Track ad impressions for sidebar ads
+document.addEventListener('DOMContentLoaded', function() {
+    // Track sidebar ad impressions
+    document.querySelectorAll('.sidebar-ad').forEach(function(ad) {
+        const adId = ad.getAttribute('data-ad-id');
+        if (adId) {
+            trackAdImpression(parseInt(adId));
+        }
+    });
+    
+    // Show popup ad after 2 seconds if exists
+    {% if popup_ads %}
+    if (!localStorage.getItem('popup_ad_closed_{{ popup_ads.id }}')) {
+        setTimeout(function() {
+            const popup = document.getElementById('popup-ad-overlay');
+            if (popup) {
+                popup.style.display = 'flex';
+                trackAdImpression({{ popup_ads.id }});
+            }
+        }, 2000);
+    }
+    {% endif %}
+});
+
+function closePopupAd() {
+    const popup = document.getElementById('popup-ad-overlay');
+    if (popup) {
+        popup.style.display = 'none';
+        {% if popup_ads %}
+        localStorage.setItem('popup_ad_closed_{{ popup_ads.id }}', 'true');
+        {% endif %}
+    }
+}
+
+// Close popup when clicking outside
+document.addEventListener('click', function(e) {
+    const popup = document.getElementById('popup-ad-overlay');
+    if (popup && e.target === popup) {
+        closePopupAd();
+    }
+});
 </script>
 {% endblock %}

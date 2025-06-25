@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
-from models import News, Category, NewsView, SiteStatistics
+from models import News, Category, NewsView, SiteStatistics, Advertisement
 from app import db
 from services.currency_service import get_currency_data
 from services.weather_service import get_weather_data
@@ -50,6 +50,14 @@ def index():
             limit=6,
             exclude_ids=[news.id for news in latest_news[:3]]  # Exclude already shown news
         )
+    
+    # Get active advertisements
+    try:
+        sidebar_ads = Advertisement.query.filter_by(is_active=True, ad_type='sidebar').all()
+        popup_ads = Advertisement.query.filter_by(is_active=True, ad_type='popup').first()
+    except:
+        sidebar_ads = []
+        popup_ads = None
     
     # Get external data - force fresh data
     try:

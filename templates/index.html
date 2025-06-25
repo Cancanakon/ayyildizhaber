@@ -496,33 +496,7 @@
         <div class="col-lg-4">
 
 
-            <!-- Right Vertical Ads -->
-            {% if sidebar_ads %}
-            {% set right_ads = sidebar_ads|selectattr("position", "equalto", "right")|list|sort(attribute="slot_number") %}
-            {% if right_ads %}
-            <div class="vertical-ads-container mb-4 d-none d-lg-block">
-                {% for ad in right_ads[:2] %}
-                <div class="vertical-banner-ad" data-ad-id="{{ ad.id }}" onclick="trackAdImpression({{ ad.id }})">
-                    {% if ad.link_url %}
-                    <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
-                        <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
-                             class="vertical-banner-image">
-                        {% if ad.title %}
-                        <div class="vertical-banner-title">{{ ad.title }}</div>
-                        {% endif %}
-                    </a>
-                    {% else %}
-                    <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
-                         class="vertical-banner-image">
-                    {% if ad.title %}
-                    <div class="vertical-banner-title">{{ ad.title }}</div>
-                    {% endif %}
-                    {% endif %}
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-            {% endif %}
+
 
 
 
@@ -532,6 +506,34 @@
         </div>
     </div>
 </div>
+
+<!-- Right Fixed Vertical Ads -->
+{% if sidebar_ads %}
+{% set right_ads = sidebar_ads|selectattr("position", "equalto", "right")|list|sort(attribute="slot_number") %}
+{% if right_ads %}
+<div class="sidebar-ads-right d-none d-lg-block">
+    {% for ad in right_ads[:2] %}
+    <div class="vertical-banner-ad sidebar-ad" data-ad-id="{{ ad.id }}">
+        {% if ad.link_url %}
+        <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
+            <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
+                 class="vertical-banner-image">
+            {% if ad.title %}
+            <div class="vertical-banner-title">{{ ad.title }}</div>
+            {% endif %}
+        </a>
+        {% else %}
+        <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
+             class="vertical-banner-image">
+        {% if ad.title %}
+        <div class="vertical-banner-title">{{ ad.title }}</div>
+        {% endif %}
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endif %}
 
 <!-- Popup Advertisement -->
 {% if popup_ads %}

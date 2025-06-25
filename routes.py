@@ -61,7 +61,7 @@ def index():
         popup_ads = Advertisement.query.filter_by(
             is_active=True, 
             ad_type='popup'
-        ).order_by(Advertisement.created_at.desc()).limit(1).all()
+        ).order_by(Advertisement.created_at.desc()).first()
     except Exception as e:
         print(f"Error fetching ads: {e}")
         sidebar_ads = []
@@ -365,6 +365,9 @@ def track_ad_click():
         data = request.get_json()
         ad_id = data.get('ad_id')
         
+        if not ad_id:
+            return jsonify({'error': 'No ad_id provided'}), 400
+            
         ad = Advertisement.query.get(ad_id)
         if ad:
             ad.increment_clicks()
@@ -381,6 +384,9 @@ def track_ad_impression():
         data = request.get_json()
         ad_id = data.get('ad_id')
         
+        if not ad_id:
+            return jsonify({'error': 'No ad_id provided'}), 400
+            
         ad = Advertisement.query.get(ad_id)
         if ad:
             ad.increment_impressions()

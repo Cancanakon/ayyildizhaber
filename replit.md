@@ -98,11 +98,17 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- June 25, 2025: Created comprehensive Ubuntu 24.04 VPS deployment system with SSL support
+- June 25, 2025: Fixed popup advertisement system with modal design and backdrop blur
+- June 25, 2025: Resolved widget duplication issues - removed duplicate currency, weather, prayer widgets
+- June 25, 2025: Fixed right sidebar ads positioning - now appear as fixed vertical banners on right side
+- June 25, 2025: Enhanced popup ads with proper modal styling, close button, and localStorage persistence
+- June 25, 2025: Improved advertisement tracking API with better error handling
 - June 25, 2025: Redesigned advertisement system for vertical banners (120x300px)
 - June 25, 2025: Fixed layout conflicts with widgets - ads now properly positioned
 - June 25, 2025: Reduced to 2 slots per side to prevent design disruption
 - June 25, 2025: Left ads positioned as fixed vertical banners outside main content
-- June 25, 2025: Right ads integrated with sidebar widgets in proper layout
+- June 25, 2025: Right ads now properly positioned as fixed vertical banners on right side
 - June 25, 2025: Improved mobile responsiveness with conditional ad display
 - June 25, 2025: Enhanced widget design for currency, weather, popular news, and prayer times
 - June 25, 2025: Implemented comprehensive advertisement management system with admin panel
@@ -110,12 +116,6 @@ This is a comprehensive news website application built with Flask, featuring a T
 - June 25, 2025: Created ad tracking system with click and impression analytics
 - June 25, 2025: Added advertisement model with image upload and URL linking capabilities
 - June 25, 2025: Integrated ads into homepage with responsive design and mobile support
-- June 25, 2025: Fixed news detail page template errors - removed duplicate head blocks
-- June 25, 2025: Reorganized navigation menu - moved Yerel Haberler to rightmost position
-- June 25, 2025: Removed Yaşam and Çevre categories from navigation and homepage
-- June 25, 2025: Fixed mini live player functionality completely - all buttons now working properly
-- June 25, 2025: Added drag-and-drop functionality to mini player with viewport boundary constraints
-- June 25, 2025: Implemented proper JavaScript event handling with preventDefault and stopPropagation
 - June 25, 2025: Created comprehensive Ubuntu 24.04 VPS deployment guide with fixed Nginx configuration
 - June 25, 2025: Resolved previous SSL and Nginx configuration errors from earlier deployment attempts
 - June 25, 2025: Added quick deployment script for one-command server setup

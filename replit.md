@@ -98,12 +98,13 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
-- June 25, 2025: Redesigned advertisement system to support 4 ads per side (8 total)
-- June 25, 2025: Added slot-based positioning system (1-4 slots per side)
-- June 25, 2025: Changed banner dimensions to 160x150px for compact vertical layout
-- June 25, 2025: Enhanced advertisement display with title and description sections
-- June 25, 2025: Added individual slot management in admin panel
-- June 25, 2025: Improved advertisement styling with better content organization
+- June 25, 2025: Redesigned advertisement system for vertical banners (120x300px)
+- June 25, 2025: Fixed layout conflicts with widgets - ads now properly positioned
+- June 25, 2025: Reduced to 2 slots per side to prevent design disruption
+- June 25, 2025: Left ads positioned as fixed vertical banners outside main content
+- June 25, 2025: Right ads integrated with sidebar widgets in proper layout
+- June 25, 2025: Improved mobile responsiveness with conditional ad display
+- June 25, 2025: Enhanced widget design for currency, weather, popular news, and prayer times
 - June 25, 2025: Implemented comprehensive advertisement management system with admin panel
 - June 25, 2025: Added sidebar ads (left/right positioning) and popup ads functionality  
 - June 25, 2025: Created ad tracking system with click and impression analytics

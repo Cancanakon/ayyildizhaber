@@ -60,14 +60,12 @@
                                 <div class="mb-3" id="slot-selection" {{ 'style=display:none;' if ad.ad_type != 'sidebar' }}>
                                     <label for="slot_number" class="form-label">Slot Numarası</label>
                                     <select class="form-select" id="slot_number" name="slot_number">
-                                        <option value="1" {{ 'selected' if ad.slot_number == 1 }}>1. Slot (En Üst)</option>
-                                        <option value="2" {{ 'selected' if ad.slot_number == 2 }}>2. Slot</option>
-                                        <option value="3" {{ 'selected' if ad.slot_number == 3 }}>3. Slot</option>
-                                        <option value="4" {{ 'selected' if ad.slot_number == 4 }}>4. Slot (En Alt)</option>
+                                        <option value="1" {{ 'selected' if ad.slot_number == 1 }}>1. Slot (Üst)</option>
+                                        <option value="2" {{ 'selected' if ad.slot_number == 2 }}>2. Slot (Alt)</option>
                                     </select>
                                     <div class="form-text">
                                         <i class="fas fa-info-circle text-primary"></i>
-                                        Her kenarda 4 adet reklam alt alta sıralanır. Zorunlu boyut: 160x150px
+                                        Her kenarda 2 adet dikey reklam gösterilir. Zorunlu boyut: 120x300px
                                     </div>
 
                                 <div class="mb-3">
@@ -76,7 +74,7 @@
                                     <div class="form-text">
                                         <div class="alert alert-info">
                                             <strong><i class="fas fa-info-circle"></i> Zorunlu Özellikler:</strong><br>
-                                            <strong>Kenar Reklamları:</strong> Tam olarak 160x150px (Kompakt banner format)<br>
+                                            <strong>Kenar Reklamları:</strong> Tam olarak 120x300px (Dikey banner format)<br>
                                             <strong>Popup Reklamları:</strong> 600x400px veya benzer oranlar<br>
                                             <strong>Formatlar:</strong> JPG, PNG, GIF, WebP<br>
                                             <strong>Maksimum boyut:</strong> 2MB<br>

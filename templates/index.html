@@ -99,65 +99,36 @@
 
 <div class="container-fluid py-4">
     <div class="row">
-        <!-- Left Sidebar Banner Ads - 4 slots -->
-        <div class="col-lg-2 d-none d-lg-block">
-            <div class="sidebar-banner-container">
-                <div class="banner-ads-column">
-                    {% if sidebar_ads %}
-                    {% set left_ads = sidebar_ads|selectattr("position", "equalto", "left")|list|sort(attribute="slot_number") %}
-                    {% for slot in range(1, 5) %}
-                        {% set slot_ad = left_ads|selectattr("slot_number", "equalto", slot)|list|first %}
-                        {% if slot_ad %}
-                        <div class="banner-ad" data-ad-id="{{ slot_ad.id }}" onclick="trackAdImpression({{ slot_ad.id }})">
-                            {% if slot_ad.link_url %}
-                            <a href="{{ slot_ad.link_url }}" target="_blank" onclick="trackAdClick({{ slot_ad.id }})">
-                                <img src="{{ slot_ad.image_path }}" alt="{{ slot_ad.title or 'Reklam' }}" 
-                                     class="banner-ad-image">
-                                <div class="banner-ad-content">
-                                    {% if slot_ad.title %}
-                                    <div class="banner-ad-title">{{ slot_ad.title }}</div>
-                                    {% endif %}
-                                    {% if slot_ad.description %}
-                                    <div class="banner-ad-description">{{ slot_ad.description }}</div>
-                                    {% endif %}
-                                </div>
-                            </a>
-                            {% else %}
-                            <img src="{{ slot_ad.image_path }}" alt="{{ slot_ad.title or 'Reklam' }}" 
-                                 class="banner-ad-image">
-                            <div class="banner-ad-content">
-                                {% if slot_ad.title %}
-                                <div class="banner-ad-title">{{ slot_ad.title }}</div>
-                                {% endif %}
-                                {% if slot_ad.description %}
-                                <div class="banner-ad-description">{{ slot_ad.description }}</div>
-                                {% endif %}
-                            </div>
-                            {% endif %}
-                        </div>
-                        {% else %}
-                        <div class="banner-ad-placeholder">
-                            <i class="fas fa-image text-muted"></i>
-                            <small class="text-muted d-block">Sol Slot {{ slot }}</small>
-                            <small class="text-muted">160x150px</small>
-                        </div>
-                        {% endif %}
-                    {% endfor %}
-                    {% else %}
-                    {% for slot in range(1, 5) %}
-                    <div class="banner-ad-placeholder">
-                        <i class="fas fa-image text-muted"></i>
-                        <small class="text-muted d-block">Sol Slot {{ slot }}</small>
-                        <small class="text-muted">160x150px</small>
-                    </div>
-                    {% endfor %}
+        <!-- Left Sidebar Vertical Ads -->
+        {% if sidebar_ads %}
+        {% set left_ads = sidebar_ads|selectattr("position", "equalto", "left")|list|sort(attribute="slot_number") %}
+        {% if left_ads %}
+        <div class="sidebar-ads-left d-none d-xl-block">
+            {% for ad in left_ads[:2] %}
+            <div class="vertical-banner-ad" data-ad-id="{{ ad.id }}" onclick="trackAdImpression({{ ad.id }})">
+                {% if ad.link_url %}
+                <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
+                    <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
+                         class="vertical-banner-image">
+                    {% if ad.title %}
+                    <div class="vertical-banner-title">{{ ad.title }}</div>
                     {% endif %}
-                </div>
+                </a>
+                {% else %}
+                <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
+                     class="vertical-banner-image">
+                {% if ad.title %}
+                <div class="vertical-banner-title">{{ ad.title }}</div>
+                {% endif %}
+                {% endif %}
             </div>
+            {% endfor %}
         </div>
+        {% endif %}
+        {% endif %}
 
         <!-- Main Content -->
-        <div class="{% if sidebar_ads %}{% set left_ads = sidebar_ads|selectattr('position', 'equalto', 'left')|list %}{% set right_ads = sidebar_ads|selectattr('position', 'equalto', 'right')|list %}{% if left_ads and right_ads %}col-lg-8 offset-lg-0{% elif left_ads or right_ads %}col-lg-10{% else %}col-lg-12{% endif %}{% else %}col-lg-8{% endif %} px-4">
+        <div class="col-lg-8 px-4">
             <!-- Featured News Section -->
             {% if featured_news %}
             <section class="featured-news">
@@ -521,61 +492,139 @@
             {% endif %}
         </div>
 
-        <!-- Right Sidebar Banner Ads - 4 slots -->
-        <div class="col-lg-2 d-none d-lg-block">
-            <div class="sidebar-banner-container">
-                <div class="banner-ads-column">
-                    {% if sidebar_ads %}
-                    {% set right_ads = sidebar_ads|selectattr("position", "equalto", "right")|list|sort(attribute="slot_number") %}
-                    {% for slot in range(1, 5) %}
-                        {% set slot_ad = right_ads|selectattr("slot_number", "equalto", slot)|list|first %}
-                        {% if slot_ad %}
-                        <div class="banner-ad" data-ad-id="{{ slot_ad.id }}" onclick="trackAdImpression({{ slot_ad.id }})">
-                            {% if slot_ad.link_url %}
-                            <a href="{{ slot_ad.link_url }}" target="_blank" onclick="trackAdClick({{ slot_ad.id }})">
-                                <img src="{{ slot_ad.image_path }}" alt="{{ slot_ad.title or 'Reklam' }}" 
-                                     class="banner-ad-image">
-                                <div class="banner-ad-content">
-                                    {% if slot_ad.title %}
-                                    <div class="banner-ad-title">{{ slot_ad.title }}</div>
-                                    {% endif %}
-                                    {% if slot_ad.description %}
-                                    <div class="banner-ad-description">{{ slot_ad.description }}</div>
-                                    {% endif %}
-                                </div>
-                            </a>
-                            {% else %}
-                            <img src="{{ slot_ad.image_path }}" alt="{{ slot_ad.title or 'Reklam' }}" 
-                                 class="banner-ad-image">
-                            <div class="banner-ad-content">
-                                {% if slot_ad.title %}
-                                <div class="banner-ad-title">{{ slot_ad.title }}</div>
-                                {% endif %}
-                                {% if slot_ad.description %}
-                                <div class="banner-ad-description">{{ slot_ad.description }}</div>
-                                {% endif %}
+        <!-- Right Sidebar Content and Widgets -->
+        <div class="col-lg-4">
+            <!-- Currency Widget -->
+            {% if currency_data %}
+            <div class="widget-card mb-4">
+                <div class="widget-header">
+                    <h5><i class="fas fa-coins me-2"></i>Döviz Kurları</h5>
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="toggleChart('currency')">
+                        <i class="fas fa-chart-line"></i>
+                    </button>
+                </div>
+                <div class="widget-content">
+                    <div class="currency-list">
+                        {% for symbol, data in currency_data.currency.items() %}
+                        <div class="currency-item">
+                            <span class="currency-symbol">{{ symbol }}</span>
+                            <div class="currency-rates">
+                                <small>Alış: {{ "%.2f"|format(data.buying) }}</small>
+                                <small>Satış: {{ "%.2f"|format(data.selling) }}</small>
                             </div>
-                            {% endif %}
                         </div>
-                        {% else %}
-                        <div class="banner-ad-placeholder">
-                            <i class="fas fa-image text-muted"></i>
-                            <small class="text-muted d-block">Sağ Slot {{ slot }}</small>
-                            <small class="text-muted">160x150px</small>
-                        </div>
-                        {% endif %}
-                    {% endfor %}
-                    {% else %}
-                    {% for slot in range(1, 5) %}
-                    <div class="banner-ad-placeholder">
-                        <i class="fas fa-image text-muted"></i>
-                        <small class="text-muted d-block">Sağ Slot {{ slot }}</small>
-                        <small class="text-muted">160x150px</small>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
-                    {% endif %}
+                    <canvas id="currencyChart" width="300" height="200" style="display: none;"></canvas>
                 </div>
             </div>
+            {% endif %}
+
+            <!-- Right Vertical Ads -->
+            {% if sidebar_ads %}
+            {% set right_ads = sidebar_ads|selectattr("position", "equalto", "right")|list|sort(attribute="slot_number") %}
+            {% if right_ads %}
+            <div class="vertical-ads-container mb-4 d-none d-lg-block">
+                {% for ad in right_ads[:2] %}
+                <div class="vertical-banner-ad" data-ad-id="{{ ad.id }}" onclick="trackAdImpression({{ ad.id }})">
+                    {% if ad.link_url %}
+                    <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
+                        <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
+                             class="vertical-banner-image">
+                        {% if ad.title %}
+                        <div class="vertical-banner-title">{{ ad.title }}</div>
+                        {% endif %}
+                    </a>
+                    {% else %}
+                    <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
+                         class="vertical-banner-image">
+                    {% if ad.title %}
+                    <div class="vertical-banner-title">{{ ad.title }}</div>
+                    {% endif %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endif %}
+
+            <!-- Weather Widget -->
+            {% if weather_data %}
+            <div class="widget-card mb-4">
+                <div class="widget-header">
+                    <h5><i class="fas fa-cloud-sun me-2"></i>Hava Durumu</h5>
+                </div>
+                <div class="widget-content">
+                    <div class="weather-cities">
+                        {% for city, data in weather_data.cities.items() %}
+                        <div class="weather-item">
+                            <span class="city-name">{{ city }}</span>
+                            <div class="weather-info">
+                                <span class="temperature">{{ data.temperature }}°C</span>
+                                <i class="{{ data.icon }}"></i>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Popular News -->
+            {% if popular_news %}
+            <div class="widget-card mb-4">
+                <div class="widget-header">
+                    <h5><i class="fas fa-fire me-2"></i>Popüler Haberler</h5>
+                </div>
+                <div class="widget-content">
+                    {% for news in popular_news %}
+                    <div class="popular-news-item">
+                        <a href="{{ url_for('news_detail', slug=news.slug) }}" class="news-link">
+                            <div class="news-title">{{ news.title }}</div>
+                            <small class="news-views"><i class="fas fa-eye"></i> {{ news.view_count }}</small>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Prayer Times -->
+            {% if prayer_data %}
+            {% set istanbul_prayer = prayer_data.cities.get('İstanbul') %}
+            {% if istanbul_prayer %}
+            <div class="widget-card">
+                <div class="widget-header">
+                    <h5><i class="fas fa-mosque me-2"></i>Namaz Vakitleri</h5>
+                    <small>İstanbul</small>
+                </div>
+                <div class="widget-content">
+                    <div class="prayer-times">
+                        <div class="prayer-item">
+                            <span class="prayer-name">İmsak</span>
+                            <span class="prayer-time">{{ istanbul_prayer.fajr }}</span>
+                        </div>
+                        <div class="prayer-item">
+                            <span class="prayer-name">Öğle</span>
+                            <span class="prayer-time">{{ istanbul_prayer.dhuhr }}</span>
+                        </div>
+                        <div class="prayer-item">
+                            <span class="prayer-name">İkindi</span>
+                            <span class="prayer-time">{{ istanbul_prayer.asr }}</span>
+                        </div>
+                        <div class="prayer-item">
+                            <span class="prayer-name">Akşam</span>
+                            <span class="prayer-time">{{ istanbul_prayer.maghrib }}</span>
+                        </div>
+                        <div class="prayer-item">
+                            <span class="prayer-name">Yatsı</span>
+                            <span class="prayer-time">{{ istanbul_prayer.isha }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endif %}
         </div>
     </div>
 </div>

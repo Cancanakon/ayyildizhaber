@@ -42,8 +42,12 @@ echo "Python ortamı hazırlanıyor..."
 python3 -m venv venv
 source venv/bin/activate
 
-# Pip güncellemesi
+# Pip güncellemesi ve temel paketler
 pip install --upgrade pip
+pip install gunicorn flask flask-sqlalchemy flask-login
+
+# Venv sahipliğini ayarla
+chown -R www-data:www-data venv
 
 # Nginx yapılandırması
 echo "Nginx yapılandırılıyor..."

@@ -1,0 +1,39 @@
+Database initialization: FAILED - Class '<class 'models.Admin'>' already has a primary mapper defined.
+Traceback (most recent call last):
+  File "/var/www/ayyildiz/init_db.py", line 13, in <module>
+    from app import app, init_database
+  File "/var/www/ayyildiz/app.py", line 125, in <module>
+    app = create_app()
+          ^^^^^^^^^^^^
+  File "/var/www/ayyildiz/app.py", line 50, in create_app
+    register_blueprints(app)
+  File "/var/www/ayyildiz/app.py", line 57, in register_blueprints
+    from routes import main_bp
+  File "/var/www/ayyildiz/routes.py", line 2, in <module>
+    from models import News, Category, NewsView, SiteStatistics, Advertisement
+  File "/var/www/ayyildiz/models.py", line 6, in <module>
+    class Admin(UserMixin, db.Model):
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/flask_sqlalchemy/model.py", line 100, in __init__
+    super().__init__(name, bases, d, **kwargs)
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/flask_sqlalchemy/model.py", line 120, in __init__
+    super().__init__(name, bases, d, **kwargs)
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/decl_api.py", line 198, in __init__
+    _as_declarative(reg, cls, dict_)
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/decl_base.py", line 244, in _as_declarative
+    return _MapperConfig.setup_mapping(registry, cls, dict_, None, {})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/decl_base.py", line 325, in setup_mapping
+    return _ClassScanMapperConfig(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/decl_base.py", line 518, in __init__
+    super().__init__(registry, cls_, mapper_kw)
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/decl_base.py", line 341, in __init__
+    instrumentation.register_class(
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/instrumentation.py", line 682, in register_class
+    manager._update_state(
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/instrumentation.py", line 207, in _update_state
+    registry._add_manager(self)
+  File "/var/www/ayyildiz/venv/lib/python3.12/site-packages/sqlalchemy/orm/decl_api.py", line 1402, in _add_manager
+    raise exc.ArgumentError(
+sqlalchemy.exc.ArgumentError: Class '<class 'models.Admin'>' already has a primary mapper defined.
+root@srv863913:~/ayyildizhaber/deployment#

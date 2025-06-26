@@ -146,8 +146,10 @@ from routes import main_bp
 from admin_routes import admin_bp
 from admin_config_routes import config_bp
 from ad_routes import ad_bp
+from live_stream_routes import live_stream_bp
 
 app.register_blueprint(main_bp)
 app.register_blueprint(admin_bp, url_prefix='/admin')
 app.register_blueprint(config_bp)
 app.register_blueprint(ad_bp)
+app.register_blueprint(live_stream_bp)

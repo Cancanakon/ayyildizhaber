@@ -190,3 +190,57 @@ class Advertisement(db.Model):
     def increment_impressions(self):
         self.impression_count += 1
         db.session.commit()
+
+
+class LiveStreamSettings(db.Model):
+    __tablename__ = 'live_stream_settings'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    youtube_url = db.Column(db.String(500), nullable=False)
+    youtube_video_id = db.Column(db.String(50), nullable=False)
+    is_active = db.Column(db.Boolean, default=False)
+    is_default = db.Column(db.Boolean, default=False)
+    description = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Admin who created this stream setting
+    admin_id = db.Column(db.Integer, db.ForeignKey('admins.id'))
+    admin = db.relationship('Admin', backref=db.backref('live_streams', lazy='dynamic'))
+    
+    def extract_video_id(self):
+        """Extract YouTube video ID from URL"""
+        import re
+        patterns = [
+            r'youtube\.com/watch\?v=([^&]+)',
+            r'youtu\.be/([^?]+)',
+            r'youtube\.com/embed/([^?]+)',
+            r'youtube\.com/v/([^?]+)'
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, self.youtube_url)
+            if match:
+                return match.group(1)
+        return None
+    
+    def get_embed_url(self):
+        """Get embed URL for YouTube video"""
+        video_id = self.extract_video_id()
+        if video_id:
+            return f"https://www.youtube.com/embed/{video_id}?autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1"
+        return None
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'youtube_url': self.youtube_url,
+            'youtube_video_id': self.youtube_video_id,
+            'is_active': self.is_active,
+            'is_default': self.is_default,
+            'description': self.description,
+            'embed_url': self.get_embed_url(),
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }

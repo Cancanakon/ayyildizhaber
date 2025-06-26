@@ -1,0 +1,144 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Canlı Yayın Yönetimi - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">Canlı Yayın Yönetimi</h1>
+                <a href="{{ url_for('live_stream.create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Yeni Yayın Ekle
+                </a>
+            </div>
+
+            <!-- Active Stream Info -->
+            {% if active_stream %}
+            <div class="alert alert-success mb-4">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-broadcast-tower me-2"></i>
+                    <div>
+                        <strong>Aktif Canlı Yayın:</strong> {{ active_stream.name }}<br>
+                        <small class="text-muted">{{ active_stream.youtube_url }}</small>
+                    </div>
+                    <div class="ms-auto">
+                        <a href="{{ url_for('live_stream.preview', id=active_stream.id) }}" class="btn btn-sm btn-outline-success me-2">
+                            <i class="fas fa-eye"></i> Önizle
+                        </a>
+                        <form method="POST" action="{{ url_for('live_stream.deactivate') }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-warning" onclick="return confirm('Canlı yayını deaktif etmek istediğinizden emin misiniz?')">
+                                <i class="fas fa-stop"></i> Durdur
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-warning mb-4">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Şu anda aktif canlı yayın yok. Yayın başlatmak için aşağıdaki listeden birini seçin.
+            </div>
+            {% endif %}
+
+            <!-- Live Streams Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Canlı Yayın Listesi</h5>
+                </div>
+                <div class="card-body">
+                    {% if streams %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Yayın Adı</th>
+                                    <th>YouTube URL</th>
+                                    <th>Video ID</th>
+                                    <th>Durum</th>
+                                    <th>Oluşturulma</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for stream in streams %}
+                                <tr class="{{ 'table-success' if stream.is_active else '' }}">
+                                    <td>
+                                        <strong>{{ stream.name }}</strong>
+                                        {% if stream.is_default %}
+                                        <span class="badge bg-info ms-2">Varsayılan</span>
+                                        {% endif %}
+                                        {% if stream.is_active %}
+                                        <span class="badge bg-success ms-2">
+                                            <i class="fas fa-broadcast-tower"></i> Aktif
+                                        </span>
+                                        {% endif %}
+                                        {% if stream.description %}
+                                        <br><small class="text-muted">{{ stream.description }}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ stream.youtube_url }}" target="_blank" class="text-decoration-none">
+                                            {{ stream.youtube_url[:50] }}{% if stream.youtube_url|length > 50 %}...{% endif %}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <code>{{ stream.youtube_video_id }}</code>
+                                    </td>
+                                    <td>
+                                        {% if stream.is_active %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-play"></i> Yayında
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-pause"></i> Beklemede
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ stream.created_at.strftime('%d.%m.%Y %H:%M') if stream.created_at else 'Bilinmiyor' }}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ url_for('live_stream.preview', id=stream.id) }}" class="btn btn-outline-info" title="Önizle">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{{ url_for('live_stream.edit', id=stream.id) }}" class="btn btn-outline-primary" title="Düzenle">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            {% if not stream.is_active %}
+                                            <form method="POST" action="{{ url_for('live_stream.activate', id=stream.id) }}" class="d-inline">
+                                                <button type="submit" class="btn btn-outline-success" title="Aktifleştir" onclick="return confirm('Bu yayını aktifleştirmek istediğinizden emin misiniz?')">
+                                                    <i class="fas fa-play"></i>
+                                                </button>
+                                            </form>
+                                            <form method="POST" action="{{ url_for('live_stream.delete', id=stream.id) }}" class="d-inline">
+                                                <button type="submit" class="btn btn-outline-danger" title="Sil" onclick="return confirm('Bu yayın ayarını silmek istediğinizden emin misiniz?')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-broadcast-tower fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Henüz canlı yayın ayarı yok</h5>
+                        <p class="text-muted mb-3">İlk canlı yayın ayarınızı oluşturun</p>
+                        <a href="{{ url_for('live_stream.create') }}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Yeni Yayın Ekle
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

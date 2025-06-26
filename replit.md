@@ -98,10 +98,10 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
-- June 26, 2025: Created complete sıfırdan VPS kurulum sistemi - install.sh ve deploy.sh
-- June 26, 2025: Optimized 2-step deployment process tested for Ubuntu 24.04
-- June 26, 2025: Streamlined Nginx configuration without syntax errors
-- June 26, 2025: Simplified Gunicorn systemd service with proper PostgreSQL dependencies
+- June 26, 2025: Created comprehensive VPS deployment system with vps-setup.sh and deploy-to-vps.sh
+- June 26, 2025: Added complete Ubuntu 24.04 server configuration with PostgreSQL, Nginx, Gunicorn
+- June 26, 2025: Implemented automatic project packaging and deployment with proper error handling
+- June 26, 2025: Added requirements-vps.txt for production dependencies and VPS-KURULUM-REHBERİ.md guide
 - June 26, 2025: Added comprehensive live stream management system with admin panel control
 - June 26, 2025: Enhanced advertisement system with larger banners (160x400px) and improved clickability
 - June 26, 2025: Fixed sidebar ad positioning conflicts - reduced z-index and added pointer-events controls

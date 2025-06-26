@@ -91,11 +91,11 @@ fi
 python3 -m venv venv
 source venv/bin/activate
 
-# Requirements yükle
-if [ -f "requirements.txt" ]; then
+# Requirements yükle - deployment klasöründeki requirements.txt kullan
+if [ -f "deployment/requirements.txt" ]; then
+    pip install -r deployment/requirements.txt || error_exit "Python paketleri kurulamadı"
+elif [ -f "requirements.txt" ]; then
     pip install -r requirements.txt || error_exit "Python paketleri kurulamadı"
-elif [ -f "pyproject.toml" ]; then
-    pip install . || error_exit "Python paketleri kurulamadı"
 else
     # Temel paketleri manuel kur
     pip install flask flask-sqlalchemy flask-login psycopg2-binary gunicorn \

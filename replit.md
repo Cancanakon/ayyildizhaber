@@ -98,14 +98,11 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
-- June 26, 2025: Created single-command-install.sh for foolproof VPS deployment
-- June 26, 2025: Developed HTTP-only installation system bypassing SSL complications
-- June 26, 2025: Fixed all PostgreSQL connection issues with proper authentication
-- June 26, 2025: Resolved Gunicorn startup problems with environment variable handling
-- June 26, 2025: Created comprehensive installation guide based on real deployment experience
-- June 26, 2025: Eliminated all previous SSL and Nginx configuration errors
-- June 26, 2025: Implemented working systemd service with proper permissions
-- June 26, 2025: Added complete deployment documentation with troubleshooting guide
+- June 26, 2025: Cleaned project structure - removed all cache, deployment artifacts, and duplicate files
+- June 26, 2025: Created requirements-deploy.txt for Replit Deployments compatibility
+- June 26, 2025: Prepared project for Replit native deployment with custom domain support
+- June 26, 2025: Simplified file structure to core components only (app, templates, static, services)
+- June 26, 2025: Removed VPS deployment approach in favor of Replit's managed deployment solution
 - June 25, 2025: Redesigned advertisement system for vertical banners (120x300px)
 - June 25, 2025: Fixed layout conflicts with widgets - ads now properly positioned
 - June 25, 2025: Reduced to 2 slots per side to prevent design disruption

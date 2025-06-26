@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize live player after a short delay to ensure DOM is ready
     setTimeout(initializeLivePlayer, 100);
     
+    // Setup video error detection
+    setTimeout(setupVideoErrorDetection, 2000);
+    
     // Update date/time every minute
     setInterval(updateDateTime, 60000);
 });
@@ -672,6 +675,68 @@ function initializeLivePlayer() {
     }
     
     console.log('Live player initialization completed');
+}
+
+// YouTube Live Stream Retry Function
+function retryLiveStream() {
+    const iframe = document.getElementById('live-iframe');
+    const errorOverlay = document.getElementById('video-error-message');
+    
+    if (iframe && errorOverlay) {
+        // Hide error overlay
+        errorOverlay.style.display = 'none';
+        
+        // Try alternative live stream URLs
+        const streamUrls = [
+            'https://www.youtube.com/embed/live_stream?channel=UCwIAJU8WnPNTmUfrGJMkwOQ&autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1',
+            'https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1', // CNN Türk
+            'https://www.youtube.com/embed/XxJKnDLYZz4?autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1'  // TRT Haber
+        ];
+        
+        // Use a random stream URL
+        const randomUrl = streamUrls[Math.floor(Math.random() * streamUrls.length)];
+        iframe.src = randomUrl;
+        
+        // Set up error detection
+        setTimeout(() => {
+            // Check if video is playing by trying to access iframe content
+            try {
+                if (iframe.contentWindow) {
+                    console.log('Live stream loaded successfully');
+                }
+            } catch (e) {
+                console.log('Live stream still having issues, showing error overlay');
+                errorOverlay.style.display = 'flex';
+            }
+        }, 3000);
+    }
+}
+
+// Auto-detect video errors and show overlay
+function setupVideoErrorDetection() {
+    const iframe = document.getElementById('live-iframe');
+    const errorOverlay = document.getElementById('video-error-message');
+    
+    if (iframe && errorOverlay) {
+        iframe.addEventListener('load', () => {
+            // Wait a bit then check if video is working
+            setTimeout(() => {
+                // If iframe is still loading or has issues, show error
+                try {
+                    const iframeSrc = iframe.src;
+                    if (!iframeSrc || iframeSrc.includes('error')) {
+                        errorOverlay.style.display = 'flex';
+                    }
+                } catch (e) {
+                    console.log('Video detection check failed, assuming it works');
+                }
+            }, 5000);
+        });
+        
+        iframe.addEventListener('error', () => {
+            errorOverlay.style.display = 'flex';
+        });
+    }
 }
 
 // Recommendation tracking functions

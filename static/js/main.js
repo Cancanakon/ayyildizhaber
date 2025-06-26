@@ -688,9 +688,10 @@ function retryLiveStream() {
         
         // Try alternative live stream URLs
         const streamUrls = [
-            'https://www.youtube.com/embed/live_stream?channel=UCwIAJU8WnPNTmUfrGJMkwOQ&autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1',
+            'https://www.youtube.com/embed/TNax9QRxK40?autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1', // Ana video
             'https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1', // CNN Türk
-            'https://www.youtube.com/embed/XxJKnDLYZz4?autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1'  // TRT Haber
+            'https://www.youtube.com/embed/XxJKnDLYZz4?autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1', // TRT Haber
+            'https://www.youtube.com/embed/live_stream?channel=UCwIAJU8WnPNTmUfrGJMkwOQ&autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1'
         ];
         
         // Use a random stream URL

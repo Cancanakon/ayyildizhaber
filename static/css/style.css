@@ -658,6 +658,37 @@ body {
     border: none;
 }
 
+/* Video Error Overlay */
+.video-error-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.error-content {
+    text-align: center;
+    padding: 20px;
+}
+
+.error-content i {
+    font-size: 2rem;
+    color: #ffc107;
+    margin-bottom: 10px;
+}
+
+.error-content p {
+    margin: 10px 0;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
 .live-player-toggle {
     position: fixed;
     bottom: 20px;
@@ -1135,27 +1166,30 @@ body {
     }
 }
 
-/* Vertical Advertisement Styles */
+/* Vertical Advertisement Styles - Büyütülmüş ve Düzeltilmiş */
 .sidebar-ads-left {
     position: fixed;
-    left: 10px;
+    left: 15px;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 100;
+    z-index: 50; /* Z-index düşürüldü, tıklanabilirlik için */
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px;
+    pointer-events: none; /* Container'a tıklanamaz, sadece reklamlara */
 }
 
 .sidebar-ads-right {
     position: fixed;
-    right: 10px;
+    right: 15px;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 100;
+    z-index: 50; /* Z-index düşürüldü */
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px;
+    pointer-events: none; /* Container'a tıklanamaz, sadece reklamlara */
+};
 }
 
 .vertical-ads-container {
@@ -1164,15 +1198,16 @@ body {
 
 .vertical-banner-ad {
     background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     overflow: hidden;
     transition: all 0.3s ease;
     cursor: pointer;
-    border: 1px solid #e9ecef;
-    width: 120px;
-    margin-bottom: 15px;
+    border: 2px solid #e9ecef;
+    width: 160px; /* 120px'den 160px'e büyütüldü */
+    margin-bottom: 20px;
     position: relative;
+    pointer-events: auto; /* Reklamların tıklanabilir olması için */
 }
 
 .vertical-banner-ad:hover {
@@ -1183,7 +1218,7 @@ body {
 
 .vertical-banner-image {
     width: 100%;
-    height: 300px;
+    height: 400px; /* 300px'den 400px'e uzatıldı */
     object-fit: cover;
     object-position: center;
     display: block;

@@ -234,12 +234,21 @@
             </div>
         </div>
         <div class="live-player-content">
-            <iframe id="live-iframe" 
-                    src="https://www.youtube.com/embed/TNax9QRxK40?autoplay=1&mute=1&controls=1&rel=0" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-            </iframe>
+            <div id="live-video-container">
+                <iframe id="live-iframe" 
+                        src="https://www.youtube.com/embed/live_stream?channel=UCwIAJU8WnPNTmUfrGJMkwOQ&autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                </iframe>
+                <div id="video-error-message" class="video-error-overlay" style="display: none;">
+                    <div class="error-content">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Canlı yayın şu anda mevcut değil</p>
+                        <button onclick="retryLiveStream()" class="btn btn-sm btn-primary">Tekrar Dene</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -15,26 +15,28 @@ Türkiye'nin modern dijital haber platformu. TRT Haber entegrasyonu, canlı yay�
 
 ## VPS Kurulum
 
-### Tek Komut Kurulum
+### GitHub Token ile Kurulum
 
 VPS'nizde (Ubuntu 24.04):
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/yourusername/ayyildizhaber/main/github-vps-install.sh | bash
+# 1. Kurulum scriptini indirin
+wget https://raw.githubusercontent.com/yourusername/ayyildizhaber/main/github-token-install.sh
+chmod +x github-token-install.sh
+
+# 2. GitHub token ile çalıştırın
+./github-token-install.sh GITHUB_TOKEN GITHUB_USER REPO_NAME
+
+# Örnek:
+./github-token-install.sh ghp_xxxxxxxxxxxx myusername ayyildizhaber
 ```
 
-### Manuel Kurulum
+### GitHub Token Nasıl Alınır
 
-```bash
-# 1. Scripti indirin
-wget https://raw.githubusercontent.com/yourusername/ayyildizhaber/main/github-vps-install.sh
-
-# 2. İzin verin
-chmod +x github-vps-install.sh
-
-# 3. Çalıştırın
-./github-vps-install.sh
-```
+1. GitHub.com → Settings → Developer settings
+2. Personal access tokens → Tokens (classic)
+3. Generate new token → Select repo permissions
+4. Token'ı kopyalayın ve yukarıdaki komutta kullanın
 
 ### Kurulum Sonrası
 

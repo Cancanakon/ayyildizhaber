@@ -103,6 +103,8 @@ This is a comprehensive news website application built with Flask, featuring a T
 - June 26, 2025: Implemented Supervisor process management instead of systemd for better reliability
 - June 26, 2025: Added comprehensive PostgreSQL setup with proper user permissions and database ownership
 - June 26, 2025: Added README.md with clear installation instructions and system requirements
+- June 26, 2025: Added GitHub token authentication support for private repository deployment
+- June 26, 2025: Created github-token-install.sh with parameter-based token handling for secure installation
 - June 26, 2025: Added comprehensive live stream management system with admin panel control
 - June 26, 2025: Enhanced advertisement system with larger banners (160x400px) and improved clickability
 - June 26, 2025: Fixed sidebar ad positioning conflicts - reduced z-index and added pointer-events controls

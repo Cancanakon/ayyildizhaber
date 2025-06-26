@@ -1,31 +1,40 @@
 #!/bin/bash
 
-# Ayyıldız Haber Ajansı - GitHub'dan Sıfırdan VPS Kurulum
-# Ubuntu 24.04 için tam otomatik kurulum
+# Ayyıldız Haber Ajansı - GitHub Token Kurulum Scripti
+# Kullanım: ./github-token-install.sh GITHUB_TOKEN GITHUB_USER REPO_NAME
 
 set -e
 
-# GitHub Repository Settings
-GITHUB_USER="yourusername"
-GITHUB_REPO="ayyildizhaber"
-GITHUB_TOKEN=""  # Bu kısmı doldurmanız gerekiyor
-GITHUB_BRANCH="main"
+# Parametreleri al
+GITHUB_TOKEN="$1"
+GITHUB_USER="$2"
+GITHUB_REPO="$3"
+GITHUB_BRANCH="${4:-main}"
+
+if [ $# -lt 3 ]; then
+    echo "Kullanım: $0 GITHUB_TOKEN GITHUB_USER REPO_NAME [BRANCH]"
+    echo ""
+    echo "Örnek:"
+    echo "  $0 ghp_xxxxxxxxxxxx myusername ayyildizhaber main"
+    echo ""
+    echo "GitHub Token nasıl alınır:"
+    echo "1. GitHub.com -> Settings -> Developer settings"
+    echo "2. Personal access tokens -> Tokens (classic)"
+    echo "3. Generate new token -> Select repo permissions"
+    exit 1
+fi
 
 PROJECT_DIR="/var/www/ayyildizhaber"
 DB_USER="ayyildizhaber"
 DB_PASS="ayyildizhaber2025!"
 DB_NAME="ayyildizhaber"
 
-# GitHub token kontrolü
-if [ -z "$GITHUB_TOKEN" ]; then
-    echo "HATA: GitHub token gerekli!"
-    echo "Lütfen scriptin başındaki GITHUB_TOKEN değişkenini doldurun."
-    echo "GitHub -> Settings -> Developer settings -> Personal access tokens"
-    exit 1
-fi
-
-echo "=== Ayyıldız Haber Ajansı GitHub'dan Sıfırdan Kurulum ==="
-echo "Bu işlem 10-15 dakika sürecek..."
+echo "=== Ayyıldız Haber Ajansı GitHub Token Kurulum ==="
+echo "Token: ${GITHUB_TOKEN:0:10}..."
+echo "User: $GITHUB_USER"
+echo "Repo: $GITHUB_REPO"
+echo "Branch: $GITHUB_BRANCH"
+echo ""
 
 # Sistem güncellemesi
 echo "1/10 - Sistem güncelleniyor..."
@@ -87,7 +96,13 @@ pip install --upgrade pip
 
 # Paketleri yükle
 echo "7/10 - Python paketleri yükleniyor..."
-cat > requirements.txt << 'EOF'
+if [ -f requirements.txt ]; then
+    pip install -r requirements.txt
+elif [ -f requirements-vps.txt ]; then
+    pip install -r requirements-vps.txt
+else
+    # Manuel paket yükleme
+    cat > requirements.txt << 'EOF'
 flask==3.0.0
 flask-sqlalchemy==3.1.1
 flask-login==0.6.3
@@ -103,8 +118,8 @@ feedparser==6.0.11
 python-dateutil==2.8.2
 email-validator==2.1.0
 EOF
-
-pip install -r requirements.txt
+    pip install -r requirements.txt
+fi
 
 # Çevre değişkenleri
 echo "8/10 - Çevre değişkenleri ayarlanıyor..."

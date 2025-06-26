@@ -30,9 +30,9 @@ set -e
 
 cd /var/www/ayyildizajans
 
-echo "🔄 Git repository güncelleniyor..."
-git stash push -m "Auto-stash before update $(date)"
-git pull origin main || echo "Git pull başarısız - manuel kontrol gerekli"
+echo "🔄 Mevcut dosyalar yedekleniyor..."
+cp -r /var/www/ayyildizajans /var/www/ayyildizajans_backup_$(date +%Y%m%d_%H%M%S)
+echo "Yedek oluşturuldu: ayyildizajans_backup_$(date +%Y%m%d_%H%M%S)"
 
 echo "🐍 Python dependencies güncelleniyor..."
 source venv/bin/activate
@@ -71,16 +71,45 @@ EOF
 
 echo -e "${GREEN}📤 Güncelleme scripti sunucuya gönderiliyor...${NC}"
 
-# Script'i sunucuya gönder ve çalıştır
+# Önce dosyaları sunucuya gönder
+echo -e "${GREEN}📤 Proje dosyaları sunucuya gönderiliyor...${NC}"
+
+# Dosyaları sıkıştır (gereksiz dosyaları hariç tut)
+tar -czf /tmp/ayyildiz_update.tar.gz \
+    --exclude='__pycache__' \
+    --exclude='*.pyc' \
+    --exclude='.git' \
+    --exclude='venv' \
+    --exclude='cache' \
+    --exclude='*.log' \
+    --exclude='update-vps.sh' \
+    --exclude='quick-update.sh' \
+    --exclude='sync-to-vps.sh' \
+    .
+
+# Dosyaları ve scripti sunucuya gönder
+scp /tmp/ayyildiz_update.tar.gz $USERNAME@$SERVER_IP:/tmp/
 scp $TEMP_FILE $USERNAME@$SERVER_IP:/tmp/update_script.sh
 
 echo -e "${GREEN}🔧 Sunucuda güncelleme çalıştırılıyor...${NC}"
 
 ssh $USERNAME@$SERVER_IP << 'ENDSSH'
+# Güncelleme scriptini çalıştır
 chmod +x /tmp/update_script.sh
+
+# Dosyaları extract et
+cd /tmp
+tar -xzf ayyildiz_update.tar.gz -C /var/www/ayyildizajans/ --overwrite
+
+# Update scriptini çalıştır
 /tmp/update_script.sh
-rm /tmp/update_script.sh
+
+# Geçici dosyaları temizle
+rm /tmp/update_script.sh /tmp/ayyildiz_update.tar.gz
 ENDSSH
+
+# Yerel geçici dosyayı temizle
+rm /tmp/ayyildiz_update.tar.gz
 
 # Geçici dosyayı temizle
 rm $TEMP_FILE

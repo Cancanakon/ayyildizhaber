@@ -8,7 +8,7 @@ USERNAME="root"
 
 echo "🚀 Hızlı güncelleme başlatılıyor..."
 
-# Dosyaları sıkıştır ve gönder
+# Dosyaları sıkıştır ve gönder (bilgisayarınızdan)
 tar -czf update.tar.gz \
     --exclude='__pycache__' \
     --exclude='*.pyc' \
@@ -16,7 +16,10 @@ tar -czf update.tar.gz \
     --exclude='venv' \
     --exclude='cache' \
     --exclude='*.log' \
-    *.py templates/ static/ services/ utils/ config/
+    --exclude='update*.sh' \
+    --exclude='quick*.sh' \
+    --exclude='sync*.sh' \
+    .
 
 echo "📦 Dosyalar hazırlandı, sunucuya gönderiliyor..."
 
@@ -24,16 +27,12 @@ echo "📦 Dosyalar hazırlandı, sunucuya gönderiliyor..."
 scp update.tar.gz $USERNAME@$SERVER_IP:/tmp/
 
 ssh $USERNAME@$SERVER_IP << 'ENDSSH'
-cd /var/www/ayyildizajans
-
 # Backup yap
-cp -r . ../ayyildizajans_backup_$(date +%Y%m%d_%H%M%S)
+cp -r /var/www/ayyildizajans /var/www/ayyildizajans_backup_$(date +%Y%m%d_%H%M%S)
 
 # Güncelleme uygula
-cd /tmp
-tar -xzf update.tar.gz
-cp -r . /var/www/ayyildizajans/
 cd /var/www/ayyildizajans
+tar -xzf /tmp/update.tar.gz --overwrite
 
 # Dependencies güncelle
 source venv/bin/activate

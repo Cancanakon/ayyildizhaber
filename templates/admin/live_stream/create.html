@@ -1,0 +1,151 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Yeni Canlı Yayın Ekle - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">Yeni Canlı Yayın Ekle</h1>
+                <a href="{{ url_for('live_stream.index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Geri Dön
+                </a>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Canlı Yayın Bilgileri</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">Yayın Adı *</label>
+                                            <input type="text" class="form-control" id="name" name="name" 
+                                                   placeholder="TRT Haber Canlı" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="youtube_url" class="form-label">YouTube URL *</label>
+                                            <input type="url" class="form-control" id="youtube_url" name="youtube_url" 
+                                                   placeholder="https://youtu.be/TNax9QRxK40" required>
+                                            <div class="form-text">
+                                                YouTube video veya canlı yayın bağlantısını girin
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Açıklama</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3" 
+                                              placeholder="Canlı yayın hakkında kısa açıklama (opsiyonel)"></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="is_default" name="is_default">
+                                        <label class="form-check-label" for="is_default">
+                                            Varsayılan yayın olarak ayarla
+                                        </label>
+                                        <div class="form-text">
+                                            Varsayılan yayın, aktif yayın olmadığında gösterilir
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Yayını Kaydet
+                                    </button>
+                                    <a href="{{ url_for('live_stream.index') }}" class="btn btn-secondary">İptal</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Desteklenen URL Formatları</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6><i class="fas fa-link text-primary"></i> YouTube URL Örnekleri:</h6>
+                            <div class="mb-3">
+                                <small class="text-muted">Normal video:</small><br>
+                                <code class="small">https://www.youtube.com/watch?v=TNax9QRxK40</code>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">Kısa bağlantı:</small><br>
+                                <code class="small">https://youtu.be/TNax9QRxK40</code>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">Embed formatı:</small><br>
+                                <code class="small">https://www.youtube.com/embed/TNax9QRxK40</code>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Not:</strong> Video ID otomatik olarak URL'den çıkarılacak ve embed formatına dönüştürülecektir.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5 class="mb-0">Kullanım Bilgileri</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="mb-0">
+                                <li>Oluşturulan yayın başlangıçta pasif durumda olacak</li>
+                                <li>Aktifleştirmek için listeden "Aktifleştir" butonuna tıklayın</li>
+                                <li>Aynı anda sadece bir yayın aktif olabilir</li>
+                                <li>Aktif yayın anasayfada mini player'da gösterilir</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('youtube_url').addEventListener('input', function() {
+    const url = this.value;
+    const patterns = [
+        /youtube\.com\/watch\?v=([^&]+)/,
+        /youtu\.be\/([^?]+)/,
+        /youtube\.com\/embed\/([^?]+)/,
+        /youtube\.com\/v\/([^?]+)/
+    ];
+    
+    let videoId = null;
+    for (let pattern of patterns) {
+        const match = url.match(pattern);
+        if (match) {
+            videoId = match[1];
+            break;
+        }
+    }
+    
+    const feedback = this.parentNode.querySelector('.form-text');
+    if (videoId) {
+        feedback.innerHTML = `<i class="fas fa-check text-success"></i> Video ID bulundu: <code>${videoId}</code>`;
+        feedback.className = 'form-text text-success';
+    } else if (url.length > 0) {
+        feedback.innerHTML = `<i class="fas fa-times text-danger"></i> Geçerli YouTube URL'si giriniz`;
+        feedback.className = 'form-text text-danger';
+    } else {
+        feedback.innerHTML = 'YouTube video veya canlı yayın bağlantısını girin';
+        feedback.className = 'form-text';
+    }
+});
+</script>
+{% endblock %}

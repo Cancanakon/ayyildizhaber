@@ -1,0 +1,172 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Canlı Yayın Düzenle - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">Canlı Yayın Düzenle</h1>
+                <a href="{{ url_for('live_stream.index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Geri Dön
+                </a>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Canlı Yayın Bilgileri</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">Yayın Adı *</label>
+                                            <input type="text" class="form-control" id="name" name="name" 
+                                                   value="{{ stream.name }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="youtube_url" class="form-label">YouTube URL *</label>
+                                            <input type="url" class="form-control" id="youtube_url" name="youtube_url" 
+                                                   value="{{ stream.youtube_url }}" required>
+                                            <div class="form-text">
+                                                YouTube video veya canlı yayın bağlantısını girin
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Açıklama</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3">{{ stream.description or '' }}</textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="is_default" name="is_default"
+                                               {{ 'checked' if stream.is_default }}>
+                                        <label class="form-check-label" for="is_default">
+                                            Varsayılan yayın olarak ayarla
+                                        </label>
+                                        <div class="form-text">
+                                            Varsayılan yayın, aktif yayın olmadığında gösterilir
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {% if stream.is_active %}
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i>
+                                    <strong>Bu yayın şu anda aktif.</strong> Değişiklikler anında sitede görünecektir.
+                                </div>
+                                {% endif %}
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Değişiklikleri Kaydet
+                                    </button>
+                                    <a href="{{ url_for('live_stream.index') }}" class="btn btn-secondary">İptal</a>
+                                    <a href="{{ url_for('live_stream.preview', id=stream.id) }}" class="btn btn-info">
+                                        <i class="fas fa-eye me-2"></i>Önizle
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Mevcut Video Bilgileri</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <strong>Video ID:</strong><br>
+                                <code>{{ stream.youtube_video_id }}</code>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Embed URL:</strong><br>
+                                <small class="text-muted">{{ stream.get_embed_url() }}</small>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Durum:</strong><br>
+                                {% if stream.is_active %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-broadcast-tower"></i> Aktif Yayın
+                                </span>
+                                {% else %}
+                                <span class="badge bg-secondary">
+                                    <i class="fas fa-pause"></i> Pasif
+                                </span>
+                                {% endif %}
+                                
+                                {% if stream.is_default %}
+                                <span class="badge bg-info ms-1">
+                                    <i class="fas fa-star"></i> Varsayılan
+                                </span>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Oluşturulma:</strong><br>
+                                <small class="text-muted">{{ stream.created_at.strftime('%d.%m.%Y %H:%M') if stream.created_at else 'Bilinmiyor' }}</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5 class="mb-0">Video Önizleme</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div style="position: relative; padding-bottom: 56.25%; height: 0;">
+                                <iframe src="{{ stream.get_embed_url() }}" 
+                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                                        frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('youtube_url').addEventListener('input', function() {
+    const url = this.value;
+    const patterns = [
+        /youtube\.com\/watch\?v=([^&]+)/,
+        /youtu\.be\/([^?]+)/,
+        /youtube\.com\/embed\/([^?]+)/,
+        /youtube\.com\/v\/([^?]+)/
+    ];
+    
+    let videoId = null;
+    for (let pattern of patterns) {
+        const match = url.match(pattern);
+        if (match) {
+            videoId = match[1];
+            break;
+        }
+    }
+    
+    const feedback = this.parentNode.querySelector('.form-text');
+    if (videoId) {
+        feedback.innerHTML = `<i class="fas fa-check text-success"></i> Video ID bulundu: <code>${videoId}</code>`;
+        feedback.className = 'form-text text-success';
+    } else if (url.length > 0) {
+        feedback.innerHTML = `<i class="fas fa-times text-danger"></i> Geçerli YouTube URL'si giriniz`;
+        feedback.className = 'form-text text-danger';
+    } else {
+        feedback.innerHTML = 'YouTube video veya canlı yayın bağlantısını girin';
+        feedback.className = 'form-text';
+    }
+});
+</script>
+{% endblock %}

@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize live player after a short delay to ensure DOM is ready
     setTimeout(initializeLivePlayer, 100);
     
+    // Load active live stream
+    setTimeout(loadActiveLiveStream, 500);
+    
     // Setup video error detection
     setTimeout(setupVideoErrorDetection, 2000);
     
@@ -738,6 +741,44 @@ function setupVideoErrorDetection() {
             errorOverlay.style.display = 'flex';
         });
     }
+}
+
+// Load Active Live Stream from Admin Settings
+function loadActiveLiveStream() {
+    fetch('/admin/live-stream/api/active')
+        .then(response => response.json())
+        .then(data => {
+            const iframe = document.getElementById('live-iframe');
+            const channelName = document.querySelector('.channel-name');
+            
+            if (data.status === 'success' && data.stream) {
+                // Update iframe src with admin-configured stream
+                iframe.src = data.stream.embed_url;
+                
+                // Update channel name in player header
+                if (channelName) {
+                    channelName.textContent = data.stream.name;
+                }
+                
+                console.log('Live stream loaded:', data.stream.name);
+            } else {
+                // Fallback to default TRT Haber stream
+                iframe.src = 'https://www.youtube.com/embed/TNax9QRxK40?autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1';
+                
+                if (channelName) {
+                    channelName.textContent = 'Canlı Yayın';
+                }
+                
+                console.log('Using fallback stream');
+            }
+        })
+        .catch(error => {
+            console.error('Live stream loading failed:', error);
+            
+            // Emergency fallback
+            const iframe = document.getElementById('live-iframe');
+            iframe.src = 'https://www.youtube.com/embed/TNax9QRxK40?autoplay=1&mute=1&controls=1&rel=0&modestbranding=1&playsinline=1';
+        });
 }
 
 // Recommendation tracking functions

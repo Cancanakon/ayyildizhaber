@@ -173,6 +173,14 @@
                             Reklam Yönetimi
                         </a>
                     </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if 'live_stream' in request.endpoint }}" 
+                           href="{{ url_for('live_stream.index') }}">
+                            <i class="fas fa-broadcast-tower"></i>
+                            Canlı Yayın
+                        </a>
+                    </li>
                     {% endif %}
                     
                     <li class="nav-item">

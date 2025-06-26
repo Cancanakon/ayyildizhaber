@@ -93,9 +93,26 @@ with app.app_context():
         )
         db.session.add(admin)
     
+    # Create default live stream setting
+    from models import LiveStreamSettings
+    
+    default_stream = LiveStreamSettings.query.filter_by(is_default=True).first()
+    if not default_stream:
+        default_stream = LiveStreamSettings(
+            name='TRT Haber Canlı',
+            youtube_url='https://youtu.be/TNax9QRxK40',
+            youtube_video_id='TNax9QRxK40',
+            description='TRT Haber resmi canlı yayını',
+            is_default=True,
+            is_active=True,
+            admin_id=1  # Default admin
+        )
+        db.session.add(default_stream)
+    
     db.session.commit()
     print("Default admin user created: admin@gmail.com / admin123")
     print("Default categories created")
+    print("Default live stream created")
 
 # Register template filters
 from utils.helpers import register_template_filters

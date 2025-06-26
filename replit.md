@@ -102,6 +102,8 @@ This is a comprehensive news website application built with Flask, featuring a T
 - June 26, 2025: Added complete Ubuntu 24.04 server configuration with PostgreSQL, Nginx, Gunicorn
 - June 26, 2025: Implemented automatic project packaging and deployment with proper error handling
 - June 26, 2025: Added requirements-vps.txt for production dependencies and VPS-KURULUM-REHBERİ.md guide
+- June 26, 2025: Created Windows-compatible deployment scripts - deploy-to-vps.ps1 and deploy-windows.bat
+- June 26, 2025: Added multi-platform support with automatic tool detection and fallback options
 - June 26, 2025: Added comprehensive live stream management system with admin panel control
 - June 26, 2025: Enhanced advertisement system with larger banners (160x400px) and improved clickability
 - June 26, 2025: Fixed sidebar ad positioning conflicts - reduced z-index and added pointer-events controls

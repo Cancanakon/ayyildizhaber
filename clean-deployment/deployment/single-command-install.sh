@@ -57,10 +57,17 @@ echo -e "${BLUE}=== ADIM 5: UYGULAMA KURULUMU ===${NC}"
 mkdir -p /opt/ayyildizhaber
 cd /opt/ayyildizhaber
 
-# GitHub yerine mevcut dosyaları kopyala (eğer varsa)
-if [ ! -f "main.py" ]; then
-    echo "main.py bulunamadı. Lütfen proje dosyalarını /opt/ayyildizhaber/ dizinine kopyalayın"
-    echo "Örnek: scp -r * root@VPS_IP:/opt/ayyildizhaber/"
+# Deployment paketinden dosyaları kopyala
+if [ -d "/tmp/clean-deployment" ]; then
+    echo "Deployment paketinden dosyalar kopyalanıyor..."
+    cp -r /tmp/clean-deployment/* /opt/ayyildizhaber/
+    chown -R www-data:www-data /opt/ayyildizhaber
+    echo "✓ Dosyalar başarıyla kopyalandı"
+elif [ ! -f "main.py" ]; then
+    echo "main.py bulunamadı. Deployment paketini yükleyin:"
+    echo "1. Paketi indirin: wget [PAKET_URL]"
+    echo "2. Çıkarın: tar -xzf ayyildizhaber-clean.tar.gz -C /tmp/"
+    echo "3. Tekrar çalıştırın: ./single-command-install.sh"
     exit 1
 fi
 

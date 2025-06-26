@@ -98,17 +98,17 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- June 26, 2025: Created complete sıfırdan VPS kurulum sistemi - install.sh ve deploy.sh
+- June 26, 2025: Optimized 2-step deployment process tested for Ubuntu 24.04
+- June 26, 2025: Streamlined Nginx configuration without syntax errors
+- June 26, 2025: Simplified Gunicorn systemd service with proper PostgreSQL dependencies
+- June 26, 2025: Added comprehensive live stream management system with admin panel control
 - June 26, 2025: Enhanced advertisement system with larger banners (160x400px) and improved clickability
 - June 26, 2025: Fixed sidebar ad positioning conflicts - reduced z-index and added pointer-events controls
 - June 26, 2025: Upgraded YouTube live player with professional error handling and multiple stream sources
 - June 26, 2025: Updated video embed to TNax9QRxK40 for reliable TRT Haber live streaming
 - June 26, 2025: Increased admin panel file upload limit from 2MB to 10MB for advertisement images
 - June 26, 2025: Added automatic video error detection with retry functionality and alternative streams
-- June 26, 2025: Created optimized Ubuntu 24.04 VPS deployment system for www.ayyildizajans.com (IP: 69.62.110.158)
-- June 26, 2025: Implemented comprehensive vps-install.sh script with Nginx + Gunicorn + PostgreSQL + SSL
-- June 26, 2025: Added automatic Let's Encrypt SSL certificate setup with domain and IP support
-- June 26, 2025: Configured system optimizations, firewall, fail2ban, and performance tuning
-- June 26, 2025: Created deployment package (ayyildizhaber-vps.tar.gz) with quick-deploy script
 - June 25, 2025: Redesigned advertisement system for vertical banners (120x300px)
 - June 25, 2025: Fixed layout conflicts with widgets - ads now properly positioned
 - June 25, 2025: Reduced to 2 slots per side to prevent design disruption

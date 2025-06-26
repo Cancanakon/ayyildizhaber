@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Hakkımızda - Ayyıldız Haber Ajansı{% endblock %}
+{% block description %}Ayyıldız Haber Ajansı hakkında bilgiler. Misyonumuz, vizyonumuz ve değerlerimiz.{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <h1 class="text-center mb-4 text-primary">Hakkımızda</h1>
+                    
+                    <div class="text-center mb-4">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" class="img-fluid" style="max-width: 150px;">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="text-primary mb-3">Misyonumuz</h3>
+                            <p class="lead">
+                                Ayyıldız Haber Ajansı olarak, Türkiye ve dünyadan en güncel, doğru ve tarafsız haberleri 
+                                okuyucularımıza ulaştırmayı misyon ediniyoruz. Güvenilir habercilik anlayışıyla, 
+                                toplumun haber alma hakkına hizmet ediyoruz.
+                            </p>
+
+                            <h3 class="text-primary mb-3 mt-4">Vizyonumuz</h3>
+                            <p>
+                                Türkiye'nin önde gelen dijital haber platformlarından biri olmak ve okuyucularımıza 
+                                kaliteli, objektif ve zamanlı habercilik hizmeti sunmak vizyonumuzun temelini oluşturuyor. 
+                                Modern teknolojiler kullanarak haber deneyimini sürekli geliştiriyoruz.
+                            </p>
+
+                            <h3 class="text-primary mb-3 mt-4">Değerlerimiz</h3>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fas fa-check text-primary me-2"></i><strong>Doğruluk:</strong> Haberlerin güvenilirliği</li>
+                                        <li class="mb-2"><i class="fas fa-check text-primary me-2"></i><strong>Tarafsızlık:</strong> Objektif habercilik</li>
+                                        <li class="mb-2"><i class="fas fa-check text-primary me-2"></i><strong>Hızlılık:</strong> Anında haber ulaştırma</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fas fa-check text-primary me-2"></i><strong>Kalite:</strong> Profesyonel standartlar</li>
+                                        <li class="mb-2"><i class="fas fa-check text-primary me-2"></i><strong>Erişim:</strong> Herkese ulaşabilir haber</li>
+                                        <li class="mb-2"><i class="fas fa-check text-primary me-2"></i><strong>Şeffaflık:</strong> Açık iletişim</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h3 class="text-primary mb-3 mt-4">Haber Kategorilerimiz</h3>
+                            <p>
+                                Gündem, politika, ekonomi, spor, teknoloji, sağlık, kültür-sanat ve dünya haberleri 
+                                olmak üzere geniş bir yelpazede haber hizmetimizi sürdürüyoruz. TRT Haber başta olmak 
+                                üzere güvenilir kaynaklardan derlediğimiz haberlerle okuyucularımızı bilgilendiriyoruz.
+                            </p>
+
+                            <div class="bg-light p-4 rounded mt-4">
+                                <h4 class="text-primary mb-3">İletişim Bilgilerimiz</h4>
+                                <p class="mb-1"><strong>Adres:</strong> Hatay, İskenderun</p>
+                                <p class="mb-1"><strong>Telefon:</strong> <a href="tel:05423313131" class="text-primary">0542 331 31 31</a></p>
+                                <p class="mb-1"><strong>Web:</strong> <a href="https://www.ayyildizajans.com/" class="text-primary">https://www.ayyildizajans.com/</a></p>
+                                <p class="mb-0"><strong>E-posta:</strong> <a href="mailto:ayyildizcasttr@gmail.com" class="text-primary">ayyildizcasttr@gmail.com</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

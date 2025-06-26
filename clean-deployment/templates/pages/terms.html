@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Kullanım Şartları - Ayyıldız Haber Ajansı{% endblock %}
+{% block description %}Ayyıldız Haber Ajansı kullanım şartları ve koşulları. Web sitesi kullanım kuralları ve yasal bilgiler.{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <h1 class="text-center mb-4 text-primary">Kullanım Şartları</h1>
+                    <p class="text-center text-muted mb-5">Son güncelleme: 23.06.2025</p>
+                    
+                    <div class="terms-content">
+                        <h3 class="text-primary mb-3">1. Genel Hükümler</h3>
+                        <p>
+                            Bu kullanım şartları, Ayyıldız Haber Ajansı web sitesini (www.ayyildizhaber.com) 
+                            ziyaret eden ve kullanan tüm kullanıcılar için geçerlidir. Web sitemizi kullanarak 
+                            bu şartları kabul etmiş sayılırsınız.
+                        </p>
+
+                        <h3 class="text-primary mb-3 mt-4">2. Tanımlar</h3>
+                        <ul>
+                            <li><strong>Site:</strong> www.ayyildizhaber.com web sitesi</li>
+                            <li><strong>Kullanıcı:</strong> Siteyi ziyaret eden ve kullanan kişiler</li>
+                            <li><strong>İçerik:</strong> Sitede yer alan tüm metinler, resimler, videolar ve diğer materyaller</li>
+                            <li><strong>Hizmet:</strong> Site üzerinden sunulan tüm haber ve bilgi hizmetleri</li>
+                        </ul>
+
+                        <h3 class="text-primary mb-3 mt-4">3. Kabul Edilebilir Kullanım</h3>
+                        <p>Web sitemizi kullanırken aşağıdaki kurallara uymanız gerekmektedir:</p>
+                        <ul>
+                            <li>Yasa dışı, zararlı, tehditkar veya ahlaka aykırı içerik paylaşmamak</li>
+                            <li>Telif hakkı ihlali yapmamak</li>
+                            <li>Diğer kullanıcıların haklarına saygı göstermek</li>
+                            <li>Sistemi bozmaya yönelik faaliyetlerde bulunmamak</li>
+                            <li>Spam veya istenmeyen içerik göndermemek</li>
+                            <li>Kişisel bilgileri izinsiz kullanmamak</li>
+                        </ul>
+
+                        <h3 class="text-primary mb-3 mt-4">4. İçerik ve Telif Hakları</h3>
+                        <h5>4.1 Site İçeriği</h5>
+                        <p>
+                            Sitemizdeki tüm içerikler (metinler, görseller, videolar, logolar) telif hakkı 
+                            ile korunmaktadır. Bu içeriklerin izinsiz kopyalanması, çoğaltılması veya 
+                            dağıtılması yasaktır.
+                        </p>
+
+                        <h5 class="mt-3">4.2 Kullanıcı İçeriği</h5>
+                        <p>
+                            Kullanıcılar tarafından gönderilen yorumlar ve diğer içerikler için 
+                            gönderen kişi sorumludur. Bu içeriklerin uygunluğunu kontrol etme 
+                            hakkımız saklıdır.
+                        </p>
+
+                        <h5 class="mt-3">4.3 Kaynak Gösterme</h5>
+                        <p>
+                            Sitemizdeki haberleri paylaşırken kaynak gösterilmesi zorunludur. 
+                            Ticari amaçlı kullanım için önceden yazılı izin alınmalıdır.
+                        </p>
+
+                        <h3 class="text-primary mb-3 mt-4">5. Hizmet Kapsamı ve Sınırlamaları</h3>
+                        <h5>5.1 Hizmet Sunumu</h5>
+                        <ul>
+                            <li>7/24 haber hizmeti sunmaya çalışıyoruz</li>
+                            <li>Teknik bakım durumlarında hizmet kesintisi olabilir</li>
+                            <li>Haber içeriklerinin doğruluğu için azami dikkat gösterilir</li>
+                            <li>Güncelleme ve değişiklik hakları saklıdır</li>
+                        </ul>
+
+                        <h5 class="mt-3">5.2 Sorumluluk Sınırlamaları</h5>
+                        <ul>
+                            <li>Üçüncü taraf kaynaklardan alınan haberlerin doğruluğu</li>
+                            <li>Teknik arızalar sonucu oluşabilecek veri kaybı</li>
+                            <li>Dış bağlantıların içeriği ve güvenliği</li>
+                            <li>Kullanıcı hatalarından kaynaklanan sorunlar</li>
+                        </ul>
+
+                        <h3 class="text-primary mb-3 mt-4">6. Gizlilik ve Veri Korunması</h3>
+                        <p>
+                            Kişisel verilerinizin korunması ve gizliliği konusundaki detaylı bilgiler 
+                            <a href="{{ url_for('main.privacy') }}" class="text-primary">Gizlilik Politikamızda</a> 
+                            yer almaktadır.
+                        </p>
+
+                        <h3 class="text-primary mb-3 mt-4">7. Yasaklı Faaliyetler</h3>
+                        <p>Aşağıdaki faaliyetler kesinlikle yasaktır:</p>
+                        <ul>
+                            <li>Hack, virüs veya zararlı yazılım yükleme</li>
+                            <li>Sistem güvenliğini test etme veya bypass etme</li>
+                            <li>Diğer kullanıcıların hesaplarına yetkisiz erişim</li>
+                            <li>Sahte kimlik veya bilgi kullanma</li>
+                            <li>Ticari amaçlı otomatik veri toplama</li>
+                            <li>Site performansını olumsuz etkileyecek faaliyetler</li>
+                        </ul>
+
+                        <h3 class="text-primary mb-3 mt-4">8. Fikri Mülkiyet Hakları</h3>
+                        <p>
+                            Site tasarımı, logosu, marka adı ve tüm fikri mülkiyet hakları 
+                            Ayyıldız Haber Ajansı'na aittir. Bu hakların ihlali yasal takibata 
+                            konu olabilir.
+                        </p>
+
+                        <h3 class="text-primary mb-3 mt-4">9. Hesap Sonlandırma</h3>
+                        <p>
+                            Bu şartları ihlal eden kullanıcıların site erişimi engellenebilir. 
+                            Ciddi ihlaller hukuki takibata konu olabilir.
+                        </p>
+
+                        <h3 class="text-primary mb-3 mt-4">10. Değişiklikler</h3>
+                        <p>
+                            Bu kullanım şartları gerektiğinde güncellenebilir. Önemli değişiklikler 
+                            sitede duyurulacaktır. Güncellemeler sonrası site kullanımının devamı 
+                            yeni şartların kabulü anlamına gelir.
+                        </p>
+
+                        <h3 class="text-primary mb-3 mt-4">11. Geçerli Hukuk ve Yetki</h3>
+                        <p>
+                            Bu şartlar Türkiye Cumhuriyeti hukukuna tabidir. Doğabilecek 
+                            uyuşmazlıklarda Hatay mahkemeleri yetkilidir.
+                        </p>
+
+                        <h3 class="text-primary mb-3 mt-4">12. İletişim</h3>
+                        <p>
+                            Kullanım şartları hakkında sorularınız için bizimle iletişime geçebilirsiniz:
+                        </p>
+                        <div class="bg-light p-3 rounded">
+                            <p class="mb-1"><strong>E-posta:</strong> <a href="mailto:ayyildizcasttr@gmail.com">ayyildizcasttr@gmail.com</a></p>
+                            <p class="mb-1"><strong>E-posta:</strong> <a href="mailto:info@ayyildizajans.com">info@ayyildizajans.com</a></p>
+                            <p class="mb-1"><strong>Telefon:</strong> <a href="tel:05423313131">0542 331 31 31</a></p>
+                            <p class="mb-0"><strong>Adres:</strong> Hatay, İskenderun</p>
+                        </div>
+
+                        <div class="alert alert-info mt-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Önemli Not:</strong> Web sitemizi kullanarak bu kullanım şartlarını 
+                            okuduğunuzu, anladığınızı ve kabul ettiğinizi beyan etmiş olursunuz.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

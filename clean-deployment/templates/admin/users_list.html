@@ -1,0 +1,110 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Kullanıcı Yönetimi - Admin Panel{% endblock %}
+{% block page_title %}Kullanıcı Yönetimi{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="mb-0">
+                <i class="fas fa-users me-3"></i>
+                Kullanıcı Yönetimi
+            </h1>
+            <p class="text-muted mb-0">Admin kullanıcılarını yönetin</p>
+        </div>
+        <div>
+            <a href="{{ url_for('admin.user_create') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>
+                Yeni Kullanıcı
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="admin-table">
+    <div class="table-header p-3 bg-primary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-list me-2"></i>
+            Kullanıcı Listesi
+        </h5>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Kullanıcı Adı</th>
+                    <th>E-posta</th>
+                    <th>Yetki</th>
+                    <th>Durum</th>
+                    <th>Son Giriş</th>
+                    <th>Kayıt Tarihi</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>
+                        <strong>{{ user.username }}</strong>
+                        {% if user.id == current_user.id %}
+                            <span class="badge bg-info ms-2">Siz</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        {% if user.is_super_admin %}
+                            <span class="badge bg-danger">Süper Admin</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Admin</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.is_active %}
+                            <span class="badge bg-success">Aktif</span>
+                        {% else %}
+                            <span class="badge bg-warning">Pasif</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.last_login %}
+                            {{ user.last_login.strftime('%d.%m.%Y %H:%M') }}
+                        {% else %}
+                            <span class="text-muted">Hiç giriş yapmamış</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ user.created_at.strftime('%d.%m.%Y') }}</td>
+                    <td>
+                        <a href="{{ url_for('admin.user_edit', id=user.id) }}" 
+                           class="btn btn-sm btn-outline-primary btn-action">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        
+                        {% if user.id != current_user.id %}
+                        <form method="POST" action="{{ url_for('admin.user_delete', id=user.id) }}" 
+                              style="display: inline;" 
+                              onsubmit="return confirm('Bu kullanıcıyı silmek istediğinizden emin misiniz?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger btn-action">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if not users %}
+<div class="text-center py-5">
+    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+    <h4 class="text-muted">Henüz kullanıcı bulunmuyor</h4>
+    <p class="text-muted">İlk kullanıcıyı oluşturmak için yukarıdaki butonu kullanın.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,495 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Kategoriler - Admin Panel{% endblock %}
+{% block page_title %}Kategori Yönetimi{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="mb-0">
+                <i class="fas fa-tags me-3"></i>
+                Kategoriler
+            </h1>
+            <p class="text-muted mb-0">Haber kategorilerini yönetin, düzenleyin ve organize edin</p>
+        </div>
+        <div>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                <i class="fas fa-plus me-2"></i>
+                Yeni Kategori Ekle
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Categories Grid -->
+{% if categories %}
+<div class="row">
+    {% for category in categories %}
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="admin-table category-card">
+            <div class="table-header p-3 text-white" style="background-color: {{ category.color }};">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-tag me-2"></i>
+                        {{ category.name }}
+                    </h5>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="#" onclick="editCategory({{ category.id }})">
+                                    <i class="fas fa-edit me-2"></i>Düzenle
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('main.category_news', slug=category.slug) }}" target="_blank">
+                                    <i class="fas fa-external-link-alt me-2"></i>Görüntüle
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="#" 
+                                   onclick="deleteCategory({{ category.id }}, '{{ category.name }}')">
+                                    <i class="fas fa-trash me-2"></i>Sil
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-3">
+                <div class="category-stats mb-3">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h4 class="text-primary mb-0">{{ category.news.filter_by(status='published').count() }}</h4>
+                            <small class="text-muted">Yayınlanan</small>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="text-warning mb-0">{{ category.news.filter_by(status='draft').count() }}</h4>
+                            <small class="text-muted">Taslak</small>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if category.description %}
+                <p class="text-muted mb-3">{{ category.description[:100] }}{% if category.description|length > 100 %}...{% endif %}</p>
+                {% endif %}
+                
+                <div class="category-info">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <small class="text-muted">Slug:</small>
+                        <code class="small">{{ category.slug }}</code>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <small class="text-muted">Renk:</small>
+                        <div class="d-flex align-items-center">
+                            <div class="color-swatch me-2" style="width: 20px; height: 20px; background-color: {{ category.color }}; border-radius: 3px; border: 1px solid #ddd;"></div>
+                            <code class="small">{{ category.color }}</code>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Durum:</small>
+                        <span class="badge bg-{{ 'success' if category.is_active else 'secondary' }}">
+                            {{ 'Aktif' if category.is_active else 'Pasif' }}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <div class="btn-group w-100">
+                        <a href="{{ url_for('main.category_news', slug=category.slug) }}" 
+                           class="btn btn-outline-primary btn-sm" target="_blank">
+                            <i class="fas fa-eye me-1"></i>Görüntüle
+                        </a>
+                        <button type="button" class="btn btn-outline-warning btn-sm" 
+                                onclick="editCategory({{ category.id }})">
+                            <i class="fas fa-edit me-1"></i>Düzenle
+                        </button>
+                        <a href="{{ url_for('admin.news_list', category=category.id) }}" 
+                           class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-newspaper me-1"></i>Haberleri
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Statistics -->
+<div class="admin-table mt-4">
+    <div class="table-header p-3 bg-info text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-chart-pie me-2"></i>
+            Kategori İstatistikleri
+        </h5>
+    </div>
+    
+    <div class="p-3">
+        <div class="row">
+            <div class="col-lg-8">
+                <canvas id="categoryChart" width="400" height="200"></canvas>
+            </div>
+            <div class="col-lg-4">
+                <h6 class="mb-3">Kategori Özeti</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Kategori</th>
+                                <th>Haber Sayısı</th>
+                                <th>Oran</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for category in categories %}
+                            {% set news_count = category.news.filter_by(status='published').count() %}
+                            {% set total_published = namespace(value=0) %}
+{% for category in categories %}
+    {% set total_published.value = total_published.value + (category.news.filter_by(status='published').count() if category.news else 0) %}
+{% endfor %}
+                            <tr>
+                                <td>
+                                    <span style="color: {{ category.color }};">●</span>
+                                    {{ category.name }}
+                                </td>
+                                <td>{{ news_count }}</td>
+                                <td>{{ '%.1f'|format((news_count / total_news * 100) if total_news > 0 else 0) }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- Empty State -->
+<div class="admin-table">
+    <div class="p-5 text-center">
+        <i class="fas fa-tags fa-5x text-muted mb-4"></i>
+        <h3 class="text-muted mb-3">Henüz kategori bulunmuyor</h3>
+        <p class="text-muted mb-4">
+            Haberlerinizi organize etmek için kategoriler oluşturun.<br>
+            İlk kategorinizi eklemek için aşağıdaki butona tıklayın.
+        </p>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+            <i class="fas fa-plus me-2"></i>
+            İlk Kategoriyi Ekle
+        </button>
+    </div>
+</div>
+{% endif %}
+
+<!-- Add Category Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus me-2"></i>
+                    Yeni Kategori Ekle
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('admin.category_create') }}" class="needs-validation" novalidate>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="add_name" class="form-label">Kategori Adı <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="add_name" name="name" required maxlength="100">
+                        <div class="invalid-feedback">
+                            Lütfen kategori adını girin.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="add_description" class="form-label">Açıklama</label>
+                        <textarea class="form-control" id="add_description" name="description" rows="3" maxlength="500"></textarea>
+                        <div class="form-text">Kategorinin kısa açıklaması (isteğe bağlı)</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="add_color" class="form-label">Renk</label>
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color" id="add_color" name="color" value="#dc2626">
+                            <input type="text" class="form-control" id="add_color_text" value="#dc2626" readonly>
+                        </div>
+                        <div class="form-text">Kategori için temsili renk seçin</div>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="add_is_active" name="is_active" checked>
+                        <label class="form-check-label" for="add_is_active">
+                            Kategoriyi aktif olarak oluştur
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-2"></i>
+                        Kategori Ekle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Category Modal -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-edit me-2"></i>
+                    Kategori Düzenle
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" id="editCategoryForm" class="needs-validation" novalidate>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="edit_name" class="form-label">Kategori Adı <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit_name" name="name" required maxlength="100">
+                        <div class="invalid-feedback">
+                            Lütfen kategori adını girin.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="edit_description" class="form-label">Açıklama</label>
+                        <textarea class="form-control" id="edit_description" name="description" rows="3" maxlength="500"></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="edit_color" class="form-label">Renk</label>
+                        <div class="input-group">
+                            <input type="color" class="form-control form-control-color" id="edit_color" name="color">
+                            <input type="text" class="form-control" id="edit_color_text" readonly>
+                        </div>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="edit_is_active" name="is_active">
+                        <label class="form-check-label" for="edit_is_active">
+                            Kategori aktif
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save me-2"></i>
+                        Güncelle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Category chart
+{% if categories %}
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('categoryChart').getContext('2d');
+    
+    const categories = [
+        {% for category in categories %}
+        {
+            name: '{{ category.name }}',
+            count: {{ category.news.filter_by(status='published').count() }},
+            color: '{{ category.color }}'
+        },
+        {% endfor %}
+    ];
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: categories.map(cat => cat.name),
+            datasets: [{
+                data: categories.map(cat => cat.count),
+                backgroundColor: categories.map(cat => cat.color),
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+});
+{% endif %}
+
+// Color picker sync
+document.addEventListener('DOMContentLoaded', function() {
+    const addColorPicker = document.getElementById('add_color');
+    const addColorText = document.getElementById('add_color_text');
+    const editColorPicker = document.getElementById('edit_color');
+    const editColorText = document.getElementById('edit_color_text');
+    
+    addColorPicker.addEventListener('input', function() {
+        addColorText.value = this.value;
+    });
+    
+    editColorPicker.addEventListener('input', function() {
+        editColorText.value = this.value;
+    });
+});
+
+// Edit category
+function editCategory(categoryId) {
+    // Get category data via AJAX or from page data
+    const categories = [
+        {% for category in categories %}
+        {
+            id: {{ category.id }},
+            name: '{{ category.name }}',
+            description: `{{ category.description or '' }}`,
+            color: '{{ category.color }}',
+            is_active: {{ 'true' if category.is_active else 'false' }}
+        },
+        {% endfor %}
+    ];
+    
+    const category = categories.find(cat => cat.id === categoryId);
+    if (category) {
+        document.getElementById('edit_name').value = category.name;
+        document.getElementById('edit_description').value = category.description;
+        document.getElementById('edit_color').value = category.color;
+        document.getElementById('edit_color_text').value = category.color;
+        document.getElementById('edit_is_active').checked = category.is_active;
+        
+        // Set form action
+        document.getElementById('editCategoryForm').action = `/admin/kategori/${categoryId}/duzenle`;
+        
+        // Show modal
+        new bootstrap.Modal(document.getElementById('editCategoryModal')).show();
+    }
+}
+
+// Delete category
+function deleteCategory(categoryId, categoryName) {
+    if (confirm(`"${categoryName}" kategorisini silmek istediğinizden emin misiniz?\n\nBu işlem geri alınamaz ve kategoriye ait haberler etkilenebilir.`)) {
+        // Create form and submit
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/admin/kategori/${categoryId}/sil`;
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// Form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        const forms = document.getElementsByClassName('needs-validation');
+        Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+
+// Category card animations
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryCards = document.querySelectorAll('.category-card');
+    categoryCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.5s ease';
+        
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 100 + (index * 100));
+    });
+});
+
+// Search categories
+function searchCategories() {
+    const input = document.getElementById('categorySearch');
+    const filter = input.value.toUpperCase();
+    const cards = document.querySelectorAll('.category-card');
+    
+    cards.forEach(card => {
+        const name = card.querySelector('h5').textContent.toUpperCase();
+        const description = card.querySelector('p') ? card.querySelector('p').textContent.toUpperCase() : '';
+        
+        if (name.indexOf(filter) > -1 || description.indexOf(filter) > -1) {
+            card.parentElement.style.display = '';
+        } else {
+            card.parentElement.style.display = 'none';
+        }
+    });
+}
+
+// Predefined colors
+const predefinedColors = [
+    '#dc2626', '#ea580c', '#d97706', '#ca8a04',
+    '#65a30d', '#16a34a', '#059669', '#0891b2',
+    '#0284c7', '#2563eb', '#4f46e5', '#7c3aed',
+    '#a21caf', '#be185d', '#e11d48'
+];
+
+// Add color suggestions
+document.addEventListener('DOMContentLoaded', function() {
+    const colorInputs = [
+        { picker: 'add_color', text: 'add_color_text' },
+        { picker: 'edit_color', text: 'edit_color_text' }
+    ];
+    
+    colorInputs.forEach(input => {
+        const picker = document.getElementById(input.picker);
+        const container = picker.parentElement.parentElement;
+        
+        const suggestionsDiv = document.createElement('div');
+        suggestionsDiv.className = 'mt-2';
+        suggestionsDiv.innerHTML = '<small class="text-muted">Önerilen renkler:</small><br>';
+        
+        predefinedColors.forEach(color => {
+            const colorBtn = document.createElement('button');
+            colorBtn.type = 'button';
+            colorBtn.className = 'btn btn-sm me-1 mt-1';
+            colorBtn.style.backgroundColor = color;
+            colorBtn.style.width = '30px';
+            colorBtn.style.height = '30px';
+            colorBtn.style.border = '1px solid #ddd';
+            colorBtn.onclick = function() {
+                picker.value = color;
+                document.getElementById(input.text).value = color;
+            };
+            suggestionsDiv.appendChild(colorBtn);
+        });
+        
+        container.appendChild(suggestionsDiv);
+    });
+});
+</script>
+{% endblock %}

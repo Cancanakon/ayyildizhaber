@@ -1,0 +1,193 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Profil - Admin Panel{% endblock %}
+{% block page_title %}Profil Ayarları{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="mb-0">
+                <i class="fas fa-user-circle me-3"></i>
+                Profil Ayarları
+            </h1>
+            <p class="text-muted mb-0">Kişisel bilgilerinizi ve şifrenizi güncelleyin</p>
+        </div>
+        <div>
+            <span class="badge bg-{% if current_user.is_super_admin %}danger{% else %}secondary{% endif %} fs-6">
+                {% if current_user.is_super_admin %}Süper Admin{% else %}Admin{% endif %}
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Profile Information -->
+        <div class="admin-table mb-4">
+            <div class="table-header p-3 bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-user me-2"></i>
+                    Kişisel Bilgiler
+                </h5>
+            </div>
+            
+            <div class="p-4">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Kullanıcı Adı</label>
+                                <input type="text" class="form-control" id="username" name="username" 
+                                       value="{{ current_user.username }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">E-posta</label>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       value="{{ current_user.email }}" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <h6 class="mb-3">
+                        <i class="fas fa-lock me-2"></i>
+                        Şifre Değiştir
+                    </h6>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="current_password" class="form-label">Mevcut Şifre</label>
+                                <input type="password" class="form-control" id="current_password" name="current_password">
+                                <div class="form-text">Şifre değiştirmek için gerekli</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="new_password" class="form-label">Yeni Şifre</label>
+                                <input type="password" class="form-control" id="new_password" name="new_password" 
+                                       minlength="6">
+                                <div class="form-text">En az 6 karakter</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="confirm_password" class="form-label">Şifre Tekrar</label>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
+                                       minlength="6">
+                                <div class="form-text">Yeni şifreyi tekrar girin</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-start">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>
+                            Güncelle
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <!-- Account Information -->
+        <div class="admin-table">
+            <div class="table-header p-3 bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Hesap Bilgileri
+                </h5>
+            </div>
+            
+            <div class="p-3">
+                <div class="mb-3">
+                    <small class="text-muted">Kullanıcı ID</small>
+                    <div class="fw-bold">{{ current_user.id }}</div>
+                </div>
+                
+                <div class="mb-3">
+                    <small class="text-muted">Yetki Seviyesi</small>
+                    <div class="fw-bold">
+                        {% if current_user.is_super_admin %}
+                            <span class="badge bg-danger">Süper Admin</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Admin</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <small class="text-muted">Hesap Durumu</small>
+                    <div class="fw-bold">
+                        {% if current_user.is_active %}
+                            <span class="badge bg-success">Aktif</span>
+                        {% else %}
+                            <span class="badge bg-warning">Pasif</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <small class="text-muted">Kayıt Tarihi</small>
+                    <div class="fw-bold">{{ current_user.created_at.strftime('%d.%m.%Y') }}</div>
+                </div>
+                
+                {% if current_user.last_login %}
+                <div class="mb-3">
+                    <small class="text-muted">Son Giriş</small>
+                    <div class="fw-bold">{{ current_user.last_login.strftime('%d.%m.%Y %H:%M') }}</div>
+                </div>
+                {% endif %}
+                
+                <div class="mb-0">
+                    <small class="text-muted">Oluşturulan Haberler</small>
+                    <div class="fw-bold">{{ current_user.news_created.count() }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Password confirmation validation
+document.getElementById('confirm_password').addEventListener('input', function() {
+    const newPassword = document.getElementById('new_password').value;
+    const confirmPassword = this.value;
+    
+    if (newPassword && confirmPassword) {
+        if (newPassword !== confirmPassword) {
+            this.setCustomValidity('Şifreler eşleşmiyor');
+            this.classList.add('is-invalid');
+        } else {
+            this.setCustomValidity('');
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+        }
+    }
+});
+
+// New password validation
+document.getElementById('new_password').addEventListener('input', function() {
+    const confirmPassword = document.getElementById('confirm_password');
+    if (this.value && confirmPassword.value) {
+        if (this.value !== confirmPassword.value) {
+            confirmPassword.setCustomValidity('Şifreler eşleşmiyor');
+            confirmPassword.classList.add('is-invalid');
+        } else {
+            confirmPassword.setCustomValidity('');
+            confirmPassword.classList.remove('is-invalid');
+            confirmPassword.classList.add('is-valid');
+        }
+    }
+});
+</script>
+{% endblock %}

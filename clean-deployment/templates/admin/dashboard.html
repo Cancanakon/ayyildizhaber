@@ -1,0 +1,410 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Dashboard - Admin Panel{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="mb-0">
+                <i class="fas fa-tachometer-alt me-3"></i>
+                Dashboard
+            </h1>
+            <p class="text-muted mb-0">Hoş geldiniz, {{ current_user.username }}!</p>
+        </div>
+        <div>
+            <span class="badge bg-success fs-6">
+                <i class="fas fa-circle me-1"></i>
+                Sistem Aktif
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <i class="fas fa-newspaper fa-3x text-primary mb-3"></i>
+            <span class="stats-number">{{ total_news }}</span>
+            <div class="stats-label">Toplam Haber</div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <i class="fas fa-eye fa-3x text-success mb-3"></i>
+            <span class="stats-number">{{ published_news }}</span>
+            <div class="stats-label">Yayınlanan</div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <i class="fas fa-edit fa-3x text-warning mb-3"></i>
+            <span class="stats-number">{{ draft_news }}</span>
+            <div class="stats-label">Taslak</div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <i class="fas fa-tags fa-3x text-info mb-3"></i>
+            <span class="stats-number">{{ total_categories }}</span>
+            <div class="stats-label">Kategori</div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <i class="fas fa-ad fa-3x text-warning mb-3"></i>
+            <span class="stats-number">{{ total_ads }}</span>
+            <div class="stats-label">Reklam</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Recent News -->
+    <div class="col-lg-8">
+        <div class="admin-table">
+            <div class="table-header p-3 bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-clock me-2"></i>
+                    Son Eklenen Haberler
+                </h5>
+            </div>
+            
+            {% if recent_news %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Başlık</th>
+                            <th>Kategori</th>
+                            <th>Durum</th>
+                            <th>Tarih</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for news in recent_news %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if news.featured_image and (news.featured_image.startswith('http') or news.featured_image.startswith('//')) %}
+                                    <img src="{{ news.featured_image if news.featured_image.startswith('http') else 'https:' + news.featured_image }}" 
+                                         alt="{{ news.title }}" 
+                                         class="rounded me-3" 
+                                         style="width: 50px; height: 50px; object-fit: cover;"
+                                         onerror="this.src='{{ url_for('static', filename='images/logo.png') }}'; this.style.objectFit='contain'; this.style.padding='5px';">
+                                    {% else %}
+                                    <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" 
+                                         style="width: 50px; height: 50px;">
+                                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ayyıldız Haber Ajansı" style="width: 25px; height: 25px; object-fit: contain;">
+                                    </div>
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="mb-1">{{ news.title[:50] }}{% if news.title|length > 50 %}...{% endif %}</h6>
+                                        <small class="text-muted">
+                                            {% if news.source and news.source != 'manual' %}
+                                                <i class="fas fa-external-link-alt me-1"></i>{{ news.source.upper() }}
+                                            {% else %}
+                                                <i class="fas fa-user me-1"></i>Manuel
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge" style="background-color: {{ news.category.color }};">
+                                    {{ news.category.name }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if news.status == 'published' %}
+                                <span class="badge bg-success">Yayınlandı</span>
+                                {% elif news.status == 'draft' %}
+                                <span class="badge bg-warning">Taslak</span>
+                                {% else %}
+                                <span class="badge bg-secondary">{{ news.status.title() }}</span>
+                                {% endif %}
+                                
+                                {% if news.is_featured %}
+                                <span class="badge bg-primary ms-1">Öne Çıkan</span>
+                                {% endif %}
+                                
+                                {% if news.is_breaking %}
+                                <span class="badge bg-danger ms-1">Son Dakika</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <small>{{ news.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ url_for('main.news_detail', slug=news.slug) }}" 
+                                       class="btn btn-outline-primary btn-action" target="_blank">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ url_for('admin.news_edit', id=news.id) }}" 
+                                       class="btn btn-outline-warning btn-action">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="p-3 bg-light">
+                <a href="{{ url_for('admin.news_list') }}" class="btn btn-primary">
+                    <i class="fas fa-list me-2"></i>
+                    Tüm Haberleri Görüntüle
+                </a>
+                <a href="{{ url_for('admin.news_create') }}" class="btn btn-success ms-2">
+                    <i class="fas fa-plus me-2"></i>
+                    Yeni Haber Ekle
+                </a>
+            </div>
+            
+            {% else %}
+            <div class="p-5 text-center">
+                <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Henüz haber bulunmuyor</h5>
+                <p class="text-muted mb-4">İlk haberinizi eklemek için aşağıdaki butona tıklayın.</p>
+                <a href="{{ url_for('admin.news_create') }}" class="btn btn-success">
+                    <i class="fas fa-plus me-2"></i>
+                    İlk Haberi Ekle
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Popular News & Statistics -->
+    <div class="col-lg-4">
+        <!-- Popular News -->
+        <div class="admin-table mb-4">
+            <div class="table-header p-3 bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-fire me-2"></i>
+                    Popüler Haberler (7 gün)
+                </h5>
+            </div>
+            
+            {% if popular_news %}
+            <div class="list-group list-group-flush">
+                {% for news_item, view_count in popular_news %}
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="me-2">
+                            <h6 class="mb-1">{{ news_item.title[:40] }}{% if news_item.title|length > 40 %}...{% endif %}</h6>
+                            <small class="text-muted">{{ news_item.category.name }}</small>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">{{ view_count }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="p-3 text-center">
+                <i class="fas fa-chart-line fa-2x text-muted mb-2"></i>
+                <p class="text-muted mb-0">Henüz görüntüleme verisi yok</p>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Daily Visitors Chart -->
+        {% if daily_stats %}
+        <div class="admin-table">
+            <div class="table-header p-3 bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-area me-2"></i>
+                    Günlük Ziyaretçiler (30 gün)
+                </h5>
+            </div>
+            
+            <div class="p-3">
+                <canvas id="visitorsChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Quick Actions -->
+        <div class="admin-table mt-4">
+            <div class="table-header p-3 bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>
+                    Hızlı İşlemler
+                </h5>
+            </div>
+            
+            <div class="p-3">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('admin.news_create') }}" class="btn btn-success">
+                        <i class="fas fa-plus me-2"></i>
+                        Yeni Haber Ekle
+                    </a>
+                    <a href="{{ url_for('ads.create') }}" class="btn btn-warning">
+                        <i class="fas fa-ad me-2"></i>
+                        Yeni Reklam Ekle
+                    </a>
+                    <a href="{{ url_for('admin.statistics') }}" class="btn btn-primary">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        İstatistikleri Görüntüle
+                    </a>
+                    <a href="{{ url_for('main.index') }}" class="btn btn-info" target="_blank">
+                        <i class="fas fa-globe me-2"></i>
+                        Siteyi Görüntüle
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- System Status -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="admin-table">
+            <div class="table-header p-3 bg-dark text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-server me-2"></i>
+                    Sistem Durumu
+                </h5>
+            </div>
+            
+            <div class="p-3">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-database fa-2x text-success mb-2"></i>
+                            <h6>Veritabanı</h6>
+                            <span class="badge bg-success">Aktif</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-rss fa-2x text-success mb-2"></i>
+                            <h6>TRT Haber Beslemesi</h6>
+                            <span class="badge bg-success">Çalışıyor</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-cloud fa-2x text-success mb-2"></i>
+                            <h6>Dış Servisler</h6>
+                            <span class="badge bg-success">Bağlı</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-shield-alt fa-2x text-success mb-2"></i>
+                            <h6>Güvenlik</h6>
+                            <span class="badge bg-success">Güvenli</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Daily visitors chart
+{% if daily_stats %}
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('visitorsChart').getContext('2d');
+    
+    const dates = [
+        {% for stat in daily_stats|reverse %}
+        '{{ stat.date.strftime("%d/%m") }}',
+        {% endfor %}
+    ];
+    
+    const visitors = [
+        {% for stat in daily_stats|reverse %}
+        {{ stat.daily_visitors }},
+        {% endfor %}
+    ];
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Günlük Ziyaretçi',
+                data: visitors,
+                borderColor: 'rgb(220, 38, 38)',
+                backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+});
+{% endif %}
+
+// Auto-refresh dashboard data every 5 minutes
+setInterval(function() {
+    // Could implement AJAX refresh here
+    console.log('Dashboard data could be refreshed here');
+}, 300000);
+
+// Welcome message animation
+document.addEventListener('DOMContentLoaded', function() {
+    const pageHeader = document.querySelector('.page-header');
+    if (pageHeader) {
+        pageHeader.style.opacity = '0';
+        pageHeader.style.transform = 'translateY(-20px)';
+        pageHeader.style.transition = 'all 0.5s ease';
+        
+        setTimeout(() => {
+            pageHeader.style.opacity = '1';
+            pageHeader.style.transform = 'translateY(0)';
+        }, 100);
+    }
+});
+
+// Stats cards animation
+document.addEventListener('DOMContentLoaded', function() {
+    const statsCards = document.querySelectorAll('.stats-card');
+    statsCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.5s ease';
+        
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 200 + (index * 100));
+    });
+});
+</script>
+{% endblock %}

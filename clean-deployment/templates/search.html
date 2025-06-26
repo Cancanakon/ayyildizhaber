@@ -1,0 +1,332 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if query %}Arama: "{{ query }}" - Ayyıldız Haber Ajansı{% else %}Arama - Ayyıldız Haber Ajansı{% endif %}
+{% endblock %}
+
+{% block description %}
+{% if query %}"{{ query }}" için arama sonuçları. Ayyıldız Haber Ajansı'nda haberleri arayın.{% else %}Ayyıldız Haber Ajansı'nda haber arama sayfası.{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Ana Sayfa</a></li>
+            <li class="breadcrumb-item active">Arama</li>
+        </ol>
+    </nav>
+
+    <!-- Search Header -->
+    <div class="search-header mb-5 text-center">
+        <h1 class="display-4 text-red mb-3">
+            <i class="fas fa-search me-3"></i>
+            Haber Arama
+        </h1>
+        
+        <!-- Enhanced Search Form -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <form class="search-form-enhanced" action="{{ url_for('main.search') }}" method="GET">
+                    <div class="input-group input-group-lg">
+                        <input type="text" class="form-control" name="q" 
+                               placeholder="Haber başlığı, içerik veya anahtar kelime arayın..." 
+                               value="{{ query }}" required minlength="3">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search me-2"></i>Ara
+                        </button>
+                    </div>
+                    <small class="form-text text-muted mt-2">
+                        Arama için en az 3 karakter girmelisiniz.
+                    </small>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% if query %}
+    <!-- Search Results -->
+    <div class="search-results">
+        <div class="results-header mb-4">
+            <h2 class="h4">
+                "<strong>{{ query }}</strong>" için arama sonuçları
+                {% if news %}
+                <small class="text-muted">({{ news.total }} sonuç bulundu)</small>
+                {% endif %}
+            </h2>
+        </div>
+
+        {% if news and news.items %}
+        <!-- Results Grid -->
+        <div class="row">
+            {% for article in news.items %}
+            <div class="col-lg-6 col-md-6 mb-4">
+                <article class="news-card search-result-card slide-up">
+                    {% if article.featured_image %}
+                    <img src="{{ article.featured_image }}" class="card-img-top" alt="{{ article.title }}">
+                    {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="fas fa-newspaper fa-2x text-muted"></i>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="card-body">
+                        <h3 class="card-title h5">
+                            <a href="{{ url_for('main.news_detail', slug=article.slug) }}" class="text-decoration-none">
+                                {{ article.title|highlight_search(query)|safe }}
+                            </a>
+                        </h3>
+                        
+                        {% if article.summary %}
+                        <p class="card-text">
+                            {{ article.summary[:200]|highlight_search(query)|safe }}
+                            {% if article.summary|length > 200 %}...{% endif %}
+                        </p>
+                        {% endif %}
+                        
+                        <div class="news-meta">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="category-badge" style="background-color: {{ article.category.color }};">
+                                    {{ article.category.name }}
+                                </span>
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar-alt me-1"></i>
+                                    {{ article.published_at.strftime('%d.%m.%Y') if article.published_at }}
+                                </small>
+                            </div>
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-eye me-1"></i>{{ article.view_count }} görüntülenme
+                                    {% if article.source and article.source != 'manual' %}
+                                    <span class="ms-3">
+                                        <i class="fas fa-external-link-alt me-1"></i>{{ article.source.upper() }}
+                                    </span>
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if news.pages > 1 %}
+        <nav aria-label="Arama sonuçları sayfa navigasyonu" class="mt-5">
+            <ul class="pagination justify-content-center">
+                <!-- Previous Page -->
+                {% if news.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('main.search', q=query, page=news.prev_num) }}">
+                        <i class="fas fa-chevron-left me-1"></i>Önceki
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">
+                        <i class="fas fa-chevron-left me-1"></i>Önceki
+                    </span>
+                </li>
+                {% endif %}
+
+                <!-- Page Numbers -->
+                {% for page_num in news.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                    {% if page_num %}
+                        {% if page_num != news.page %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('main.search', q=query, page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">…</span>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+
+                <!-- Next Page -->
+                {% if news.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('main.search', q=query, page=news.next_num) }}">
+                        Sonraki<i class="fas fa-chevron-right ms-1"></i>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">
+                        Sonraki<i class="fas fa-chevron-right ms-1"></i>
+                    </span>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+        {% elif query %}
+        <!-- No Results -->
+        <div class="no-results text-center py-5">
+            <div class="mb-4">
+                <i class="fas fa-search fa-5x text-muted"></i>
+            </div>
+            <h3 class="text-muted mb-3">Aradığınız içerik bulunamadı</h3>
+            <p class="text-muted mb-4">
+                "<strong>{{ query }}</strong>" için hiçbir sonuç bulunamadı.<br>
+                Lütfen farklı anahtar kelimeler deneyiniz.
+            </p>
+            
+            <!-- Search Suggestions -->
+            <div class="search-suggestions mb-4">
+                <h5 class="mb-3">Arama önerileri:</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2">• Daha genel anahtar kelimeler kullanın</li>
+                    <li class="mb-2">• Yazım hatalarını kontrol edin</li>
+                    <li class="mb-2">• Farklı kelime kombinasyonları deneyin</li>
+                    <li class="mb-2">• Türkçe karakterleri kullanmayı deneyin</li>
+                </ul>
+            </div>
+            
+            <div class="suggested-actions">
+                <a href="{{ url_for('main.index') }}" class="btn btn-primary me-2">
+                    <i class="fas fa-home me-2"></i>Ana Sayfaya Dön
+                </a>
+                <button class="btn btn-outline-primary" onclick="document.querySelector('input[name=q]').focus()">
+                    <i class="fas fa-search me-2"></i>Yeni Arama Yap
+                </button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if not query %}
+    <!-- Search Tips -->
+    <div class="search-tips">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title text-center mb-4">
+                            <i class="fas fa-lightbulb text-warning me-2"></i>
+                            Arama İpuçları
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-check-circle text-success me-2"></i>Etkili Arama</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">• Spesifik kelimeler kullanın</li>
+                                    <li class="mb-2">• Birden fazla anahtar kelime deneyin</li>
+                                    <li class="mb-2">• Güncel konuları arayın</li>
+                                    <li class="mb-2">• Kategori isimlerini kullanın</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-info-circle text-info me-2"></i>Arama Kapsamı</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">• Haber başlıkları</li>
+                                    <li class="mb-2">• Haber içerikleri</li>
+                                    <li class="mb-2">• Haber özetleri</li>
+                                    <li class="mb-2">• Yazar isimleri</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popular Searches -->
+    <div class="popular-searches mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h3 class="mb-4">Popüler Aramalar</h3>
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <a href="{{ url_for('main.search', q='politika') }}" class="btn btn-outline-primary btn-sm">Politika</a>
+                    <a href="{{ url_for('main.search', q='ekonomi') }}" class="btn btn-outline-primary btn-sm">Ekonomi</a>
+                    <a href="{{ url_for('main.search', q='spor') }}" class="btn btn-outline-primary btn-sm">Spor</a>
+                    <a href="{{ url_for('main.search', q='teknoloji') }}" class="btn btn-outline-primary btn-sm">Teknoloji</a>
+                    <a href="{{ url_for('main.search', q='sağlık') }}" class="btn btn-outline-primary btn-sm">Sağlık</a>
+                    <a href="{{ url_for('main.search', q='eğitim') }}" class="btn btn-outline-primary btn-sm">Eğitim</a>
+                    <a href="{{ url_for('main.search', q='kültür') }}" class="btn btn-outline-primary btn-sm">Kültür</a>
+                    <a href="{{ url_for('main.search', q='dünya') }}" class="btn btn-outline-primary btn-sm">Dünya</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('input[name="q"]');
+    const searchForm = document.querySelector('.search-form-enhanced');
+    
+    if (searchInput && searchForm) {
+        // Auto-focus on search input
+        searchInput.focus();
+        
+        // Search validation
+        searchForm.addEventListener('submit', function(e) {
+            const query = searchInput.value.trim();
+            if (query.length < 3) {
+                e.preventDefault();
+                alert('Arama için en az 3 karakter girmelisiniz.');
+                searchInput.focus();
+                return false;
+            }
+        });
+        
+        // Clear search on Escape
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                this.value = '';
+            }
+        });
+    }
+    
+    // Highlight search terms in results
+    const query = '{{ query|safe }}';
+    if (query) {
+        highlightSearchTerms(query);
+    }
+});
+
+function highlightSearchTerms(query) {
+    const terms = query.toLowerCase().split(' ');
+    const textElements = document.querySelectorAll('.card-title a, .card-text');
+    
+    textElements.forEach(element => {
+        let html = element.innerHTML;
+        terms.forEach(term => {
+            if (term.length > 2) {
+                const regex = new RegExp(`(${term})`, 'gi');
+                html = html.replace(regex, '<mark class="bg-warning">$1</mark>');
+            }
+        });
+        element.innerHTML = html;
+    });
+}
+
+// Smooth scroll for pagination
+document.addEventListener('DOMContentLoaded', function() {
+    const paginationLinks = document.querySelectorAll('.pagination .page-link');
+    paginationLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

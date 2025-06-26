@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel - Ayyıldız Haber Ajansı{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    
+    <!-- Admin specific styles -->
+    <style>
+        .admin-wrapper {
+            min-height: 100vh;
+        }
+        .admin-sidebar {
+            background: #1f2937;
+            min-height: 100vh;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .admin-sidebar .nav-link {
+            color: #d1d5db;
+            padding: 12px 20px;
+            border-radius: 0;
+            transition: all 0.3s ease;
+            margin-bottom: 2px;
+        }
+        .admin-sidebar .nav-link:hover,
+        .admin-sidebar .nav-link.active {
+            background: var(--primary-red);
+            color: white;
+            transform: translateX(5px);
+        }
+        .admin-sidebar .nav-link i {
+            width: 20px;
+            margin-right: 10px;
+        }
+        .admin-header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .admin-content {
+            background: #f8f9fa;
+            min-height: calc(100vh - 70px);
+            padding: 30px;
+        }
+        .page-header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .page-header h1 {
+            margin: 0;
+            color: var(--text-dark);
+        }
+        .stats-card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-red);
+            display: block;
+        }
+        .stats-label {
+            color: var(--text-light);
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+        .admin-table {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .admin-table .table {
+            margin: 0;
+        }
+        .admin-table .table thead {
+            background: var(--primary-red);
+            color: white;
+        }
+        .btn-action {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+        .auto-save-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: none;
+            z-index: 1000;
+        }
+    </style>
+    
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="admin-wrapper d-flex">
+        <!-- Sidebar -->
+        <nav class="admin-sidebar" style="width: 250px;">
+            <div class="p-3">
+                <h4 class="text-white mb-4">
+                    <i class="fas fa-newspaper me-2"></i>
+                    Admin Panel
+                </h4>
+                
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if request.endpoint == 'admin.dashboard' }}" 
+                           href="{{ url_for('admin.dashboard') }}">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if 'news' in request.endpoint }}" 
+                           href="{{ url_for('admin.news_list') }}">
+                            <i class="fas fa-newspaper"></i>
+                            Haberler
+                        </a>
+                    </li>
+                    
+
+                    
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if 'statistics' in request.endpoint }}" 
+                           href="{{ url_for('admin.statistics') }}">
+                            <i class="fas fa-chart-bar"></i>
+                            İstatistikler
+                        </a>
+                    </li>
+                    
+                    {% if current_user.is_super_admin %}
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if 'users' in request.endpoint }}" 
+                           href="{{ url_for('admin.users_list') }}">
+                            <i class="fas fa-users"></i>
+                            Kullanıcılar
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if 'ads' in request.endpoint }}" 
+                           href="{{ url_for('ads.index') }}">
+                            <i class="fas fa-ad"></i>
+                            Reklam Yönetimi
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if 'profile' in request.endpoint }}" 
+                           href="{{ url_for('admin.profile') }}">
+                            <i class="fas fa-user-circle"></i>
+                            Profil
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item mt-4">
+                        <hr class="border-secondary">
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.index') }}" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            Siteyi Görüntüle
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.logout') }}">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Çıkış Yap
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="flex-grow-1">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-0">{% block page_title %}Admin Panel{% endblock %}</h5>
+                            <small class="text-muted">{{ current_user.username }} olarak giriş yaptınız</small>
+                        </div>
+                        <div>
+                            <span class="text-muted me-3">
+                                <i class="fas fa-calendar-alt me-1"></i>
+                                <span id="current-datetime"></span>
+                            </span>
+                            <div class="dropdown d-inline">
+                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" 
+                                        data-bs-toggle="dropdown">
+                                    <i class="fas fa-user me-1"></i>
+                                    {{ current_user.username }}
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">
+                                        <i class="fas fa-user me-2"></i>Profil
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="#">
+                                        <i class="fas fa-cog me-2"></i>Ayarlar
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('admin.logout') }}">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Çıkış Yap
+                                    </a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="admin-content">
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'danger' if category == 'error' else 'success' if category == 'success' else 'info' }} alert-dismissible fade show" role="alert">
+                                <i class="fas fa-{% if category == 'error' %}exclamation-triangle{% elif category == 'success' %}check-circle{% else %}info-circle{% endif %} me-2"></i>
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Auto-save indicator -->
+    <div class="auto-save-indicator" id="autoSaveIndicator">
+        <i class="fas fa-check me-2"></i>
+        <span>Otomatik kaydedildi</span>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Update current date/time
+        function updateDateTime() {
+            const now = new Date();
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            
+            const dateTimeElement = document.getElementById('current-datetime');
+            if (dateTimeElement) {
+                dateTimeElement.textContent = now.toLocaleDateString('tr-TR', options);
+            }
+        }
+        
+        // Update date/time every minute
+        updateDateTime();
+        setInterval(updateDateTime, 60000);
+        
+        // Confirm delete actions
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn-delete') || 
+                e.target.closest('.btn-delete')) {
+                if (!confirm('Bu işlemi gerçekleştirmek istediğinizden emin misiniz? Bu işlem geri alınamaz.')) {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        });
+        
+        // Auto-hide alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 5000);
+            });
+        });
+        
+        // Show auto-save indicator
+        function showAutoSaveIndicator(message = 'Otomatik kaydedildi') {
+            const indicator = document.getElementById('autoSaveIndicator');
+            if (indicator) {
+                indicator.querySelector('span').textContent = message;
+                indicator.style.display = 'block';
+                setTimeout(() => {
+                    indicator.style.display = 'none';
+                }, 3000);
+            }
+        }
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

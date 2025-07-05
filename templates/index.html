@@ -103,7 +103,7 @@
         {% if sidebar_ads %}
         {% set left_ads = sidebar_ads|selectattr("position", "equalto", "left")|list|sort(attribute="slot_number") %}
         {% if left_ads %}
-        <div class="sidebar-ads-left d-none d-xl-block">
+        <div class="sidebar-ads-left">
             {% for ad in left_ads[:2] %}
             <div class="vertical-banner-ad" data-ad-id="{{ ad.id }}" onclick="trackAdImpression({{ ad.id }})">
                 <button class="ad-close-btn" type="button" title="Reklamı Kapat">
@@ -514,7 +514,7 @@
 {% if sidebar_ads %}
 {% set right_ads = sidebar_ads|selectattr("position", "equalto", "right")|list|sort(attribute="slot_number") %}
 {% if right_ads %}
-<div class="sidebar-ads-right d-none d-lg-block">
+<div class="sidebar-ads-right">
     {% for ad in right_ads[:2] %}
     <div class="vertical-banner-ad sidebar-ad" data-ad-id="{{ ad.id }}">
         <button class="ad-close-btn" type="button" title="Reklamı Kapat">

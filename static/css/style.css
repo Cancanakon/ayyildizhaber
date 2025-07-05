@@ -1231,13 +1231,16 @@ body {
 }
 
 /* Yeniden Yazılmış Reklam Sistemi */
+/* Reklam Containerları - Bootstrap sınıflarını zorunlu override */
+.sidebar-ads-left.d-none.d-xl-block,
+.sidebar-ads-left.d-xl-block,
 .sidebar-ads-left {
-    position: fixed;
+    position: fixed !important;
     left: 15px;
     top: 120px;
     bottom: 80px;
     z-index: 50;
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     gap: 30px;
     width: 220px;
@@ -1245,13 +1248,15 @@ body {
     padding: 10px 0;
 }
 
+.sidebar-ads-right.d-none.d-lg-block,
+.sidebar-ads-right.d-lg-block,
 .sidebar-ads-right {
-    position: fixed;
+    position: fixed !important;
     right: 15px;
     top: 120px;
     bottom: 80px;
     z-index: 50;
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     gap: 30px;
     width: 220px;
@@ -1810,7 +1815,21 @@ body {
     }
     
     .sidebar-ads-left {
-        display: none;
+        left: 5px;
+        width: 160px;
+    }
+    
+    .sidebar-ads-right {
+        right: 5px;
+        width: 160px;
+    }
+    
+    .vertical-banner-ad {
+        width: 160px;
+    }
+    
+    .vertical-banner-image {
+        height: 350px;
     }
 }
 

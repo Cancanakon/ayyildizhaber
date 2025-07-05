@@ -98,6 +98,10 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- July 5, 2025: İyileştirilmiş breadcrumb (yol görünümü) tasarımı - gradient arkaplan, daha iyi görsel ayrım
+- July 5, 2025: Admin panelinden üst banner ve alt banner reklam seçenekleri kaldırıldı - sadece kenar ve popup reklamlar
+- July 5, 2025: Tüm sayfalara header elementleri eklendi (kategori, haber detay, arama, sabit sayfalar)
+- July 5, 2025: Header elementleri tam ekran genişliğinde görünüm (header-top, main-header, main-nav, breaking-news, footer)
 - June 26, 2025: Removed all previous deployment files and created single GitHub-based VPS installation
 - June 26, 2025: Created github-vps-install.sh - one-command complete installation from GitHub repository
 - June 26, 2025: Implemented Supervisor process management instead of systemd for better reliability

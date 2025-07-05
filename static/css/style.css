@@ -1682,6 +1682,47 @@ body.has-bottom-banner {
     background: var(--primary-blue);
 }
 
+/* Breadcrumb (Yol Görünümü) Stilleri */
+.breadcrumb {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 1px solid #dee2e6;
+}
+
+.breadcrumb-item {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+    color: var(--primary-blue);
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0 8px;
+}
+
+.breadcrumb-item a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.breadcrumb-item a:hover {
+    background: rgba(52, 144, 220, 0.1);
+    color: var(--dark-blue);
+}
+
+.breadcrumb-item.active {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
 /* Content Area Reserved Space for Ads */
 body {
     margin-left: 250px; /* Sol reklam alanı rezervasyonu */

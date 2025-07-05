@@ -1471,10 +1471,10 @@ body.has-bottom-banner {
     left: 0;
     right: 0;
     z-index: 10;
-    padding: 15px 20px;
+    padding: 10px 15px;
     background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(0,0,0,0.6));
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     backdrop-filter: blur(5px);
 }
@@ -1606,7 +1606,7 @@ body.has-bottom-banner {
     }
     
     .popup-ad-header {
-        padding: 10px 15px;
+        padding: 8px 12px;
     }
     
     .popup-close-btn {

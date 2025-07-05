@@ -38,6 +38,13 @@ body {
     max-width: 1200px;
 }
 
+/* Sidebar reklamları container genişliğinden etkilenmesin */
+.sidebar-ads-left,
+.sidebar-ads-right {
+    position: fixed !important;
+    z-index: 1000 !important;
+}
+
 /* Header Styles - Tam Ekran Genişliği */
 .header-top {
     background: var(--primary-blue);
@@ -1878,11 +1885,44 @@ body {
     display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
+    position: fixed !important;
+    z-index: 1000 !important;
+}
+
+/* Büyük ekranlar için özel kurallar */
+@media (min-width: 1200px) {
+    .sidebar-ads-left,
+    .sidebar-ads-right {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: fixed !important;
+        z-index: 1000 !important;
+    }
+    
+    .vertical-banner-ad {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+@media (min-width: 1400px) {
+    .sidebar-ads-left,
+    .sidebar-ads-right {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: fixed !important;
+        z-index: 1000 !important;
+    }
 }
 
 @media (max-width: 991.98px) {
     .vertical-ads-container {
-        display: none;
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     
     .widget-card {

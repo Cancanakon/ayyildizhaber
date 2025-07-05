@@ -425,7 +425,7 @@ def statistics():
     from sqlalchemy import func, text
     
     try:
-        # Real traffic sources based on actual data
+        # Real traffic sources based on actual data (SQLite compatible)
         traffic_sources = db.session.execute(text("""
             SELECT 
                 CASE 
@@ -442,13 +442,13 @@ def statistics():
                 END as source,
                 COUNT(*) as count
             FROM news_views 
-            WHERE viewed_at >= NOW() - INTERVAL '30 days'
+            WHERE viewed_at >= datetime('now', '-30 days')
             GROUP BY source
             ORDER BY count DESC
             LIMIT 10
         """)).fetchall()
         
-        # Browser statistics
+        # Browser statistics (SQLite compatible)
         browser_stats = db.session.execute(text("""
             SELECT 
                 CASE 
@@ -461,7 +461,7 @@ def statistics():
                 END as browser,
                 COUNT(*) as count
             FROM news_views 
-            WHERE viewed_at >= NOW() - INTERVAL '30 days'
+            WHERE viewed_at >= datetime('now', '-30 days')
             GROUP BY browser
             ORDER BY count DESC
         """)).fetchall()

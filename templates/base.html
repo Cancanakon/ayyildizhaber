@@ -101,7 +101,16 @@
                         <a class="nav-link" href="{{ url_for('main.index') }}">Ana Sayfa</a>
                     </li>
                     {% if categories %}
-                        {% for category in categories %}
+                        {% set category_order = ['gundem', 'politika', 'ekonomi', 'spor', 'teknoloji', 'saglik', 'egitim', 'dunya', 'yerel-haberler'] %}
+                        {% set sorted_categories = [] %}
+                        {% for slug in category_order %}
+                            {% for category in categories %}
+                                {% if category.slug == slug %}
+                                    {% set _ = sorted_categories.append(category) %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                        {% for category in sorted_categories %}
                         <li class="nav-item">
                             <a class="nav-link {% if category.slug == 'yerel-haberler' %}nav-yerel-link{% endif %}" href="{{ url_for('main.category_news', slug=category.slug) }}">
                                 {% if category.slug == 'yerel-haberler' %}

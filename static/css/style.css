@@ -143,12 +143,19 @@ body {
     padding: 8px 15px;
 }
 
-/* Breaking News Ticker */
+/* Breaking News Ticker - Fixed Layering */
 .breaking-news {
     background: var(--primary-blue);
     color: white;
     padding: 10px 0;
     overflow: hidden;
+    position: relative;
+    z-index: 10;
+}
+
+.breaking-news .container {
+    position: relative;
+    z-index: 11;
 }
 
 .breaking-news .breaking-label {
@@ -157,11 +164,25 @@ body {
     font-weight: bold;
     border-radius: 3px;
     margin-right: 15px;
+    position: relative;
+    z-index: 13;
+    flex-shrink: 0;
+    display: inline-block;
 }
 
 .breaking-news .news-ticker {
-    display: flex;
+    display: inline-block;
     animation: scroll-left 30s linear infinite;
+    position: relative;
+    z-index: 12;
+    white-space: nowrap;
+}
+
+.breaking-news .news-ticker > span {
+    display: inline-block;
+    margin-right: 50px;
+    position: relative;
+    z-index: 12;
 }
 
 @keyframes scroll-left {
@@ -1166,30 +1187,35 @@ body {
     }
 }
 
-/* Vertical Advertisement Styles - Büyütülmüş ve Düzeltilmiş */
+/* Enhanced Large Banner Advertisement System */
 .sidebar-ads-left {
     position: fixed;
     left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 50; /* Z-index düşürüldü, tıklanabilirlik için */
+    top: 120px; /* Header'ın altından başla */
+    bottom: 80px; /* Footer'ın üstünde bitir */
+    z-index: 45;
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    pointer-events: none; /* Container'a tıklanamaz, sadece reklamlara */
+    gap: 30px;
+    width: 220px; /* Genişlik artırıldı */
+    pointer-events: none;
+    overflow-y: auto;
+    padding: 10px 0;
 }
 
 .sidebar-ads-right {
     position: fixed;
     right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 50; /* Z-index düşürüldü */
+    top: 120px; /* Header'ın altından başla */
+    bottom: 80px; /* Footer'ın üstünde bitir */
+    z-index: 45;
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    pointer-events: none; /* Container'a tıklanamaz, sadece reklamlara */
-};
+    gap: 30px;
+    width: 220px; /* Genişlik artırıldı */
+    pointer-events: none;
+    overflow-y: auto;
+    padding: 10px 0;
 }
 
 .vertical-ads-container {
@@ -1198,27 +1224,27 @@ body {
 
 .vertical-banner-ad {
     background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
     overflow: hidden;
     transition: all 0.3s ease;
     cursor: pointer;
-    border: 2px solid #e9ecef;
-    width: 160px; /* 120px'den 160px'e büyütüldü */
-    margin-bottom: 20px;
+    border: 3px solid #f8f9fa;
+    width: 220px; /* Genişlik artırıldı */
+    margin-bottom: 25px;
     position: relative;
-    pointer-events: auto; /* Reklamların tıklanabilir olması için */
+    pointer-events: auto;
 }
 
 .vertical-banner-ad:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    border-color: #007bff;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    border-color: var(--primary-blue);
 }
 
 .vertical-banner-image {
     width: 100%;
-    height: 400px; /* 300px'den 400px'e uzatıldı */
+    height: 500px; /* Daha uzun banner */
     object-fit: cover;
     object-position: center;
     display: block;
@@ -1504,8 +1530,44 @@ body {
     color: var(--primary-blue);
 }
 
-/* Responsive adjustments */
+/* Content Area Reserved Space for Ads */
+body {
+    margin-left: 250px; /* Sol reklam alanı rezervasyonu */
+    margin-right: 250px; /* Sağ reklam alanı rezervasyonu */
+}
+
+/* Enhanced Responsive Design - Daha geniş ekranlarda da reklam göster */
+@media (max-width: 1599.98px) {
+    body {
+        margin-left: 200px;
+        margin-right: 200px;
+    }
+    
+    .sidebar-ads-left {
+        left: 10px;
+        width: 180px;
+    }
+    
+    .sidebar-ads-right {
+        right: 10px;
+        width: 180px;
+    }
+    
+    .vertical-banner-ad {
+        width: 180px;
+    }
+    
+    .vertical-banner-image {
+        height: 400px;
+    }
+}
+
 @media (max-width: 1399.98px) {
+    body {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
     .sidebar-ads-left {
         display: none;
     }

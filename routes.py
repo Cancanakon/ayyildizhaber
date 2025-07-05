@@ -25,8 +25,9 @@ def index():
         slider_ids = [news.id for news in slider_news]
         featured_news = News.query.filter_by(status='published').filter(~News.id.in_(slider_ids)).order_by(News.published_at.desc()).limit(6).all()
     
-    # Get latest news by category
-    categories = Category.query.filter_by(is_active=True).all()
+    # Get only allowed categories for navigation
+    allowed_category_slugs = ['gundem', 'politika', 'ekonomi', 'spor', 'teknoloji', 'saglik', 'egitim', 'dunya', 'yerel-haberler']
+    categories = Category.query.filter_by(is_active=True).filter(Category.slug.in_(allowed_category_slugs)).all()
     latest_news = News.query.filter_by(status='published').order_by(News.published_at.desc()).limit(12).all()
     
     # Yerel haberler (sadece manuel eklenenler)

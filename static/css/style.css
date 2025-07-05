@@ -38,12 +38,16 @@ body {
     max-width: 1200px;
 }
 
-/* Header Styles */
+/* Header Styles - Tam Ekran Genişliği */
 .header-top {
     background: var(--primary-blue);
     color: white;
     padding: 8px 0;
     font-size: 0.9rem;
+    width: 100vw;
+    position: relative;
+    margin-left: -250px; /* Body margin'ini etkisiz hale getir */
+    margin-right: -250px;
 }
 
 .header-top .current-date {
@@ -66,6 +70,10 @@ body {
     background: white;
     border-bottom: 3px solid var(--primary-blue);
     padding: 15px 0;
+    width: 100vw;
+    position: relative;
+    margin-left: -250px; /* Body margin'ini etkisiz hale getir */
+    margin-right: -250px;
 }
 
 .logo-img {
@@ -87,10 +95,14 @@ body {
     margin-top: -2px;
 }
 
-/* Navigation */
+/* Navigation - Tam Ekran Genişliği */
 .main-nav {
     background: var(--dark-blue);
     padding: 0;
+    width: 100vw;
+    position: relative;
+    margin-left: -250px; /* Body margin'ini etkisiz hale getir */
+    margin-right: -250px;
 }
 
 .navbar-nav .nav-link {
@@ -143,7 +155,7 @@ body {
     padding: 8px 15px;
 }
 
-/* Breaking News Ticker - Fixed Layering */
+/* Breaking News Ticker - Fixed Layering - Tam Ekran Genişliği */
 .breaking-news {
     background: var(--primary-blue);
     color: white;
@@ -151,6 +163,9 @@ body {
     overflow: hidden;
     position: relative;
     z-index: 10;
+    width: 100vw;
+    margin-left: -250px; /* Body margin'ini etkisiz hale getir */
+    margin-right: -250px;
 }
 
 .breaking-news .container {
@@ -1611,6 +1626,62 @@ body.has-bottom-banner {
     color: var(--primary-blue);
 }
 
+/* Footer - Tam Ekran Genişliği */
+.footer {
+    background: var(--dark-blue);
+    color: white;
+    padding: 40px 0 20px;
+    width: 100vw;
+    position: relative;
+    margin-left: -250px; /* Body margin'ini etkisiz hale getir */
+    margin-right: -250px;
+}
+
+.footer h5 {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+.footer p {
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 8px;
+}
+
+.footer-links a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+.social-links a {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 35px;
+    transition: background 0.3s ease;
+}
+
+.social-links a:hover {
+    background: var(--primary-blue);
+}
+
 /* Content Area Reserved Space for Ads */
 body {
     margin-left: 250px; /* Sol reklam alanı rezervasyonu */
@@ -1622,6 +1693,16 @@ body {
     body {
         margin-left: 200px;
         margin-right: 200px;
+    }
+    
+    /* Tam ekran alanları için margin ayarı */
+    .header-top,
+    .main-header,
+    .main-nav,
+    .breaking-news,
+    .footer {
+        margin-left: -200px;
+        margin-right: -200px;
     }
     
     .sidebar-ads-left {
@@ -1645,6 +1726,16 @@ body {
 
 @media (max-width: 1399.98px) {
     body {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    /* Tam ekran alanları için margin sıfırla */
+    .header-top,
+    .main-header,
+    .main-nav,
+    .breaking-news,
+    .footer {
         margin-left: 0;
         margin-right: 0;
     }

@@ -404,15 +404,36 @@ def statistics():
     # Most viewed news
     most_viewed = News.query.order_by(News.view_count.desc()).limit(10).all()
     
-    # Daily views (last 30 days)
-    from datetime import timedelta
+    # Daily views (last 30 days) - gerçek veriler
+    from datetime import timedelta, date
     thirty_days_ago = datetime.utcnow() - timedelta(days=30)
-    daily_views = db.session.query(
+    
+    # Gerçek günlük görüntülenme verileri
+    daily_views_raw = db.session.query(
         db.func.date(NewsView.viewed_at).label('date'),
         db.func.count(NewsView.id).label('views')
     ).filter(NewsView.viewed_at >= thirty_days_ago).group_by(
         db.func.date(NewsView.viewed_at)
     ).order_by(db.text('date DESC')).all()
+    
+    # Boş günleri de dahil et (0 görüntülenme ile)
+    daily_views = []
+    current_date = date.today()
+    
+    for i in range(30):
+        check_date = current_date - timedelta(days=i)
+        views_count = 0
+        
+        # Bu tarihte görüntülenme var mı kontrol et
+        for view_data in daily_views_raw:
+            if view_data.date == check_date:
+                views_count = view_data.views
+                break
+        
+        daily_views.append({
+            'date': check_date,
+            'views': views_count
+        })
     
     # Category statistics
     category_stats = db.session.query(
@@ -466,7 +487,7 @@ def statistics():
             ORDER BY count DESC
         """)).fetchall()
         
-        # Device statistics
+        # Device statistics (SQLite compatible)
         device_stats = db.session.execute(text("""
             SELECT 
                 CASE 
@@ -476,7 +497,7 @@ def statistics():
                 END as device,
                 COUNT(*) as count
             FROM news_views 
-            WHERE viewed_at >= NOW() - INTERVAL '30 days'
+            WHERE viewed_at >= datetime('now', '-30 days')
             GROUP BY device
             ORDER BY count DESC
         """)).fetchall()

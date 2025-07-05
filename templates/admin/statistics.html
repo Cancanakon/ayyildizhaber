@@ -400,10 +400,10 @@
 // Chart configurations
 let dailyViewsChart, trafficSourcesChart, readingTimeChart, deviceStatsChart;
 
-// Daily views data
+// Daily views data (gerçek veriler)
 const dailyViewsData = [
-    {% for date, views in daily_views %}
-    { date: '{{ date }}', views: {{ views }} },
+    {% for day in daily_views %}
+    { date: '{{ day.date }}', views: {{ day.views }} },
     {% endfor %}
 ];
 
@@ -452,21 +452,34 @@ function initializeDailyViewsChart() {
     });
 }
 
-// Traffic Sources Chart
+// Traffic Sources Chart (gerçek veriler)
 function initializeTrafficSourcesChart() {
     const ctx = document.getElementById('trafficSourcesChart').getContext('2d');
+    
+    // Gerçek trafik kaynak verileri
+    const trafficData = [
+        {% for source in traffic_sources %}
+        { source: '{{ source.source }}', count: {{ source.count }} },
+        {% endfor %}
+    ];
     
     trafficSourcesChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Organik Arama', 'Sosyal Medya', 'Direkt Giriş', 'Diğer'],
+            labels: trafficData.map(item => item.source),
             datasets: [{
-                data: [65, 25, 10, 5],
+                data: trafficData.map(item => item.count),
                 backgroundColor: [
                     'rgb(34, 197, 94)',
-                    'rgb(59, 130, 246)',
+                    'rgb(59, 130, 246)', 
                     'rgb(251, 191, 36)',
-                    'rgb(156, 163, 175)'
+                    'rgb(156, 163, 175)',
+                    'rgb(239, 68, 68)',
+                    'rgb(168, 85, 247)',
+                    'rgb(236, 72, 153)',
+                    'rgb(14, 165, 233)',
+                    'rgb(34, 197, 94)',
+                    'rgb(245, 158, 11)'
                 ],
                 borderWidth: 2,
                 borderColor: '#fff'
@@ -478,6 +491,10 @@ function initializeTrafficSourcesChart() {
             plugins: {
                 legend: {
                     position: 'bottom'
+                },
+                title: {
+                    display: true,
+                    text: 'Trafik Kaynakları (Son 30 Gün)'
                 }
             }
         }
@@ -535,16 +552,23 @@ function initializeReadingTimeChart() {
     });
 }
 
-// Device Stats Chart
+// Device Stats Chart (gerçek veriler)
 function initializeDeviceStatsChart() {
     const ctx = document.getElementById('deviceStatsChart').getContext('2d');
+    
+    // Gerçek cihaz istatistik verileri
+    const deviceData = [
+        {% for device in device_stats %}
+        { device: '{{ device.device }}', count: {{ device.count }} },
+        {% endfor %}
+    ];
     
     deviceStatsChart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: ['Mobil', 'Masaüstü', 'Tablet'],
+            labels: deviceData.map(item => item.device),
             datasets: [{
-                data: [60, 35, 5],
+                data: deviceData.map(item => item.count),
                 backgroundColor: [
                     'rgb(34, 197, 94)',
                     'rgb(59, 130, 246)',
@@ -560,7 +584,7 @@ function initializeDeviceStatsChart() {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Cihaz Türü Dağılımı'
+                    text: 'Cihaz Türü Dağılımı (Son 30 Gün)'
                 },
                 legend: {
                     position: 'bottom'

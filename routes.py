@@ -154,13 +154,47 @@ def news_detail(slug):
             exclude_ids=[news.id] + [r.id for r in related_news]
         )
     
+    # Header verilerini al (anasayfa ile aynı)
+    try:
+        weather_data = get_weather_data()
+    except Exception as e:
+        print(f"Weather data error: {e}")
+        weather_data = None
+    
+    try:
+        currency_data = get_currency_data()
+        print(f"Currency data in news detail: {currency_data}")
+    except Exception as e:
+        print(f"Currency data error: {e}")
+        currency_data = None
+    
+    try:
+        prayer_data = get_prayer_times()
+    except Exception as e:
+        print(f"Prayer data error: {e}")
+        prayer_data = None
+    
+    # Breaking news'i al
+    breaking_news = News.query.filter_by(
+        is_breaking=True,
+        status='published'
+    ).order_by(News.published_at.desc()).limit(5).all()
+    
+    # Kategorileri al
+    categories = Category.query.filter_by(is_active=True).all()
+    
     return render_template('news_detail.html',
                          news=news,
                          related_news=related_news,
                          popular_news=popular_news,
                          recommended_news=recommended_news,
                          images=images,
-                         videos=videos)
+                         videos=videos,
+                         weather_data=weather_data,
+                         currency_data=currency_data,
+                         prayer_data=prayer_data,
+                         breaking_news=breaking_news,
+                         categories=categories)
 
 @main_bp.route('/kategori/<slug>')
 def category_news(slug):
@@ -199,12 +233,46 @@ def category_news(slug):
     # Get popular news
     popular_news = get_popular_news(limit=5)
     
+    # Header verilerini al (anasayfa ile aynı)
+    try:
+        weather_data = get_weather_data()
+    except Exception as e:
+        print(f"Weather data error: {e}")
+        weather_data = None
+    
+    try:
+        currency_data = get_currency_data()
+        print(f"Currency data in routes: {currency_data}")
+    except Exception as e:
+        print(f"Currency data error: {e}")
+        currency_data = None
+    
+    try:
+        prayer_data = get_prayer_times()
+    except Exception as e:
+        print(f"Prayer data error: {e}")
+        prayer_data = None
+    
+    # Breaking news'i al
+    breaking_news = News.query.filter_by(
+        is_breaking=True,
+        status='published'
+    ).order_by(News.published_at.desc()).limit(5).all()
+    
+    # Kategorileri al
+    categories = Category.query.filter_by(is_active=True).all()
+    
     return render_template('category.html',
                          category=category,
                          news=news,
                          other_categories=other_categories,
                          recent_news=recent_news,
-                         popular_news=popular_news)
+                         popular_news=popular_news,
+                         weather_data=weather_data,
+                         currency_data=currency_data,
+                         prayer_data=prayer_data,
+                         breaking_news=breaking_news,
+                         categories=categories)
 
 @main_bp.route('/arama')
 def search():
@@ -223,7 +291,43 @@ def search():
     else:
         news = None
     
-    return render_template('search.html', news=news, query=query)
+    # Header verilerini al (anasayfa ile aynı)
+    try:
+        weather_data = get_weather_data()
+    except Exception as e:
+        print(f"Weather data error: {e}")
+        weather_data = None
+    
+    try:
+        currency_data = get_currency_data()
+        print(f"Currency data in search: {currency_data}")
+    except Exception as e:
+        print(f"Currency data error: {e}")
+        currency_data = None
+    
+    try:
+        prayer_data = get_prayer_times()
+    except Exception as e:
+        print(f"Prayer data error: {e}")
+        prayer_data = None
+    
+    # Breaking news'i al
+    breaking_news = News.query.filter_by(
+        is_breaking=True,
+        status='published'
+    ).order_by(News.published_at.desc()).limit(5).all()
+    
+    # Kategorileri al
+    categories = Category.query.filter_by(is_active=True).all()
+    
+    return render_template('search.html', 
+                         news=news, 
+                         query=query,
+                         weather_data=weather_data,
+                         currency_data=currency_data,
+                         prayer_data=prayer_data,
+                         breaking_news=breaking_news,
+                         categories=categories)
 
 @main_bp.route('/api/currency')
 def api_currency():
@@ -260,23 +364,188 @@ def api_prayer():
 # Footer Pages
 @main_bp.route('/hakkimizda')
 def about():
-    return render_template('pages/about.html')
+    # Header verilerini al (anasayfa ile aynı)
+    try:
+        weather_data = get_weather_data()
+    except Exception as e:
+        print(f"Weather data error: {e}")
+        weather_data = None
+    
+    try:
+        currency_data = get_currency_data()
+    except Exception as e:
+        print(f"Currency data error: {e}")
+        currency_data = None
+    
+    try:
+        prayer_data = get_prayer_times()
+    except Exception as e:
+        print(f"Prayer data error: {e}")
+        prayer_data = None
+    
+    # Breaking news'i al
+    breaking_news = News.query.filter_by(
+        is_breaking=True,
+        status='published'
+    ).order_by(News.published_at.desc()).limit(5).all()
+    
+    # Kategorileri al
+    categories = Category.query.filter_by(is_active=True).all()
+    
+    return render_template('pages/about.html',
+                         weather_data=weather_data,
+                         currency_data=currency_data,
+                         prayer_data=prayer_data,
+                         breaking_news=breaking_news,
+                         categories=categories)
 
 @main_bp.route('/iletisim')
 def contact():
-    return render_template('pages/contact.html')
+    # Header verilerini al (anasayfa ile aynı)
+    try:
+        weather_data = get_weather_data()
+    except Exception as e:
+        print(f"Weather data error: {e}")
+        weather_data = None
+    
+    try:
+        currency_data = get_currency_data()
+    except Exception as e:
+        print(f"Currency data error: {e}")
+        currency_data = None
+    
+    try:
+        prayer_data = get_prayer_times()
+    except Exception as e:
+        print(f"Prayer data error: {e}")
+        prayer_data = None
+    
+    # Breaking news'i al
+    breaking_news = News.query.filter_by(
+        is_breaking=True,
+        status='published'
+    ).order_by(News.published_at.desc()).limit(5).all()
+    
+    # Kategorileri al
+    categories = Category.query.filter_by(is_active=True).all()
+    
+    return render_template('pages/contact.html',
+                         weather_data=weather_data,
+                         currency_data=currency_data,
+                         prayer_data=prayer_data,
+                         breaking_news=breaking_news,
+                         categories=categories)
 
 @main_bp.route('/reklam')
 def advertising():
-    return render_template('pages/advertising.html')
+    # Header verilerini al (anasayfa ile aynı)
+    try:
+        weather_data = get_weather_data()
+    except Exception as e:
+        print(f"Weather data error: {e}")
+        weather_data = None
+    
+    try:
+        currency_data = get_currency_data()
+    except Exception as e:
+        print(f"Currency data error: {e}")
+        currency_data = None
+    
+    try:
+        prayer_data = get_prayer_times()
+    except Exception as e:
+        print(f"Prayer data error: {e}")
+        prayer_data = None
+    
+    # Breaking news'i al
+    breaking_news = News.query.filter_by(
+        is_breaking=True,
+        status='published'
+    ).order_by(News.published_at.desc()).limit(5).all()
+    
+    # Kategorileri al
+    categories = Category.query.filter_by(is_active=True).all()
+    
+    return render_template('pages/advertising.html',
+                         weather_data=weather_data,
+                         currency_data=currency_data,
+                         prayer_data=prayer_data,
+                         breaking_news=breaking_news,
+                         categories=categories)
 
 @main_bp.route('/gizlilik-politikasi')
 def privacy():
-    return render_template('pages/privacy.html')
+    # Header verilerini al (anasayfa ile aynı)
+    try:
+        weather_data = get_weather_data()
+    except Exception as e:
+        print(f"Weather data error: {e}")
+        weather_data = None
+    
+    try:
+        currency_data = get_currency_data()
+    except Exception as e:
+        print(f"Currency data error: {e}")
+        currency_data = None
+    
+    try:
+        prayer_data = get_prayer_times()
+    except Exception as e:
+        print(f"Prayer data error: {e}")
+        prayer_data = None
+    
+    # Breaking news'i al
+    breaking_news = News.query.filter_by(
+        is_breaking=True,
+        status='published'
+    ).order_by(News.published_at.desc()).limit(5).all()
+    
+    # Kategorileri al
+    categories = Category.query.filter_by(is_active=True).all()
+    
+    return render_template('pages/privacy.html',
+                         weather_data=weather_data,
+                         currency_data=currency_data,
+                         prayer_data=prayer_data,
+                         breaking_news=breaking_news,
+                         categories=categories)
 
 @main_bp.route('/kullanim-sartlari')
 def terms():
-    return render_template('pages/terms.html')
+    # Header verilerini al (anasayfa ile aynı)
+    try:
+        weather_data = get_weather_data()
+    except Exception as e:
+        print(f"Weather data error: {e}")
+        weather_data = None
+    
+    try:
+        currency_data = get_currency_data()
+    except Exception as e:
+        print(f"Currency data error: {e}")
+        currency_data = None
+    
+    try:
+        prayer_data = get_prayer_times()
+    except Exception as e:
+        print(f"Prayer data error: {e}")
+        prayer_data = None
+    
+    # Breaking news'i al
+    breaking_news = News.query.filter_by(
+        is_breaking=True,
+        status='published'
+    ).order_by(News.published_at.desc()).limit(5).all()
+    
+    # Kategorileri al
+    categories = Category.query.filter_by(is_active=True).all()
+    
+    return render_template('pages/terms.html',
+                         weather_data=weather_data,
+                         currency_data=currency_data,
+                         prayer_data=prayer_data,
+                         breaking_news=breaking_news,
+                         categories=categories)
 
 # Recommendation Engine API Endpoints
 @main_bp.route('/api/track-interaction', methods=['POST'])

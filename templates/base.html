@@ -144,23 +144,14 @@
         </div>
     </nav>
 
-    <!-- Breaking News Ticker -->
+    <!-- Breaking News Banner (Kayan Yazı Kaldırıldı) -->
     {% if breaking_news %}
     <div class="breaking-news">
         <div class="container">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center justify-content-center">
                 <div class="breaking-label">
                     <i class="fas fa-bolt me-1"></i>
                     SON DAKİKA
-                </div>
-                <div class="news-ticker">
-                    {% for news in breaking_news %}
-                        <span class="me-5">
-                            <a href="{{ url_for('main.news_detail', slug=news.slug) }}" class="text-white text-decoration-none">
-                                {{ news.title }}
-                            </a>
-                        </span>
-                    {% endfor %}
                 </div>
             </div>
         </div>

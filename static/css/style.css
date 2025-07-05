@@ -185,25 +185,7 @@ body {
     display: inline-block;
 }
 
-.breaking-news .news-ticker {
-    display: inline-block;
-    animation: scroll-left 30s linear infinite;
-    position: relative;
-    z-index: 12;
-    white-space: nowrap;
-}
-
-.breaking-news .news-ticker > span {
-    display: inline-block;
-    margin-right: 50px;
-    position: relative;
-    z-index: 12;
-}
-
-@keyframes scroll-left {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-}
+/* Kayan yazı CSS'i kaldırıldı - artık sadece SON DAKİKA etiketi görünüyor */
 
 /* News Cards */
 .news-card {

@@ -599,17 +599,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Show popup ad after 2 seconds if exists
+    // Show popup ad after 2 seconds if exists (her seferinde göster)
     {% if popup_ads %}
-    if (!localStorage.getItem('popup_ad_closed_{{ popup_ads.id }}')) {
-        setTimeout(function() {
-            const popup = document.getElementById('popup-ad-overlay');
-            if (popup) {
-                popup.style.display = 'flex';
-                trackAdImpression({{ popup_ads.id }});
-            }
-        }, 2000);
-    }
+    setTimeout(function() {
+        const popup = document.getElementById('popup-ad-overlay');
+        if (popup) {
+            popup.style.display = 'flex';
+            trackAdImpression({{ popup_ads.id }});
+        }
+    }, 2000);
     {% endif %}
 });
 
@@ -617,9 +615,7 @@ function closePopupAd() {
     const popup = document.getElementById('popup-ad-overlay');
     if (popup) {
         popup.style.display = 'none';
-        {% if popup_ads %}
-        localStorage.setItem('popup_ad_closed_{{ popup_ads.id }}', 'true');
-        {% endif %}
+        // localStorage kaldırıldı - her seferinde gösterilecek
     }
 }
 

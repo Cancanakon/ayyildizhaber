@@ -311,59 +311,8 @@
     
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     
-    <!-- Reklam yönetimi - tüm sayfalarda çalışacak -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Kenar reklamlarının kapatma butonları
-        document.querySelectorAll('.ad-close-btn').forEach(function(closeBtn) {
-            closeBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // En yakın reklam container'ını bul ve gizle
-                const adContainer = this.closest('.vertical-banner-ad');
-                if (adContainer) {
-                    adContainer.style.display = 'none';
-                }
-            });
-        });
-        
-        // Popup reklamlar için otomatik gösterim (sadece index sayfasında)
-        if (window.location.pathname === '/' || window.location.pathname === '/index') {
-            {% if popup_ads %}
-            setTimeout(function() {
-                const popup = document.getElementById('popup-ad-overlay');
-                if (popup) {
-                    popup.style.display = 'flex';
-                    // Impression tracking
-                    fetch('/api/track-ad-impression', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ ad_id: {{ popup_ads.id }} })
-                    }).catch(error => console.log('Ad tracking error:', error));
-                }
-            }, 2000);
-            {% endif %}
-        }
-    });
-    
-    // Popup kapatma fonksiyonu - global
-    function closePopupAd() {
-        const popup = document.getElementById('popup-ad-overlay');
-        if (popup) {
-            popup.style.display = 'none';
-        }
-    }
-    
-    // Reklam tıklama takibi - global
-    function trackAdClick(adId) {
-        fetch('/api/track-ad-click', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ad_id: adId })
-        }).catch(error => console.log('Ad tracking error:', error));
-    }
-    </script>
+    <!-- Yeni Reklam Sistemi -->
+    <script src="{{ url_for('static', filename='js/ads.js') }}"></script>
     
     {% block scripts %}{% endblock %}
 </body>

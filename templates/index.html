@@ -543,22 +543,29 @@
 
 <!-- Popup Advertisement -->
 {% if popup_ads %}
-<div id="popup-ad-overlay" class="popup-ad-overlay" style="display: none;">
+<div id="popup-ad-overlay" class="popup-ad-overlay" data-ad-id="{{ popup_ads.id }}" style="display: none; opacity: 0;">
     <div class="popup-ad-container">
-        <div class="popup-ad-header">
-            <button type="button" class="popup-ad-close" onclick="closePopupAd()">&times;</button>
-        </div>
-        <div class="popup-ad-content" data-ad-id="{{ popup_ads.id }}">
-            {% if popup_ads.link_url %}
-            <a href="{{ popup_ads.link_url }}" target="_blank" onclick="trackAdClick({{ popup_ads.id }})">
-                <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
-                     class="img-fluid">
-            </a>
-            {% else %}
+        <button id="popup-close-btn" class="popup-close-btn" type="button" title="Reklamı Kapat">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        {% if popup_ads.link_url %}
+        <a href="{{ popup_ads.link_url }}" target="_blank" onclick="trackAdClick({{ popup_ads.id }})">
             <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
-                 class="img-fluid">
-            {% endif %}
-        </div>
+                 class="popup-ad-image">
+        </a>
+        {% else %}
+        <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
+             class="popup-ad-image">
+        {% endif %}
+        
+        {% if popup_ads.title %}
+        <div class="popup-ad-title">{{ popup_ads.title }}</div>
+        {% endif %}
+        
+        {% if popup_ads.description %}
+        <div class="popup-ad-description">{{ popup_ads.description }}</div>
+        {% endif %}
     </div>
 </div>
 {% endif %}
@@ -572,23 +579,6 @@ setInterval(function() {
     // You could implement AJAX refresh here if needed
 }, 300000);
 
-// Index sayfası özel reklam işlemleri
-// Temel reklam fonksiyonları base template'de tanımlı
-
-// Sidebar reklamları için impression tracking
-document.addEventListener('DOMContentLoaded', function() {
-    // Track sidebar ad impressions
-    document.querySelectorAll('.sidebar-ad').forEach(function(ad) {
-        const adId = ad.getAttribute('data-ad-id');
-        if (adId) {
-            // trackAdImpression fonksiyonu base template'de tanımlı
-            fetch('/api/track-ad-impression', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ad_id: parseInt(adId) })
-            }).catch(error => console.log('Ad tracking error:', error));
-        }
-    });
-});
+// Index sayfası - Reklam sistemi ads.js ile otomatik yönetiliyor
 </script>
 {% endblock %}

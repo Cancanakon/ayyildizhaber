@@ -98,8 +98,11 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
-- July 5, 2025: Sidebar reklamların pointer-events sorunu çözüldü - CSS'de 'pointer-events: none' kaldırılarak etkileşim aktif hale getirildi
-- July 5, 2025: Sol ve sağ kenar reklamlar artık tıklanabilir ve kapatılabilir - kullanıcılar X butonuna tıklayarak reklamları kapatabilir
+- July 5, 2025: Reklam sistemi tamamen yeniden yazıldı - yeni ads.js modülü ile daha güvenilir ve modüler yapı
+- July 5, 2025: AdManager class'ı ile profesyonel reklam yönetimi - event handling, animation ve tracking sistemi
+- July 5, 2025: CSS'de z-index ve pointer-events optimizasyonu - reklamlar artık düzgün görünüyor ve etkileşimli
+- July 5, 2025: Popup reklam HTML'i güncellendi - yeni stil ve daha iyi kullanıcı deneyimi
+- July 5, 2025: Base template'den eski JavaScript kodları kaldırıldı - temiz ve organize kod yapısı
 - July 5, 2025: Reklam sistemindeki kritik sorun çözüldü - popup reklamlar artık sayfaya girişte görünür ve sadece X butonuyla kapanır
 - July 5, 2025: Reklamların dışına tıklama ile kapanma sorunu giderildi - artık sadece kapatma butonuyla kapanır
 - July 5, 2025: Reklam JavaScript kodları base template'e taşındı - tüm sayfalarda tutarlı çalışım

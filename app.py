@@ -117,6 +117,33 @@ with app.app_context():
 from utils.helpers import register_template_filters
 register_template_filters(app)
 
+# Template context processor for global ads
+@app.context_processor
+def inject_global_ads():
+    """Inject banner ads into all templates"""
+    try:
+        from models import Advertisement
+        
+        top_banner = Advertisement.query.filter_by(
+            ad_type='top_banner',
+            is_active=True
+        ).first()
+        
+        bottom_banner = Advertisement.query.filter_by(
+            ad_type='bottom_banner',
+            is_active=True
+        ).first()
+        
+        return {
+            'ads': {
+                'top_banner': top_banner,
+                'bottom_banner': bottom_banner
+            }
+        }
+    except Exception as e:
+        print(f"Error injecting ads: {e}")
+        return {'ads': {'top_banner': None, 'bottom_banner': None}}
+
 # Background scheduler for fetching news
 scheduler = BackgroundScheduler()
 

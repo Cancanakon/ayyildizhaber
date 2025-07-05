@@ -150,8 +150,8 @@ class Advertisement(db.Model):
     __tablename__ = 'advertisements'
     
     id = db.Column(db.Integer, primary_key=True)
-    ad_type = db.Column(db.String(20), nullable=False)  # 'sidebar', 'popup'
-    position = db.Column(db.String(20))  # 'left', 'right' (for sidebar ads)
+    ad_type = db.Column(db.String(20), nullable=False)  # 'sidebar', 'popup', 'top_banner', 'bottom_banner'
+    position = db.Column(db.String(20))  # 'left', 'right' (for sidebar ads), 'top', 'bottom' (for banners)
     slot_number = db.Column(db.Integer, default=1)  # 1-4 for each side
     title = db.Column(db.String(255))
     description = db.Column(db.Text)  # Enhanced description field

@@ -36,6 +36,24 @@
     {% block head %}{% endblock %}
 </head>
 <body>
+    <!-- Top Banner Container -->
+    {% set top_banner = ads.get('top_banner') %}
+    {% if top_banner %}
+    <div class="top-banner-container" data-ad-id="{{ top_banner.id }}">
+        <div class="horizontal-banner-ad">
+            <button class="ad-close-btn" type="button" title="Reklamı Kapat">
+                <i class="fas fa-times"></i>
+            </button>
+            <a href="{{ top_banner.link_url or '#' }}" target="_blank" 
+               onclick="trackAdClick({{ top_banner.id }})">
+                <img src="{{ url_for('static', filename='uploads/' + top_banner.image_path) }}" 
+                     alt="{{ top_banner.title or 'Reklam' }}" 
+                     class="horizontal-banner-image">
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Header Top -->
     <div class="header-top">
         <div class="container">
@@ -268,6 +286,24 @@
             <span>Canlı Yayın</span>
         </button>
     </div>
+
+    <!-- Bottom Banner Container -->
+    {% set bottom_banner = ads.get('bottom_banner') %}
+    {% if bottom_banner %}
+    <div class="bottom-banner-container" data-ad-id="{{ bottom_banner.id }}">
+        <div class="horizontal-banner-ad">
+            <button class="ad-close-btn" type="button" title="Reklamı Kapat">
+                <i class="fas fa-times"></i>
+            </button>
+            <a href="{{ bottom_banner.link_url or '#' }}" target="_blank" 
+               onclick="trackAdClick({{ bottom_banner.id }})">
+                <img src="{{ url_for('static', filename='uploads/' + bottom_banner.image_path) }}" 
+                     alt="{{ bottom_banner.title or 'Reklam' }}" 
+                     class="horizontal-banner-image">
+            </a>
+        </div>
+    </div>
+    {% endif %}
 
     <!-- Custom JS -->
     <!-- Chart.js -->

@@ -78,8 +78,24 @@ def create():
                 
                 # Validate slot number for sidebar ads
                 if ad_type == 'sidebar' and (slot_number < 1 or slot_number > 2):
-                    flash('Slot numarası 1-2 arasında olmalıdır', 'error')
-                    return redirect(url_for('ads.create'))
+                    flash('Sidebar reklamlar için slot numarası 1 veya 2 olmalıdır', 'error')
+                    return redirect(request.url)
+                
+                # Set position for banner ads
+                if ad_type == 'top_banner':
+                    position = 'top'
+                elif ad_type == 'bottom_banner':
+                    position = 'bottom'
+                
+                # Validate - only one active banner per position
+                if ad_type in ['top_banner', 'bottom_banner']:
+                    existing_banner = Advertisement.query.filter_by(
+                        ad_type=ad_type,
+                        is_active=True
+                    ).first()
+                    if existing_banner:
+                        flash(f'Bu pozisyon için zaten aktif bir banner bulunmaktadır', 'error')
+                        return redirect(request.url)
                 
                 # Check if slot is already occupied
                 if ad_type == 'sidebar':

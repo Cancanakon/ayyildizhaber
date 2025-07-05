@@ -833,6 +833,65 @@ if (window.location.pathname.includes('/haber/')) {
     trackScrollDepth();
 }
 
+// Advertisement Management System
+function initializeAds() {
+    // Close button functionality for all ads
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('ad-close-btn') || e.target.closest('.ad-close-btn')) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const adElement = e.target.closest('.vertical-banner-ad, .top-banner-container, .bottom-banner-container, .popup-ad-overlay');
+            if (adElement) {
+                // Fade out animation
+                adElement.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                adElement.style.opacity = '0';
+                adElement.style.transform = 'scale(0.9)';
+                
+                setTimeout(() => {
+                    adElement.style.display = 'none';
+                    
+                    // Remove body padding for horizontal banners
+                    if (adElement.classList.contains('top-banner-container')) {
+                        document.body.classList.remove('has-top-banner');
+                    } else if (adElement.classList.contains('bottom-banner-container')) {
+                        document.body.classList.remove('has-bottom-banner');
+                    }
+                }, 300);
+                
+                // Store user preference
+                const adId = adElement.dataset.adId;
+                if (adId) {
+                    localStorage.setItem(`ad_closed_${adId}`, 'true');
+                }
+            }
+        }
+    });
+    
+    // Check previously closed ads
+    document.querySelectorAll('[data-ad-id]').forEach(ad => {
+        const adId = ad.dataset.adId;
+        if (localStorage.getItem(`ad_closed_${adId}`) === 'true') {
+            ad.style.display = 'none';
+            
+            // Remove body padding for horizontal banners
+            if (ad.classList.contains('top-banner-container')) {
+                document.body.classList.remove('has-top-banner');
+            } else if (ad.classList.contains('bottom-banner-container')) {
+                document.body.classList.remove('has-bottom-banner');
+            }
+        }
+    });
+    
+    // Add body classes for horizontal banners
+    if (document.querySelector('.top-banner-container:not([style*="display: none"])')) {
+        document.body.classList.add('has-top-banner');
+    }
+    if (document.querySelector('.bottom-banner-container:not([style*="display: none"])')) {
+        document.body.classList.add('has-bottom-banner');
+    }
+}
+
 // Service Worker Registration (for offline functionality)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -845,3 +904,6 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
+
+// Initialize ads on page load
+document.addEventListener('DOMContentLoaded', initializeAds);

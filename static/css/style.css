@@ -1230,10 +1230,91 @@ body {
     transition: all 0.3s ease;
     cursor: pointer;
     border: 3px solid #f8f9fa;
-    width: 220px; /* Genişlik artırıldı */
+    width: 220px;
     margin-bottom: 25px;
     position: relative;
     pointer-events: auto;
+}
+
+/* Kapatma Butonu Stilleri */
+.ad-close-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    font-size: 12px;
+    cursor: pointer;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.ad-close-btn:hover {
+    background: rgba(220, 38, 38, 0.9);
+    transform: scale(1.1);
+}
+
+/* Üst ve Alt Banner Sistemleri */
+.top-banner-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.top-banner-container.hidden {
+    transform: translateY(-100%);
+}
+
+.bottom-banner-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: #fff;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.bottom-banner-container.hidden {
+    transform: translateY(100%);
+}
+
+.horizontal-banner-ad {
+    width: 100%;
+    max-height: 120px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.horizontal-banner-image {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+/* Header padding adjustment for top banner */
+body.has-top-banner {
+    padding-top: 120px;
+}
+
+body.has-bottom-banner {
+    padding-bottom: 120px;
 }
 
 .vertical-banner-ad:hover {

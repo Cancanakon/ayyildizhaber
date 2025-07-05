@@ -106,6 +106,9 @@
         <div class="sidebar-ads-left d-none d-xl-block">
             {% for ad in left_ads[:2] %}
             <div class="vertical-banner-ad" data-ad-id="{{ ad.id }}" onclick="trackAdImpression({{ ad.id }})">
+                <button class="ad-close-btn" type="button" title="Reklamı Kapat">
+                    <i class="fas fa-times"></i>
+                </button>
                 {% if ad.link_url %}
                 <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
                     <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
@@ -514,6 +517,9 @@
 <div class="sidebar-ads-right d-none d-lg-block">
     {% for ad in right_ads[:2] %}
     <div class="vertical-banner-ad sidebar-ad" data-ad-id="{{ ad.id }}">
+        <button class="ad-close-btn" type="button" title="Reklamı Kapat">
+            <i class="fas fa-times"></i>
+        </button>
         {% if ad.link_url %}
         <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
             <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 

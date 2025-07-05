@@ -543,29 +543,49 @@
 
 <!-- Popup Advertisement -->
 {% if popup_ads %}
-<div id="popup-ad-overlay" class="popup-ad-overlay" data-ad-id="{{ popup_ads.id }}" style="display: none; opacity: 0;">
+<div id="popup-ad-overlay" class="popup-ad-overlay" data-ad-id="{{ popup_ads.id }}" style="display: none;">
+    <div class="popup-ad-backdrop"></div>
     <div class="popup-ad-container">
-        <button id="popup-close-btn" class="popup-close-btn" type="button" title="Reklamı Kapat">
-            <i class="fas fa-times"></i>
-        </button>
+        <div class="popup-ad-header">
+            <span class="popup-ad-label">Reklam</span>
+            <button id="popup-close-btn" class="popup-close-btn" type="button" title="Reklamı Kapat">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
         
-        {% if popup_ads.link_url %}
-        <a href="{{ popup_ads.link_url }}" target="_blank" onclick="trackAdClick({{ popup_ads.id }})">
-            <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
-                 class="popup-ad-image">
-        </a>
-        {% else %}
-        <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
-             class="popup-ad-image">
-        {% endif %}
-        
-        {% if popup_ads.title %}
-        <div class="popup-ad-title">{{ popup_ads.title }}</div>
-        {% endif %}
-        
-        {% if popup_ads.description %}
-        <div class="popup-ad-description">{{ popup_ads.description }}</div>
-        {% endif %}
+        <div class="popup-ad-content">
+            {% if popup_ads.link_url %}
+            <a href="{{ popup_ads.link_url }}" target="_blank" onclick="trackAdClick({{ popup_ads.id }})" class="popup-ad-link">
+                <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
+                     class="popup-ad-image" 
+                     onload="this.classList.add('loaded')"
+                     onerror="this.classList.add('error')">
+                <div class="popup-image-loader">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Yükleniyor...</span>
+                </div>
+            </a>
+            {% else %}
+            <div class="popup-ad-link">
+                <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
+                     class="popup-ad-image"
+                     onload="this.classList.add('loaded')"
+                     onerror="this.classList.add('error')">
+                <div class="popup-image-loader">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Yükleniyor...</span>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if popup_ads.title %}
+            <div class="popup-ad-title">{{ popup_ads.title }}</div>
+            {% endif %}
+            
+            {% if popup_ads.description %}
+            <div class="popup-ad-description">{{ popup_ads.description }}</div>
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endif %}

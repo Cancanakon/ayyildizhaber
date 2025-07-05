@@ -115,6 +115,12 @@ This is a comprehensive news website application built with Flask, featuring a T
 - July 5, 2025: Responsive tasarımda reklam kaybolma sorunu çözüldü - vertical-ads-container display:none kaldırıldı
 - July 5, 2025: Büyük ekranlar için özel media query'ler eklendi - 1200px ve 1400px genişliklerinde zorla görünür
 - July 5, 2025: Sidebar reklamlar için yüksek z-index (1000) ve position:fixed garantisi sağlandı
+- July 5, 2025: Popup reklam sistemi tamamen yeniden tasarlandı - modern animasyonlar ve backdrop blur efekti
+- July 5, 2025: Popup reklamları için gelişmiş loading göstergesi - spinner animasyon ve "Yükleniyor" mesajı
+- July 5, 2025: Popup kapatma butonu iyileştirildi - hover efektleri, rotasyon animasyonu ve daha büyük boyut
+- July 5, 2025: ESC tuşu ve backdrop tıklama ile popup kapatma özelliği eklendi
+- July 5, 2025: Admin panelinde detaylı reklam boyutu rehberi - kenar ve popup reklamları için özel kılavuz
+- July 5, 2025: Popup reklamlar mobil responsive hale getirildi - küçük ekranlar için optimize edilmiş boyutlar
 - July 5, 2025: Admin panel istatistikleri gerçek verilerle güncellendi - SQLite uyumlu sorgular ve otantik veri görünümü
 - July 5, 2025: Günlük görüntülenme trendi artık gerçek verileri gösteriyor - boş günler 0 değerle dahil edildi
 - July 5, 2025: Trafik kaynakları ve cihaz istatistikleri gerçek kullanıcı verilerinden beslenecek şekilde düzenlendi

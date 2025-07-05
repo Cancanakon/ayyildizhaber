@@ -60,31 +60,22 @@ class AdManager {
     }
 
     setupPopupAds() {
-        // Sadece ana sayfada popup göster
-        const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index';
-        
-        if (!isHomePage) return;
-        
+        // Tüm sayfalarda popup göster
         const popupOverlay = document.getElementById('popup-ad-overlay');
         const popupCloseBtn = document.getElementById('popup-close-btn');
+        const popupBackdrop = document.querySelector('.popup-ad-backdrop');
         
         if (popupOverlay) {
-            // 2 saniye sonra popup'ı göster
+            // 3 saniye sonra popup'ı göster
             setTimeout(() => {
-                popupOverlay.style.display = 'flex';
-                popupOverlay.style.opacity = '0';
-                
-                // Fade in efekti
-                setTimeout(() => {
-                    popupOverlay.style.opacity = '1';
-                }, 100);
+                this.showPopup(popupOverlay);
                 
                 // Impression track et
                 const adId = popupOverlay.getAttribute('data-ad-id');
                 if (adId) {
                     this.trackAdImpression(parseInt(adId));
                 }
-            }, 2000);
+            }, 3000);
         }
         
         // Popup kapatma butonu
@@ -96,14 +87,30 @@ class AdManager {
             });
         }
         
-        // Popup'a tıklandığında kapatma (sadece overlay'e tıklanırsa)
-        if (popupOverlay) {
-            popupOverlay.addEventListener('click', (e) => {
-                if (e.target === popupOverlay) {
-                    // Sadece overlay'in kendisine tıklanırsa kapat
-                    // this.closePopup(); // Kaldırıldı - sadece X butonu ile kapanacak
-                }
+        // Backdrop'a tıklandığında kapatma
+        if (popupBackdrop) {
+            popupBackdrop.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.closePopup();
             });
+        }
+        
+        // ESC tuşu ile kapatma
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && popupOverlay && popupOverlay.classList.contains('show')) {
+                this.closePopup();
+            }
+        });
+    }
+    
+    showPopup(popupOverlay) {
+        if (popupOverlay) {
+            popupOverlay.style.display = 'flex';
+            // Kısa bir gecikme sonra show class'ı ekle (CSS transition için)
+            setTimeout(() => {
+                popupOverlay.classList.add('show');
+            }, 50);
         }
     }
 
@@ -132,11 +139,12 @@ class AdManager {
     closePopup() {
         const popupOverlay = document.getElementById('popup-ad-overlay');
         if (popupOverlay) {
-            popupOverlay.style.opacity = '0';
+            popupOverlay.classList.remove('show');
             
+            // CSS transition tamamlandıktan sonra display:none yap
             setTimeout(() => {
                 popupOverlay.style.display = 'none';
-            }, 300);
+            }, 400);
         }
     }
 

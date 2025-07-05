@@ -572,59 +572,23 @@ setInterval(function() {
     // You could implement AJAX refresh here if needed
 }, 300000);
 
-// Advertisement tracking and popup functionality
-function trackAdClick(adId) {
-    fetch('/api/track-ad-click', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ad_id: adId })
-    }).catch(error => console.log('Ad tracking error:', error));
-}
+// Index sayfası özel reklam işlemleri
+// Temel reklam fonksiyonları base template'de tanımlı
 
-function trackAdImpression(adId) {
-    fetch('/api/track-ad-impression', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ad_id: adId })
-    }).catch(error => console.log('Ad tracking error:', error));
-}
-
-// Track ad impressions for sidebar ads
+// Sidebar reklamları için impression tracking
 document.addEventListener('DOMContentLoaded', function() {
     // Track sidebar ad impressions
     document.querySelectorAll('.sidebar-ad').forEach(function(ad) {
         const adId = ad.getAttribute('data-ad-id');
         if (adId) {
-            trackAdImpression(parseInt(adId));
+            // trackAdImpression fonksiyonu base template'de tanımlı
+            fetch('/api/track-ad-impression', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ad_id: parseInt(adId) })
+            }).catch(error => console.log('Ad tracking error:', error));
         }
     });
-    
-    // Show popup ad after 2 seconds if exists (her seferinde göster)
-    {% if popup_ads %}
-    setTimeout(function() {
-        const popup = document.getElementById('popup-ad-overlay');
-        if (popup) {
-            popup.style.display = 'flex';
-            trackAdImpression({{ popup_ads.id }});
-        }
-    }, 2000);
-    {% endif %}
-});
-
-function closePopupAd() {
-    const popup = document.getElementById('popup-ad-overlay');
-    if (popup) {
-        popup.style.display = 'none';
-        // localStorage kaldırıldı - her seferinde gösterilecek
-    }
-}
-
-// Close popup when clicking outside
-document.addEventListener('click', function(e) {
-    const popup = document.getElementById('popup-ad-overlay');
-    if (popup && e.target === popup) {
-        closePopupAd();
-    }
 });
 </script>
 {% endblock %}

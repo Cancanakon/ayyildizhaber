@@ -185,7 +185,53 @@ body {
     display: inline-block;
 }
 
-/* Kayan yazı CSS'i kaldırıldı - artık sadece SON DAKİKA etiketi görünüyor */
+/* İyileştirilmiş Breaking News Ticker */
+.breaking-news .news-ticker {
+    display: inline-block;
+    animation: scroll-left 45s linear infinite;
+    position: relative;
+    z-index: 12;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+    max-width: calc(100% - 150px); /* SON DAKİKA etiketinden sonra alan bırak */
+}
+
+.breaking-news .news-ticker > span {
+    display: inline-block;
+    margin-right: 80px;
+    position: relative;
+    z-index: 12;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.breaking-news .news-ticker a:hover {
+    color: #fff !important;
+    text-shadow: 0 0 5px rgba(255,255,255,0.5);
+}
+
+@keyframes scroll-left {
+    0% { 
+        transform: translateX(100%); 
+    }
+    100% { 
+        transform: translateX(-100%); 
+    }
+}
+
+/* Breaking news responsive tasarım */
+@media (max-width: 768px) {
+    .breaking-news .news-ticker {
+        animation: scroll-left 35s linear infinite;
+        max-width: calc(100% - 120px);
+    }
+    
+    .breaking-news .news-ticker > span {
+        margin-right: 50px;
+        font-size: 14px;
+    }
+}
 
 /* News Cards */
 .news-card {

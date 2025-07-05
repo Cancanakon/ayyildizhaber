@@ -98,6 +98,10 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- July 5, 2025: Breaking news kayan yazısı iyileştirildi - daha yavaş animasyon (45s), hover efektleri ve responsive tasarım
+- July 5, 2025: Breaking news ticker'da "SON DAKİKA" etiketinden sonra alan sınırlandırıldı - tasarım dengelendi
+- July 5, 2025: Popup reklamlar için localStorage cache kaldırıldı - artık her sayfa yenilemesinde görünüyor
+- July 5, 2025: Admin paneli body margin'ları kaldırıldı - tüm sayfa genişliğinde görünüm
 - July 5, 2025: İyileştirilmiş breadcrumb (yol görünümü) tasarımı - gradient arkaplan, daha iyi görsel ayrım
 - July 5, 2025: Admin panelinden üst banner ve alt banner reklam seçenekleri kaldırıldı - sadece kenar ve popup reklamlar
 - July 5, 2025: Tüm sayfalara header elementleri eklendi (kategori, haber detay, arama, sabit sayfalar)

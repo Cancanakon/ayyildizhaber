@@ -1261,7 +1261,7 @@ body {
     transform: scale(1.1);
 }
 
-/* Üst ve Alt Banner Sistemleri - Tam Ekran Genişliği */
+/* Üst ve Alt Banner Sistemleri */
 .top-banner-container {
     position: fixed;
     top: 0;
@@ -1271,9 +1271,6 @@ body {
     background: #fff;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
-    width: 100vw; /* Tam viewport genişliği */
-    margin: 0;
-    padding: 0;
 }
 
 .top-banner-container.hidden {
@@ -1289,9 +1286,6 @@ body {
     background: #fff;
     box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
-    width: 100vw; /* Tam viewport genişliği */
-    margin: 0;
-    padding: 0;
 }
 
 .bottom-banner-container.hidden {
@@ -1304,8 +1298,6 @@ body {
     position: relative;
     overflow: hidden;
     cursor: pointer;
-    margin: 0;
-    padding: 0;
 }
 
 .horizontal-banner-image {
@@ -1314,8 +1306,6 @@ body {
     object-fit: cover;
     object-position: center;
     display: block;
-    margin: 0;
-    padding: 0;
 }
 
 /* Header padding adjustment for top banner */
@@ -1621,17 +1611,10 @@ body.has-bottom-banner {
     color: var(--primary-blue);
 }
 
-/* Content Area Reserved Space for Ads - Banner'ları tam genişlikte tutmak için */
+/* Content Area Reserved Space for Ads */
 body {
     margin-left: 250px; /* Sol reklam alanı rezervasyonu */
     margin-right: 250px; /* Sağ reklam alanı rezervasyonu */
-}
-
-/* Banner reklamlar için tam ekran genişliği */
-.top-banner-container,
-.bottom-banner-container {
-    margin-left: -250px; /* Body margin'ini sıfırla */
-    margin-right: -250px; /* Body margin'ini sıfırla */
 }
 
 /* Enhanced Responsive Design - Daha geniş ekranlarda da reklam göster */
@@ -1639,13 +1622,6 @@ body {
     body {
         margin-left: 200px;
         margin-right: 200px;
-    }
-    
-    /* Banner reklamlar için tam ekran genişliği */
-    .top-banner-container,
-    .bottom-banner-container {
-        margin-left: -200px;
-        margin-right: -200px;
     }
     
     .sidebar-ads-left {
@@ -1669,13 +1645,6 @@ body {
 
 @media (max-width: 1399.98px) {
     body {
-        margin-left: 0;
-        margin-right: 0;
-    }
-    
-    /* Banner reklamlar için tam ekran genişliği */
-    .top-banner-container,
-    .bottom-banner-container {
         margin-left: 0;
         margin-right: 0;
     }

@@ -110,6 +110,8 @@ This is a comprehensive news website application built with Flask, featuring a T
 - July 5, 2025: Reklamların dışına tıklama ile kapanma sorunu giderildi - artık sadece kapatma butonuyla kapanır
 - July 5, 2025: Reklam JavaScript kodları base template'e taşındı - tüm sayfalarda tutarlı çalışım
 - July 5, 2025: Kenar reklamlarının kapatma butonları aktifleştirildi - kullanıcılar reklamları kapatabilir
+- July 5, 2025: Sidebar reklamların kalıcı görünümü sağlandı - global CSS override ile Bootstrap d-none sınıfları etkisiz hale getirildi
+- July 5, 2025: Tüm ekran boyutlarında reklam görünümü zorlandı - visibility visible ve opacity 1 ile kesin çözüm
 - July 5, 2025: Admin panel istatistikleri gerçek verilerle güncellendi - SQLite uyumlu sorgular ve otantik veri görünümü
 - July 5, 2025: Günlük görüntülenme trendi artık gerçek verileri gösteriyor - boş günler 0 değerle dahil edildi
 - July 5, 2025: Trafik kaynakları ve cihaz istatistikleri gerçek kullanıcı verilerinden beslenecek şekilde düzenlendi

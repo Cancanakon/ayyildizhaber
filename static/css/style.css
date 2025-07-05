@@ -1232,8 +1232,10 @@ body {
 
 /* Yeniden Yazılmış Reklam Sistemi */
 /* Reklam Containerları - Bootstrap sınıflarını zorunlu override */
-.sidebar-ads-left.d-none.d-xl-block,
-.sidebar-ads-left.d-xl-block,
+div.sidebar-ads-left,
+div.sidebar-ads-left.d-none,
+div.sidebar-ads-left.d-xl-block,
+div.sidebar-ads-left.d-none.d-xl-block,
 .sidebar-ads-left {
     position: fixed !important;
     left: 15px;
@@ -1246,10 +1248,14 @@ body {
     width: 220px;
     overflow-y: auto;
     padding: 10px 0;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
-.sidebar-ads-right.d-none.d-lg-block,
-.sidebar-ads-right.d-lg-block,
+div.sidebar-ads-right,
+div.sidebar-ads-right.d-none,
+div.sidebar-ads-right.d-lg-block,
+div.sidebar-ads-right.d-none.d-lg-block,
 .sidebar-ads-right {
     position: fixed !important;
     right: 15px;
@@ -1262,6 +1268,8 @@ body {
     width: 220px;
     overflow-y: auto;
     padding: 10px 0;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .vertical-ads-container {
@@ -1814,23 +1822,62 @@ body {
         margin-right: 0;
     }
     
+    /* Küçük ekranlar için de zorla görünür yap */
+    div.sidebar-ads-left,
+    div.sidebar-ads-left.d-none,
+    div.sidebar-ads-left.d-xl-block,
     .sidebar-ads-left {
-        left: 5px;
-        width: 160px;
+        left: 5px !important;
+        width: 160px !important;
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     
+    div.sidebar-ads-right,
+    div.sidebar-ads-right.d-none,
+    div.sidebar-ads-right.d-lg-block,
     .sidebar-ads-right {
-        right: 5px;
-        width: 160px;
+        right: 5px !important;
+        width: 160px !important;
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     
     .vertical-banner-ad {
-        width: 160px;
+        width: 160px !important;
+        display: block !important;
     }
     
     .vertical-banner-image {
-        height: 350px;
+        height: 350px !important;
     }
+}
+
+/* Bootstrap d-none Override - En yüksek öncelikli kurallar */
+@media (max-width: 1199.98px) {
+    .sidebar-ads-left.d-none.d-xl-block {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .sidebar-ads-right.d-none.d-lg-block {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+/* Global override - tüm Bootstrap sınıflarını etkisiz hale getir */
+.sidebar-ads-left,
+.sidebar-ads-right {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 @media (max-width: 991.98px) {

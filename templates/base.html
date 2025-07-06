@@ -233,23 +233,25 @@
                 </button>
             </div>
             <div class="popup-ad-content">
-                {% if popup_ads.link_url %}
-                <a href="{{ popup_ads.link_url }}" target="_blank" onclick="trackAdClick({{ popup_ads.id }})">
+                <div class="popup-image-container" style="position: relative;">
                     <div class="popup-image-loader">
                         <i class="fas fa-spinner fa-spin"></i>
                         <span>Yükleniyor...</span>
                     </div>
+                    {% if popup_ads.link_url %}
+                    <a href="{{ popup_ads.link_url }}" target="_blank" onclick="trackAdClick({{ popup_ads.id }})">
+                        <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
+                             class="popup-ad-image"
+                             onload="this.classList.add('loaded'); this.parentElement.parentElement.querySelector('.popup-image-loader').style.display='none';"
+                             onerror="this.classList.add('error'); var loader = this.parentElement.parentElement.querySelector('.popup-image-loader'); loader.innerHTML='<i class=\'fas fa-exclamation-triangle\'></i><span>Yükleme hatası</span>';">
+                    </a>
+                    {% else %}
                     <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
-                         class="popup-ad-image">
-                </a>
-                {% else %}
-                <div class="popup-image-loader">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    <span>Yükleniyor...</span>
+                         class="popup-ad-image"
+                         onload="this.classList.add('loaded'); this.parentElement.querySelector('.popup-image-loader').style.display='none';"
+                         onerror="this.classList.add('error'); var loader = this.parentElement.querySelector('.popup-image-loader'); loader.innerHTML='<i class=\'fas fa-exclamation-triangle\'></i><span>Yükleme hatası</span>';">
+                    {% endif %}
                 </div>
-                <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
-                     class="popup-ad-image">
-                {% endif %}
                 
                 {% if popup_ads.title %}
                 <div class="popup-ad-title">{{ popup_ads.title }}</div>

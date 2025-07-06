@@ -134,6 +134,7 @@ This is a comprehensive news website application built with Flask, featuring a T
 - July 6, 2025: Kategori sayfalarından gereksiz "Reklam" alanı kaldırıldı - temiz görünüm için
 - July 6, 2025: Kategori sayfalarındaki duplike "Son Haberler" ve "Diğer Kategoriler" kısımları düzeltildi
 - July 6, 2025: "Diğer Kategoriler" kısmı anasayfadaki gibi 4 kategori ile sınırlandırıldı - düzenli görünüm
+- July 6, 2025: Popup reklam yükleme sorunu çözüldü - resim container yapısı düzenlendi ve loading eventi düzeltildi
 - July 5, 2025: Admin panel istatistikleri gerçek verilerle güncellendi - SQLite uyumlu sorgular ve otantik veri görünümü
 - July 5, 2025: Günlük görüntülenme trendi artık gerçek verileri gösteriyor - boş günler 0 değerle dahil edildi
 - July 5, 2025: Trafik kaynakları ve cihaz istatistikleri gerçek kullanıcı verilerinden beslenecek şekilde düzenlendi

@@ -99,36 +99,7 @@
 
 <div class="container-fluid py-4">
     <div class="row">
-        <!-- Left Sidebar Vertical Ads -->
-        {% if sidebar_ads %}
-        {% set left_ads = sidebar_ads|selectattr("position", "equalto", "left")|list|sort(attribute="slot_number") %}
-        {% if left_ads %}
-        <div class="sidebar-ads-left">
-            {% for ad in left_ads[:2] %}
-            <div class="vertical-banner-ad" data-ad-id="{{ ad.id }}" onclick="trackAdImpression({{ ad.id }})">
-                <button class="ad-close-btn" type="button" title="Reklamı Kapat">
-                    <i class="fas fa-times"></i>
-                </button>
-                {% if ad.link_url %}
-                <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
-                    <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
-                         class="vertical-banner-image">
-                    {% if ad.title %}
-                    <div class="vertical-banner-title">{{ ad.title }}</div>
-                    {% endif %}
-                </a>
-                {% else %}
-                <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
-                     class="vertical-banner-image">
-                {% if ad.title %}
-                <div class="vertical-banner-title">{{ ad.title }}</div>
-                {% endif %}
-                {% endif %}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-        {% endif %}
+
 
         <!-- Main Content -->
         <div class="col-lg-8 px-4">
@@ -510,84 +481,9 @@
     </div>
 </div>
 
-<!-- Right Fixed Vertical Ads -->
-{% if sidebar_ads %}
-{% set right_ads = sidebar_ads|selectattr("position", "equalto", "right")|list|sort(attribute="slot_number") %}
-{% if right_ads %}
-<div class="sidebar-ads-right">
-    {% for ad in right_ads[:2] %}
-    <div class="vertical-banner-ad sidebar-ad" data-ad-id="{{ ad.id }}">
-        <button class="ad-close-btn" type="button" title="Reklamı Kapat">
-            <i class="fas fa-times"></i>
-        </button>
-        {% if ad.link_url %}
-        <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
-            <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
-                 class="vertical-banner-image">
-            {% if ad.title %}
-            <div class="vertical-banner-title">{{ ad.title }}</div>
-            {% endif %}
-        </a>
-        {% else %}
-        <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
-             class="vertical-banner-image">
-        {% if ad.title %}
-        <div class="vertical-banner-title">{{ ad.title }}</div>
-        {% endif %}
-        {% endif %}
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-{% endif %}
 
-<!-- Popup Advertisement -->
-{% if popup_ads %}
-<div id="popup-ad-overlay" class="popup-ad-overlay" data-ad-id="{{ popup_ads.id }}" style="display: none;">
-    <div class="popup-ad-backdrop"></div>
-    <div class="popup-ad-container">
-        <div class="popup-ad-header">
-            <button id="popup-close-btn" class="popup-close-btn" type="button" title="Reklamı Kapat">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="popup-ad-content">
-            {% if popup_ads.link_url %}
-            <a href="{{ popup_ads.link_url }}" target="_blank" onclick="trackAdClick({{ popup_ads.id }})" class="popup-ad-link">
-                <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
-                     class="popup-ad-image" 
-                     onload="this.classList.add('loaded')"
-                     onerror="this.classList.add('error')">
-                <div class="popup-image-loader">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    <span>Yükleniyor...</span>
-                </div>
-            </a>
-            {% else %}
-            <div class="popup-ad-link">
-                <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
-                     class="popup-ad-image"
-                     onload="this.classList.add('loaded')"
-                     onerror="this.classList.add('error')">
-                <div class="popup-image-loader">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    <span>Yükleniyor...</span>
-                </div>
-            </div>
-            {% endif %}
-            
-            {% if popup_ads.title %}
-            <div class="popup-ad-title">{{ popup_ads.title }}</div>
-            {% endif %}
-            
-            {% if popup_ads.description %}
-            <div class="popup-ad-description">{{ popup_ads.description }}</div>
-            {% endif %}
-        </div>
-    </div>
-</div>
-{% endif %}
+
+
 
 {% endblock %}
 

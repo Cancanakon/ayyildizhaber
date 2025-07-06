@@ -124,6 +124,25 @@ def inject_global_ads():
     try:
         from models import Advertisement
         
+        # Sidebar reklamları - sol ve sağ
+        left_ads = Advertisement.query.filter_by(
+            ad_type='sidebar',
+            position='left',
+            is_active=True
+        ).order_by(Advertisement.slot_number.asc()).limit(2).all()
+        
+        right_ads = Advertisement.query.filter_by(
+            ad_type='sidebar',
+            position='right',
+            is_active=True
+        ).order_by(Advertisement.slot_number.asc()).limit(2).all()
+        
+        # Popup reklamları
+        popup_ads = Advertisement.query.filter_by(
+            ad_type='popup',
+            is_active=True
+        ).first()
+        
         top_banner = Advertisement.query.filter_by(
             ad_type='top_banner',
             is_active=True
@@ -138,7 +157,11 @@ def inject_global_ads():
             'ads': {
                 'top_banner': top_banner,
                 'bottom_banner': bottom_banner
-            }
+            },
+            'sidebar_ads': left_ads + right_ads,
+            'left_ads': left_ads,
+            'right_ads': right_ads,
+            'popup_ads': popup_ads
         }
     except Exception as e:
         print(f"Error injecting ads: {e}")

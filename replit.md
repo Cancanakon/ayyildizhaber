@@ -128,6 +128,9 @@ This is a comprehensive news website application built with Flask, featuring a T
 - July 5, 2025: Kenar reklamların boyut sınırlaması kaldırıldı - artık uzun dikey fotoğraflar tam olarak görünür
 - July 5, 2025: Sidebar reklamlar için object-fit: contain kullanımı - kırpma yapmadan tam görüntü gösterimi
 - July 5, 2025: Admin panelinde reklam kılavuzu güncellendi - 220px genişlik, yükseklik serbest
+- July 5, 2025: Global sidebar reklam sistemi oluşturuldu - artık tüm sayfalarda kenar reklamları görünür
+- July 5, 2025: Base template'e sidebar ve popup reklamları eklendi - app.py context processor ile global erişim
+- July 5, 2025: Index.html'den duplike reklam kodları kaldırıldı - base template tek kaynak
 - July 5, 2025: Admin panel istatistikleri gerçek verilerle güncellendi - SQLite uyumlu sorgular ve otantik veri görünümü
 - July 5, 2025: Günlük görüntülenme trendi artık gerçek verileri gösteriyor - boş günler 0 değerle dahil edildi
 - July 5, 2025: Trafik kaynakları ve cihaz istatistikleri gerçek kullanıcı verilerinden beslenecek şekilde düzenlendi

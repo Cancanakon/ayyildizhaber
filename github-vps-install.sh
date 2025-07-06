@@ -2,6 +2,7 @@
 
 # Ayyıldız Haber Ajansı - GitHub'dan Sıfırdan VPS Kurulum
 # Ubuntu 24.04 için tam otomatik kurulum
+# Yeni API sistemi ile güncellenmiş versiyon
 
 set -e
 
@@ -16,16 +17,22 @@ DB_USER="ayyildizhaber"
 DB_PASS="ayyildizhaber2025!"
 DB_NAME="ayyildizhaber"
 
+# API Key for mobile access
+API_KEY="ayyildizhaber_mobile_2025"
+
 # GitHub token kontrolü
 if [ -z "$GITHUB_TOKEN" ]; then
     echo "HATA: GitHub token gerekli!"
     echo "Lütfen scriptin başındaki GITHUB_TOKEN değişkenini doldurun."
     echo "GitHub -> Settings -> Developer settings -> Personal access tokens"
+    echo "Token permissions: repo (full access)"
     exit 1
 fi
 
 echo "=== Ayyıldız Haber Ajansı GitHub'dan Sıfırdan Kurulum ==="
-echo "Bu işlem 10-15 dakika sürecek..."
+echo "📱 Yeni özellik: Mobil API sistemi dahil"
+echo "🔑 API Key: $API_KEY"
+echo "Bu işlem 12-18 dakika sürecek..."
 
 # Sistem güncellemesi
 echo "1/10 - Sistem güncelleniyor..."
@@ -220,7 +227,7 @@ ufw allow 'Nginx Full'
 echo ""
 echo "=== KURULUM TAMAMLANDI ==="
 echo ""
-echo "🌐 Siteniz hazır:"
+echo "🌐 Website URL'leri:"
 echo "   http://69.62.110.158"
 echo "   http://www.ayyildizajans.com"
 echo ""
@@ -228,6 +235,26 @@ echo "🔧 Admin Panel:"
 echo "   http://69.62.110.158/admin"
 echo "   Email: admin@gmail.com"
 echo "   Şifre: admin123"
+echo ""
+echo "📱 Mobile API Base URL:"
+echo "   http://69.62.110.158/api/v1"
+echo "   http://www.ayyildizajans.com/api/v1"
+echo ""
+echo "🔑 API Authentication:"
+echo "   Header: X-API-Key: ${API_KEY}"
+echo ""
+echo "📋 API Test Komutları:"
+echo "   # API Info"
+echo "   curl -H \"X-API-Key: ${API_KEY}\" \"http://69.62.110.158/api/v1/info\""
+echo ""
+echo "   # Haberler"
+echo "   curl -H \"X-API-Key: ${API_KEY}\" \"http://69.62.110.158/api/v1/news?per_page=5\""
+echo ""
+echo "   # Kategoriler"
+echo "   curl -H \"X-API-Key: ${API_KEY}\" \"http://69.62.110.158/api/v1/categories\""
+echo ""
+echo "   # Homepage Data"
+echo "   curl -H \"X-API-Key: ${API_KEY}\" \"http://69.62.110.158/api/v1/homepage\""
 echo ""
 echo "📊 Sistem Kontrol:"
 echo "   supervisorctl status ayyildizhaber"
@@ -239,4 +266,8 @@ echo "   cd ${PROJECT_DIR}"
 echo "   git pull https://${GITHUB_TOKEN}@github.com/${GITHUB_USER}/${GITHUB_REPO}.git"
 echo "   supervisorctl restart ayyildizhaber"
 echo ""
-echo "Kurulum başarıyla tamamlandı!"
+echo "📚 API Dokümantasyonu:"
+echo "   ${PROJECT_DIR}/API_DOCUMENTATION.md"
+echo ""
+echo "✅ Kurulum başarıyla tamamlandı!"
+echo "🚀 Artık mobil uygulama geliştirmeye başlayabilirsiniz!"

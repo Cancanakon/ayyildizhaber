@@ -135,6 +135,18 @@ This is a comprehensive news website application built with Flask, featuring a T
 - July 6, 2025: Kategori sayfalarındaki duplike "Son Haberler" ve "Diğer Kategoriler" kısımları düzeltildi
 - July 6, 2025: "Diğer Kategoriler" kısmı anasayfadaki gibi 4 kategori ile sınırlandırıldı - düzenli görünüm
 - July 6, 2025: Popup reklam yükleme sorunu çözüldü - resim container yapısı düzenlendi ve loading eventi düzeltildi
+- July 6, 2025: Kapsamlı mobil API sistemi oluşturuldu - tüm website verileri mobil uygulamalar için erişilebilir
+- July 6, 2025: API authentication sistemi eklendi - X-API-Key header ile güvenlik sağlandı
+- July 6, 2025: 25+ API endpoint'i geliştirildi - haberler, kategoriler, arama, widget'lar, reklamlar, canlı yayın ve kişiselleştirme
+- July 6, 2025: Model'lere to_dict() metodları eklendi - API yanıtları için JSON serialization desteği
+- July 6, 2025: Sayfalama, filtreleme ve arama özellikleri API'ye entegre edildi
+- July 6, 2025: Kullanıcı etkileşim izleme sistemi API üzerinden erişilebilir hale getirildi
+- July 6, 2025: Comprehensive API documentation oluşturuldu - mobil geliştirme için tam kılavuz
+- July 6, 2025: VPS kurulum sistemleri API desteği ile güncellendi - github-vps-install.sh revize edildi
+- July 6, 2025: Hızlı kurulum scripti oluşturuldu - quick-install.sh ile 15 dakikada kurulum
+- July 6, 2025: Kapsamlı VPS kurulum rehberi hazırlandı - VPS_KURULUM_REHBERİ.md dosyası
+- July 6, 2025: GitHub token yönetimi ve otomatik test komutları eklendi
+- July 6, 2025: SSL sertifikası, domain ayarları ve güvenlik önerileri dokümante edildi
 - July 5, 2025: Admin panel istatistikleri gerçek verilerle güncellendi - SQLite uyumlu sorgular ve otantik veri görünümü
 - July 5, 2025: Günlük görüntülenme trendi artık gerçek verileri gösteriyor - boş günler 0 değerle dahil edildi
 - July 5, 2025: Trafik kaynakları ve cihaz istatistikleri gerçek kullanıcı verilerinden beslenecek şekilde düzenlendi

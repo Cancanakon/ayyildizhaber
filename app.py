@@ -219,3 +219,7 @@ app.register_blueprint(admin_bp, url_prefix='/admin')
 app.register_blueprint(config_bp)
 app.register_blueprint(ad_bp)
 app.register_blueprint(live_stream_bp)
+
+# Register API blueprint
+from api_routes import api_bp
+app.register_blueprint(api_bp)

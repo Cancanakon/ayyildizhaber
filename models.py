@@ -35,6 +35,18 @@ class Category(db.Model):
     
     # Relationship
     news = db.relationship('News', backref='category', lazy='dynamic')
+    
+    def to_dict(self):
+        """Convert category to dictionary for API responses"""
+        return {
+            'id': self.id,
+            'name': self.name,
+            'slug': self.slug,
+            'description': self.description,
+            'color': self.color,
+            'is_active': self.is_active,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
 
 class News(db.Model):
     __tablename__ = 'news'
@@ -72,6 +84,32 @@ class News(db.Model):
     def increment_view_count(self):
         self.view_count += 1
         db.session.commit()
+    
+    def to_dict(self):
+        """Convert news to dictionary for API responses"""
+        import json
+        return {
+            'id': self.id,
+            'title': self.title,
+            'slug': self.slug,
+            'summary': self.summary,
+            'content': self.content,
+            'featured_image': self.featured_image,
+            'images': json.loads(self.images) if self.images else [],
+            'videos': json.loads(self.videos) if self.videos else [],
+            'source': self.source,
+            'source_url': self.source_url,
+            'author': self.author,
+            'status': self.status,
+            'is_featured': self.is_featured,
+            'is_breaking': self.is_breaking,
+            'published_at': self.published_at.isoformat() if self.published_at else None,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+            'view_count': self.view_count,
+            'category_id': self.category_id,
+            'category': self.category.to_dict() if self.category else None
+        }
 
 class NewsView(db.Model):
     __tablename__ = 'news_views'

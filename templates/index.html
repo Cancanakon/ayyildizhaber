@@ -1,349 +1,603 @@
 {% extends "base.html" %}
 
-{% block title %}Ayyıldız Haber Ajansı - Anasayfa{% endblock %}
+{% block title %}Ayyıldız Haber Ajansı - Güncel Haberler, Son Dakika{% endblock %}
+{% block description %}Türkiye'nin en güncel haberleri, son dakika gelişmeleri, politika, ekonomi, spor ve teknoloji haberlerini takip edin.{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <!-- Featured News Slider -->
+
+    <!-- News Slider -->
     {% if slider_news %}
-    <div class="featured-slider mb-4">
-        <div id="featuredSlider" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                {% for news in slider_news[:5] %}
-                <div class="carousel-item {% if loop.first %}active{% endif %}">
-                    <div class="slide-content">
-                        <div class="slide-image">
-                            {% if news.featured_image %}
-                            <img src="{{ news.featured_image }}" alt="{{ news.title }}" class="img-fluid">
-                            {% else %}
-                            <img src="/static/images/default-news.jpg" alt="{{ news.title }}" class="img-fluid">
-                            {% endif %}
-                        </div>
-                        <div class="slide-info">
-                            <div class="slide-category">{{ news.category.name }}</div>
-                            <h2 class="slide-title">{{ news.title }}</h2>
-                            <p class="slide-summary">{{ news.summary[:200] }}{% if news.summary|length > 200 %}...{% endif %}</p>
-                            <a href="{{ url_for('main.news_detail', slug=news.slug) }}" class="btn btn-primary">Devamını Oku</a>
+    <div class="news-slider-section">
+        <div class="container">
+            <div id="newsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                <div class="carousel-indicators">
+                    {% for news in slider_news %}
+                    <button type="button" data-bs-target="#newsCarousel" data-bs-slide-to="{{ loop.index0 }}" 
+                            class="{{ 'active' if loop.first }}" aria-label="Slide {{ loop.index }}"></button>
+                    {% endfor %}
+                </div>
+                
+                <div class="carousel-inner">
+                    {% for news in slider_news %}
+                    <div class="carousel-item {{ 'active' if loop.first }}">
+                        <div class="slider-news-item">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    {% set slider_image_url = news.featured_image %}
+                                    {% if not slider_image_url and news.images %}
+                                        {% set slider_images_list = news.images | from_json %}
+                                        {% if slider_images_list and slider_images_list|length > 0 %}
+                                            {% set slider_image_url = slider_images_list[0] %}
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if not slider_image_url and news.content %}
+                                        {% set slider_content_images = news.content | regex_findall('https?://[^\\s<>"]+\\.(jpg|jpeg|png|gif|webp)') %}
+                                        {% if slider_content_images %}
+                                            {% set slider_image_url = slider_content_images[0] %}
+                                        {% endif %}
+                                    {% endif %}
+                                    
+                                    {% if slider_image_url %}
+                                    <div class="slider-image">
+                                        <img src="{% if slider_image_url.startswith('http') %}{{ slider_image_url }}{% elif slider_image_url.startswith('//') %}https:{{ slider_image_url }}{% else %}{{ url_for('static', filename='uploads/' + slider_image_url) }}{% endif %}" 
+                                             alt="{{ news.title }}" 
+                                             class="img-fluid"
+                                             onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="slider-image-fallback" style="display: none;">
+                                            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="fallback-logo">
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="slider-image-fallback">
+                                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="fallback-logo">
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="slider-content">
+                                        <div class="slider-category">
+                                            <span class="category-badge" style="background-color: {{ news.category.color }}22; color: {{ news.category.color }}; border-color: {{ news.category.color }}44;">
+                                                {{ news.category.name }}
+                                            </span>
+                                        </div>
+                                        <h2 class="slider-title">
+                                            <a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title }}</a>
+                                        </h2>
+                                        {% if news.summary %}
+                                        <p class="slider-summary">{{ news.summary[:150] }}{% if news.summary|length > 150 %}...{% endif %}</p>
+                                        {% endif %}
+                                        <div class="slider-meta">
+                                            <span class="slider-date">
+                                                <i class="fas fa-clock me-1"></i>
+                                                {{ news.published_at.strftime('%d.%m.%Y %H:%M') if news.published_at else news.created_at.strftime('%d.%m.%Y %H:%M') }}
+                                            </span>
+                                            <span class="slider-views">
+                                                <i class="fas fa-eye me-1"></i>
+                                                {{ news.view_count }} Görüntüleme
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
+                
+                <button class="carousel-control-prev" type="button" data-bs-target="#newsCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                    <span class="visually-hidden">Önceki</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#newsCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                    <span class="visually-hidden">Sonraki</span>
+                </button>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#featuredSlider" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#featuredSlider" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
         </div>
     </div>
     {% endif %}
 
-    <!-- Main Content Row -->
+<div class="container-fluid py-4">
     <div class="row">
-        <!-- Sol Kenar - Geniş Reklam Alanı -->
-        <div class="col-xl-3 col-lg-3 d-none d-lg-block">
-            <div class="sidebar-ads-left">
-                <div class="ad-section-title">
-                    <h4><i class="fas fa-bullhorn"></i> Reklamlar</h4>
-                </div>
-                {% for i in range(1, 4) %}
-                <div class="ad-slot-wide mb-4" data-position="left" data-slot="{{ i }}">
-                    {% set ad = ads.sidebar_left | selectattr('slot_number', 'equalto', i) | first %}
-                    {% if ad %}
-                    <div class="wide-banner-ad">
-                        <button class="ad-close-btn" onclick="closeAd('{{ ad.id }}')" title="Reklamı Kapat">
-                            <i class="fas fa-times"></i>
-                        </button>
-                        <a href="{{ ad.link_url or '#' }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
-                            <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" class="wide-banner-image">
-                        </a>
-                        {% if ad.title %}
-                        <div class="wide-banner-title">{{ ad.title }}</div>
-                        {% endif %}
-                    </div>
-                    {% else %}
-                    <div class="empty-ad-slot-wide">
-                        <div class="empty-ad-text">
-                            <i class="fas fa-bullhorn mb-2"></i>
-                            <p>Bizimle iletişime geçin</p>
-                            <small>Bu alana reklam verebilirsiniz</small>
-                        </div>
-                    </div>
+        <!-- Left Sidebar Vertical Ads -->
+        {% if sidebar_ads %}
+        {% set left_ads = sidebar_ads|selectattr("position", "equalto", "left")|list|sort(attribute="slot_number") %}
+        {% if left_ads %}
+        <div class="sidebar-ads-left">
+            {% for ad in left_ads[:2] %}
+            <div class="vertical-banner-ad" data-ad-id="{{ ad.id }}" onclick="trackAdImpression({{ ad.id }})">
+                <button class="ad-close-btn" type="button" title="Reklamı Kapat">
+                    <i class="fas fa-times"></i>
+                </button>
+                {% if ad.link_url %}
+                <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
+                    <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
+                         class="vertical-banner-image">
+                    {% if ad.title %}
+                    <div class="vertical-banner-title">{{ ad.title }}</div>
                     {% endif %}
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Orta Alan - Ana İçerik -->
-        <div class="col-xl-6 col-lg-6 col-md-12">
-            <div class="main-content">
-                <!-- Breaking News Ticker -->
-                {% if breaking_news %}
-                <div class="breaking-news-ticker mb-4">
-                    <div class="ticker-header">
-                        <span class="ticker-label">SON DAKİKA</span>
-                    </div>
-                    <div class="ticker-content">
-                        <div class="ticker-text">
-                            {% for news in breaking_news %}
-                            <span class="ticker-item">{{ news.title }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
+                </a>
+                {% else %}
+                <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
+                     class="vertical-banner-image">
+                {% if ad.title %}
+                <div class="vertical-banner-title">{{ ad.title }}</div>
                 {% endif %}
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endif %}
 
-                <!-- Featured News Grid -->
-                <div class="featured-news-section mb-4">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-star"></i> Öne Çıkan Haberler
-                        </h2>
-                    </div>
+        <!-- Main Content -->
+        <div class="col-lg-8 px-4">
+            <!-- Featured News Section -->
+            {% if featured_news %}
+            <section class="featured-news">
+                <div class="container">
+                    <h2 class="text-center mb-4">
+                        <i class="fas fa-star text-red me-2"></i>
+                        Öne Çıkan Haberler
+                    </h2>
                     <div class="row">
                         {% for news in featured_news[:6] %}
-                        <div class="col-lg-6 col-md-6 mb-3">
-                            <div class="news-card featured-card">
-                                <div class="news-image">
-                                    {% if news.featured_image %}
-                                    <img src="{{ news.featured_image }}" alt="{{ news.title }}" class="img-fluid">
-                                    {% else %}
-                                    <img src="/static/images/default-news.jpg" alt="{{ news.title }}" class="img-fluid">
+                        <div class="col-lg-4 col-md-6 mb-4 d-flex">
+                            <div class="news-card featured-card fade-in w-100">
+                                {% set image_url = news.featured_image %}
+                                {% if not image_url and news.images %}
+                                    {% set images_list = news.images | from_json %}
+                                    {% if images_list and images_list|length > 0 %}
+                                        {% set image_url = images_list[0] %}
                                     {% endif %}
-                                    <div class="news-category">{{ news.category.name }}</div>
-                                </div>
-                                <div class="news-content">
-                                    <h3><a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title }}</a></h3>
-                                    <p class="news-summary">{{ news.summary[:100] }}{% if news.summary|length > 100 %}...{% endif %}</p>
-                                    <div class="news-meta">
-                                        <span class="news-date">{{ news.published_at.strftime('%d.%m.%Y') }}</span>
-                                        <span class="news-views">{{ news.view_count }} görüntülenme</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <!-- Latest News List -->
-                <div class="latest-news-section mb-4">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-clock"></i> Son Dakika Haberleri
-                        </h2>
-                    </div>
-                    <div class="news-list">
-                        {% for news in latest_news[:8] %}
-                        <div class="news-item">
-                            <div class="news-image">
-                                {% if news.featured_image %}
-                                <img src="{{ news.featured_image }}" alt="{{ news.title }}" class="img-fluid">
-                                {% else %}
-                                <img src="/static/images/default-news.jpg" alt="{{ news.title }}" class="img-fluid">
                                 {% endif %}
-                            </div>
-                            <div class="news-content">
-                                <h4><a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title }}</a></h4>
-                                <p class="news-summary">{{ news.summary[:150] }}{% if news.summary|length > 150 %}...{% endif %}</p>
-                                <div class="news-meta">
-                                    <span class="news-category">{{ news.category.name }}</span>
-                                    <span class="news-date">{{ news.published_at.strftime('%d.%m.%Y %H:%M') }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <!-- Yerel Haberler -->
-                {% if yerel_news %}
-                <div class="local-news-section mb-4">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-map-marker-alt"></i> Yerel Haberler
-                        </h2>
-                    </div>
-                    <div class="row">
-                        {% for news in yerel_news %}
-                        <div class="col-lg-6 col-md-6 mb-3">
-                            <div class="news-card local-card">
-                                <div class="news-image">
-                                    {% if news.featured_image %}
-                                    <img src="{{ news.featured_image }}" alt="{{ news.title }}" class="img-fluid">
-                                    {% else %}
-                                    <img src="/static/images/default-news.jpg" alt="{{ news.title }}" class="img-fluid">
+                                {% if not image_url and news.content %}
+                                    {% set content_images = news.content | regex_findall('https?://[^\\s<>"]+\\.(jpg|jpeg|png|gif|webp)') %}
+                                    {% if content_images %}
+                                        {% set image_url = content_images[0] %}
                                     {% endif %}
+                                {% endif %}
+                                
+                                <div class="image-container" style="height: 200px; overflow: hidden; position: relative;">
+                                    <img src="{{ image_url or url_for('static', filename='images/logo.png') }}" 
+                                         class="card-img-top" 
+                                         alt="{{ news.title }}" 
+                                         loading="lazy" 
+                                         style="height: 200px; width: 100%; object-fit: {% if image_url %}cover{% else %}contain{% endif %}; {% if not image_url %}padding: 20px;{% endif %}"
+                                         data-has-real-image="{{ 'true' if image_url else 'false' }}">
                                 </div>
-                                <div class="news-content">
-                                    <h4><a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title }}</a></h4>
-                                    <p class="news-summary">{{ news.summary[:80] }}{% if news.summary|length > 80 %}...{% endif %}</p>
-                                    <div class="news-meta">
-                                        <span class="news-date">{{ news.published_at.strftime('%d.%m.%Y') }}</span>
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title[:80] }}{% if news.title|length > 80 %}...{% endif %}</a>
+                                    </h5>
+                                    <p class="card-text">{{ news.summary[:120] if news.summary else news.content[:120] }}{% if (news.summary and news.summary|length > 120) or (not news.summary and news.content|length > 120) %}...{% endif %}</p>
+                                    <div class="news-meta mt-auto">
+                                        <span class="category-badge" style="background-color: {{ news.category.color }};">{{ news.category.name }}</span>
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock me-1"></i>
+                                            {{ news.published_at.strftime('%d.%m.%Y %H:%M') if news.published_at }}
+                                        </small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Latest News Section -->
+            <section class="latest-news mb-5">
+                <h2 class="text-red mb-4">
+                    <i class="fas fa-newspaper me-2"></i>
+                    Son Haberler
+                </h2>
+                <div class="row">
+                    {% for news in latest_news %}
+                    <div class="col-lg-6 col-md-6 mb-4 d-flex">
+                        <div class="news-card slide-up w-100">
+                            {% set latest_image_url = news.featured_image %}
+                            {% if not latest_image_url and news.images %}
+                                {% set latest_images_list = news.images | from_json %}
+                                {% if latest_images_list and latest_images_list|length > 0 %}
+                                    {% set latest_image_url = latest_images_list[0] %}
+                                {% endif %}
+                            {% endif %}
+                            {% if not latest_image_url and news.content %}
+                                {% set latest_content_images = news.content | regex_findall('https?://[^\\s<>"]+\\.(jpg|jpeg|png|gif|webp)') %}
+                                {% if latest_content_images %}
+                                    {% set latest_image_url = latest_content_images[0] %}
+                                {% endif %}
+                            {% endif %}
+                            
+                            <div class="image-container" style="height: 200px; overflow: hidden; position: relative;">
+                                <img src="{{ latest_image_url or url_for('static', filename='images/logo.png') }}" 
+                                     class="card-img-top" 
+                                     alt="{{ news.title }}" 
+                                     loading="lazy" 
+                                     style="height: 200px; width: 100%; object-fit: {% if latest_image_url %}cover{% else %}contain{% endif %}; {% if not latest_image_url %}padding: 20px;{% endif %}"
+                                     data-has-real-image="{{ 'true' if latest_image_url else 'false' }}">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title[:80] }}{% if news.title|length > 80 %}...{% endif %}</a>
+                                </h5>
+                                {% if news.summary %}
+                                <p class="card-text">{{ news.summary[:120] }}{% if news.summary|length > 120 %}...{% endif %}</p>
+                                {% else %}
+                                <p class="card-text">{{ news.content[:120] }}{% if news.content|length > 120 %}...{% endif %}</p>
+                                {% endif %}
+                                <div class="news-meta mt-auto">
+                                    <span class="category-badge" style="background-color: {{ news.category.color }};">{{ news.category.name }}</span>
+                                    <small class="text-muted ms-auto">
+                                        <i class="fas fa-eye me-1"></i>{{ news.view_count }}
+                                        <i class="fas fa-clock ms-2 me-1"></i>
+                                        {{ news.published_at.strftime('%d.%m.%Y') if news.published_at }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                {% if not latest_news %}
+                <div class="text-center py-5">
+                    <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Henüz haber bulunmamaktadır.</p>
                 </div>
                 {% endif %}
-            </div>
+            </section>
         </div>
 
-        <!-- Sağ Kenar - Widget'lar ve Reklamlar -->
-        <div class="col-xl-3 col-lg-3 d-none d-lg-block">
-            <div class="sidebar-right">
-                <!-- Widget Section -->
-                <div class="widget-section mb-4">
-                    <!-- Currency Widget -->
-                    <div class="widget currency-widget mb-4">
-                        <div class="widget-header">
-                            <h3 class="widget-title">
-                                <i class="fas fa-coins"></i> Döviz & Altın
-                            </h3>
-                        </div>
-                        <div class="widget-content">
-                            {% if currency_data %}
-                            <div class="currency-list">
-                                {% for currency, rates in currency_data.currency.items() %}
-                                <div class="currency-item">
-                                    <span class="currency-name">{{ currency }}</span>
-                                    <span class="currency-rate">₺{{ "%.2f"|format(rates.buying) }}</span>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Weather Widget -->
-                    {% if weather_data %}
-                    <div class="widget weather-widget mb-4">
-                        <div class="widget-header">
-                            <h3 class="widget-title">
-                                <i class="fas fa-cloud-sun"></i> Hava Durumu
-                            </h3>
-                        </div>
-                        <div class="widget-content">
-                            <div class="weather-list">
-                                {% for city, weather in weather_data.items() %}
-                                <div class="weather-item">
-                                    <span class="city-name">{{ city }}</span>
-                                    <span class="temperature">{{ weather.temperature }}°C</span>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <!-- Popular News Widget -->
-                    <div class="widget popular-widget mb-4">
-                        <div class="widget-header">
-                            <h3 class="widget-title">
-                                <i class="fas fa-fire"></i> Popüler Haberler
-                            </h3>
-                        </div>
-                        <div class="widget-content">
-                            <div class="popular-news-list">
-                                {% for news in popular_news %}
-                                <div class="popular-item">
-                                    <div class="popular-number">{{ loop.index }}</div>
-                                    <div class="popular-content">
-                                        <h5><a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title }}</a></h5>
-                                        <div class="popular-meta">
-                                            <span class="view-count">{{ news.view_count }} görüntülenme</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Recommended News Widget -->
+            {% if recommended_news %}
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-user-check me-2"></i>
+                    Size Özel Haberler
                 </div>
-
-                <!-- Sağ Kenar Reklamları -->
-                <div class="sidebar-ads-right">
-                    <div class="ad-section-title">
-                        <h4><i class="fas fa-bullhorn"></i> Reklamlar</h4>
-                    </div>
-                    {% for i in range(1, 3) %}
-                    <div class="ad-slot-wide mb-4" data-position="right" data-slot="{{ i }}">
-                        {% set ad = ads.sidebar_right | selectattr('slot_number', 'equalto', i) | first %}
-                        {% if ad %}
-                        <div class="wide-banner-ad">
-                            <button class="ad-close-btn" onclick="closeAd('{{ ad.id }}')" title="Reklamı Kapat">
-                                <i class="fas fa-times"></i>
-                            </button>
-                            <a href="{{ ad.link_url or '#' }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
-                                <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" class="wide-banner-image">
-                            </a>
-                            {% if ad.title %}
-                            <div class="wide-banner-title">{{ ad.title }}</div>
+                <div class="section-content">
+                    {% for news in recommended_news %}
+                    <div class="recommended-news-item" data-news-id="{{ news.id }}">
+                        {% set rec_image_url = news.featured_image %}
+                        {% if not rec_image_url and news.images %}
+                            {% set rec_images_list = news.images | from_json %}
+                            {% if rec_images_list and rec_images_list|length > 0 %}
+                                {% set rec_image_url = rec_images_list[0] %}
                             {% endif %}
-                        </div>
-                        {% else %}
-                        <div class="empty-ad-slot-wide">
-                            <div class="empty-ad-text">
-                                <i class="fas fa-bullhorn mb-2"></i>
-                                <p>Bizimle iletişime geçin</p>
-                                <small>Bu alana reklam verebilirsiniz</small>
+                        {% endif %}
+                        {% if not rec_image_url and news.content %}
+                            {% set rec_content_images = news.content | regex_findall('https?://[^\\s<>"]+\\.(jpg|jpeg|png|gif|webp)') %}
+                            {% if rec_content_images %}
+                                {% set rec_image_url = rec_content_images[0] %}
+                            {% endif %}
+                        {% endif %}
+                        
+                        <img src="{{ rec_image_url or url_for('static', filename='images/logo.png') }}" 
+                             alt="{{ news.title }}" 
+                             onerror="showFallbackImage(this)">
+                        <div class="content">
+                            <div class="title">
+                                <a href="{{ url_for('main.news_detail', slug=news.slug) }}" 
+                                   onclick="trackRecommendationClick({{ news.id }})">
+                                   {{ news.title[:60] }}{% if news.title|length > 60 %}...{% endif %}
+                                </a>
+                            </div>
+                            <div class="meta">
+                                <span class="category-badge" style="background-color: {{ news.category.color }};">
+                                    {{ news.category.name }}
+                                </span>
+                                <small class="text-muted ms-2">
+                                    {{ news.published_at.strftime('%d.%m.%Y') if news.published_at }}
+                                </small>
                             </div>
                         </div>
-                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
             </div>
+            {% endif %}
+
+            <!-- Popular News Widget -->
+            {% if popular_news %}
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-fire me-2"></i>
+                    Popüler Haberler
+                </div>
+                <div class="section-content">
+                    {% for news in popular_news %}
+                    <div class="popular-news-item">
+                        {% set pop_image_url = news.featured_image %}
+                        {% if not pop_image_url and news.images %}
+                            {% set pop_images_list = news.images | from_json %}
+                            {% if pop_images_list and pop_images_list|length > 0 %}
+                                {% set pop_image_url = pop_images_list[0] %}
+                            {% endif %}
+                        {% endif %}
+                        {% if not pop_image_url and news.content %}
+                            {% set pop_content_images = news.content | regex_findall('https?://[^\\s<>"]+\\.(jpg|jpeg|png|gif|webp)') %}
+                            {% if pop_content_images %}
+                                {% set pop_image_url = pop_content_images[0] %}
+                            {% endif %}
+                        {% endif %}
+                        
+                        <img src="{{ pop_image_url or url_for('static', filename='images/logo.png') }}" 
+                             alt="{{ news.title }}" 
+                             style="width: 60px; height: 60px; object-fit: {% if pop_image_url %}cover{% else %}contain{% endif %}; border-radius: 5px; margin-right: 15px; {% if not pop_image_url %}padding: 10px; background: #f8f9fa;{% endif %}"
+                             data-has-real-image="{{ 'true' if pop_image_url else 'false' }}">
+                        <div class="content">
+                            <div class="title">
+                                <a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title[:60] }}{% if news.title|length > 60 %}...{% endif %}</a>
+                            </div>
+                            <div class="meta">
+                                <i class="fas fa-eye me-1"></i>{{ news.view_count }}
+                                <span class="ms-2">{{ news.published_at.strftime('%d.%m.%Y') if news.published_at }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Döviz Kurları -->
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Döviz Kurları
+                </div>
+                <div class="section-content">
+                    {% if currency_data and currency_data.currency and currency_data.currency|length > 0 %}
+                        {% for code, data in currency_data.currency.items() %}
+                        <div class="currency-item">
+                            <div class="currency-symbol">{{ code }}/TRY</div>
+                            <div class="currency-values">
+                                <div class="buy">{{ "%.2f"|format(data.buying) }}</div>
+                                <div class="sell">{{ "%.2f"|format(data.selling) }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-muted text-center py-3">
+                            Döviz verileri yükleniyor...
+                        </div>
+                        <!-- Debug info -->
+                        <div class="small text-muted mt-2">
+                            {% if currency_data %}
+                                Debug: currency_data exists, currency: {{ currency_data.currency|length if currency_data.currency else 'None' }} items
+                            {% else %}
+                                Debug: No currency_data
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Kripto Para -->
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fab fa-bitcoin me-2"></i>
+                    Kripto Para
+                </div>
+                <div class="section-content">
+                    {% if currency_data and currency_data.crypto %}
+                        {% for code, data in currency_data.crypto.items() %}
+                        <div class="currency-item">
+                            <div class="currency-symbol">{{ code }}/TRY</div>
+                            <div class="currency-values">
+                                <div class="buy">{{ "{:,}".format(data.buying|int) }} TL</div>
+                                <div class="sell">{{ "{:,}".format(data.selling|int) }} TL</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-muted text-center py-3">Kripto verileri yükleniyor...</div>
+                        <!-- Debug: crypto data: {{ currency_data.crypto if currency_data else 'No data' }} -->
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Gold Prices Widget -->
+            {% if currency_data and currency_data.gold %}
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-coins me-2"></i>
+                    Altın Fiyatları
+                </div>
+                <div class="section-content">
+                    {% for type, rates in currency_data.gold.items() %}
+                    <div class="currency-item">
+                        <div class="currency-symbol">
+                            {% if type == 'gram' %}Gram Altın
+                            {% elif type == 'quarter' %}Çeyrek Altın
+                            {% elif type == 'half' %}Yarım Altın
+                            {% elif type == 'full' %}Tam Altın
+                            {% else %}{{ type }}
+                            {% endif %}
+                        </div>
+                        <div class="currency-values">
+                            <div class="buy">{{ "{:,}".format(rates.buying|int) }} TL</div>
+                            <div class="sell">{{ "{:,}".format(rates.selling|int) }} TL</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Weather Widget -->
+            {% if weather_data and weather_data.cities %}
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-cloud-sun me-2"></i>
+                    Hava Durumu
+                </div>
+                <div class="section-content">
+                    {% for city in weather_data.cities[:6] %}
+                    <div class="weather-item-widget">
+                        <div class="d-flex align-items-center">
+                            <i class="{{ city.icon }} weather-icon"></i>
+                            <span>{{ city.city }}</span>
+                        </div>
+                        <div class="text-end">
+                            <div class="weather-temp">{{ city.temperature }}°C</div>
+                            <small class="text-muted">{{ city.description }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Prayer Times Widget -->
+            {% if prayer_data and prayer_data.cities %}
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <i class="fas fa-mosque me-2"></i>
+                    Namaz Vakitleri
+                </div>
+                <div class="section-content">
+                    {% set istanbul_prayer = prayer_data.cities|selectattr("city", "equalto", "İstanbul")|first %}
+                    {% if istanbul_prayer %}
+                    <h6 class="text-center mb-3 text-primary">{{ istanbul_prayer.city }}</h6>
+                    <div class="prayer-item">
+                        <span class="prayer-name">İmsak</span>
+                        <span class="prayer-time">{{ istanbul_prayer.fajr }}</span>
+                    </div>
+                    <div class="prayer-item">
+                        <span class="prayer-name">Güneş</span>
+                        <span class="prayer-time">{{ istanbul_prayer.sunrise }}</span>
+                    </div>
+                    <div class="prayer-item">
+                        <span class="prayer-name">Öğle</span>
+                        <span class="prayer-time">{{ istanbul_prayer.dhuhr }}</span>
+                    </div>
+                    <div class="prayer-item">
+                        <span class="prayer-name">İkindi</span>
+                        <span class="prayer-time">{{ istanbul_prayer.asr }}</span>
+                    </div>
+                    <div class="prayer-item">
+                        <span class="prayer-name">Akşam</span>
+                        <span class="prayer-time">{{ istanbul_prayer.maghrib }}</span>
+                    </div>
+                    <div class="prayer-item">
+                        <span class="prayer-name">Yatsı</span>
+                        <span class="prayer-time">{{ istanbul_prayer.isha }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Right Sidebar Content and Widgets -->
+        <div class="col-lg-4">
+
+
+
+
+
+
+
+
+
         </div>
     </div>
 </div>
 
+<!-- Right Fixed Vertical Ads -->
+{% if sidebar_ads %}
+{% set right_ads = sidebar_ads|selectattr("position", "equalto", "right")|list|sort(attribute="slot_number") %}
+{% if right_ads %}
+<div class="sidebar-ads-right">
+    {% for ad in right_ads[:2] %}
+    <div class="vertical-banner-ad sidebar-ad" data-ad-id="{{ ad.id }}">
+        <button class="ad-close-btn" type="button" title="Reklamı Kapat">
+            <i class="fas fa-times"></i>
+        </button>
+        {% if ad.link_url %}
+        <a href="{{ ad.link_url }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
+            <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
+                 class="vertical-banner-image">
+            {% if ad.title %}
+            <div class="vertical-banner-title">{{ ad.title }}</div>
+            {% endif %}
+        </a>
+        {% else %}
+        <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" 
+             class="vertical-banner-image">
+        {% if ad.title %}
+        <div class="vertical-banner-title">{{ ad.title }}</div>
+        {% endif %}
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endif %}
+
 <!-- Popup Advertisement -->
 {% if popup_ads %}
-<div class="popup-ad-overlay" id="popupAdOverlay">
+<div id="popup-ad-overlay" class="popup-ad-overlay" data-ad-id="{{ popup_ads.id }}" style="display: none;">
+    <div class="popup-ad-backdrop"></div>
     <div class="popup-ad-container">
         <div class="popup-ad-header">
-            <button class="popup-close-btn" onclick="closePopupAd()" title="Reklamı Kapat">
+            <button id="popup-close-btn" class="popup-close-btn" type="button" title="Reklamı Kapat">
                 <i class="fas fa-times"></i>
             </button>
         </div>
+        
         <div class="popup-ad-content">
-            <a href="{{ popup_ads.link_url or '#' }}" target="_blank" onclick="trackAdClick({{ popup_ads.id }})">
-                <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" class="popup-ad-image">
+            {% if popup_ads.link_url %}
+            <a href="{{ popup_ads.link_url }}" target="_blank" onclick="trackAdClick({{ popup_ads.id }})" class="popup-ad-link">
+                <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
+                     class="popup-ad-image" 
+                     onload="this.classList.add('loaded')"
+                     onerror="this.classList.add('error')">
+                <div class="popup-image-loader">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Yükleniyor...</span>
+                </div>
             </a>
+            {% else %}
+            <div class="popup-ad-link">
+                <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
+                     class="popup-ad-image"
+                     onload="this.classList.add('loaded')"
+                     onerror="this.classList.add('error')">
+                <div class="popup-image-loader">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Yükleniyor...</span>
+                </div>
+            </div>
+            {% endif %}
+            
             {% if popup_ads.title %}
             <div class="popup-ad-title">{{ popup_ads.title }}</div>
+            {% endif %}
+            
+            {% if popup_ads.description %}
+            <div class="popup-ad-description">{{ popup_ads.description }}</div>
             {% endif %}
         </div>
     </div>
 </div>
 {% endif %}
 
+{% endblock %}
+
+{% block scripts %}
 <script>
-// Popup ad handling
-function closePopupAd() {
-    document.getElementById('popupAdOverlay').style.display = 'none';
-}
+// Auto-refresh widgets every 5 minutes
+setInterval(function() {
+    // You could implement AJAX refresh here if needed
+}, 300000);
 
-// Show popup ad on page load
-document.addEventListener('DOMContentLoaded', function() {
-    {% if popup_ads %}
-    setTimeout(function() {
-        document.getElementById('popupAdOverlay').style.display = 'flex';
-        trackAdImpression({{ popup_ads.id }});
-    }, 2000);
-    {% endif %}
-});
-
-// Close popup with ESC key
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape') {
-        closePopupAd();
-    }
-});
+// Index sayfası - Reklam sistemi ads.js ile otomatik yönetiliyor
 </script>
 {% endblock %}

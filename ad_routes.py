@@ -77,8 +77,8 @@ def create():
                 description = request.form.get('description', '')
                 
                 # Validate slot number for sidebar ads
-                if ad_type == 'sidebar' and (slot_number < 1 or slot_number > 3):
-                    flash('Sidebar reklamlar için slot numarası 1, 2 veya 3 olmalıdır', 'error')
+                if ad_type == 'sidebar' and (slot_number < 1 or slot_number > 2):
+                    flash('Sidebar reklamlar için slot numarası 1 veya 2 olmalıdır', 'error')
                     return redirect(request.url)
                 
                 # Set position for banner ads
@@ -216,46 +216,22 @@ def toggle_status(id):
     
     return redirect(url_for('ads.index'))
 
-@ad_bp.route('/check-slots')
-@admin_required
-def check_slots():
-    """Check slot availability for admin panel"""
-    position = request.args.get('position', 'left')
-    
-    try:
-        ads = Advertisement.query.filter_by(
-            ad_type='sidebar',
-            position=position,
-            is_active=True
-        ).all()
-        
-        slots = {}
-        for ad in ads:
-            slots[ad.slot_number] = {
-                'id': ad.id,
-                'title': ad.title
-            }
-        
-        return jsonify({'slots': slots})
-    except Exception as e:
-        return jsonify({'error': str(e), 'slots': {}}), 500
-
 @ad_bp.route('/api/active-ads')
 def get_active_ads():
     """API endpoint to get active advertisements"""
     try:
-        # Get sidebar ads - 3 per side for vertical layout
+        # Get sidebar ads - 2 per side for vertical layout
         left_ads = Advertisement.query.filter_by(
             is_active=True, 
             ad_type='sidebar',
             position='left'
-        ).order_by(Advertisement.slot_number.asc()).limit(3).all()
+        ).order_by(Advertisement.slot_number.asc()).limit(2).all()
         
         right_ads = Advertisement.query.filter_by(
             is_active=True, 
             ad_type='sidebar',
             position='right'
-        ).order_by(Advertisement.slot_number.asc()).limit(3).all()
+        ).order_by(Advertisement.slot_number.asc()).limit(2).all()
         
         popup_ads = Advertisement.query.filter_by(
             is_active=True, 

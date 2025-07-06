@@ -1237,208 +1237,64 @@ body {
     }
 }
 
-/* Ana İçerik Alanı */
-.main-content {
-    padding: 20px;
-}
-
-/* Reklam Slot Alanları */
-.ad-slot {
-    width: 100%;
-    min-height: 250px;
-    margin-bottom: 20px;
-    background: #ffffff;
-    border: 2px dashed #dee2e6;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: #6c757d;
-    font-size: 14px;
-    position: relative;
-    transition: all 0.3s ease;
-}
-
-.ad-slot.has-ad {
-    border: 2px solid #e9ecef;
-    border-style: solid;
-    background: #ffffff;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.ad-slot:hover {
-    border-color: #007bff;
-    background: #f8f9fa;
-}
-
-.ad-slot.has-ad:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-/* REMOVED - Old floating vertical banner system */
-
-.empty-ad-text {
-    color: #999;
-    font-size: 12px;
-    text-align: center;
-    padding: 20px;
-    line-height: 1.4;
-}
-
-/* Yeni Statik Kenar Reklam Sistemi CSS */
-.sidebar-ads-column {
-    padding: 10px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    position: sticky;
-    top: 20px;
-    height: fit-content;
-    max-height: calc(100vh - 40px);
-    overflow-y: auto;
-}
-
-.sidebar-ads-column.left-ads {
-    border-right: 1px solid #dee2e6;
-}
-
-.sidebar-ads-column.right-ads {
-    border-left: 1px solid #dee2e6;
-}
-
-.ad-slot-static {
-    background: white;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 8px;
-    min-height: 200px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    width: 100%;
-}
-
-.ad-slot-static:hover {
-    border-color: #dc2626;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transform: translateY(-2px);
-}
-
-.static-banner-ad {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-    border-radius: 6px;
-}
-
-.static-banner-image {
-    width: 100%;
-    height: auto;
-    max-height: 300px;
-    object-fit: contain;
-    border-radius: 6px;
-}
-
-.static-banner-title {
-    padding: 10px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #333;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.9);
-    border-top: 1px solid #eee;
-}
-
-.empty-ad-slot {
-    color: #6c757d;
-    font-size: 13px;
-    text-align: center;
-    padding: 30px 20px;
-    line-height: 1.5;
-    min-height: 200px;
-    display: flex;
+/* Yeniden Yazılmış Reklam Sistemi */
+/* Reklam Containerları - Bootstrap sınıflarını zorunlu override */
+div.sidebar-ads-left,
+div.sidebar-ads-left.d-none,
+div.sidebar-ads-left.d-xl-block,
+div.sidebar-ads-left.d-none.d-xl-block,
+.sidebar-ads-left {
+    position: fixed !important;
+    left: 15px;
+    top: 120px;
+    max-height: calc(100vh - 200px); /* Maksimum yükseklik - ekrana sığar */
+    z-index: 50;
+    display: flex !important;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border: 2px dashed #dee2e6;
+    gap: 30px;
+    width: 220px;
+    overflow-y: auto;
+    padding: 10px 0;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+div.sidebar-ads-right,
+div.sidebar-ads-right.d-none,
+div.sidebar-ads-right.d-lg-block,
+div.sidebar-ads-right.d-none.d-lg-block,
+.sidebar-ads-right {
+    position: fixed !important;
+    right: 15px;
+    top: 120px;
+    max-height: calc(100vh - 200px); /* Maksimum yükseklik - ekrana sığar */
+    z-index: 50;
+    display: flex !important;
+    flex-direction: column;
+    gap: 30px;
+    width: 220px;
+    overflow-y: auto;
+    padding: 10px 0;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.vertical-ads-container {
+    margin: 20px 0;
+}
+
+.vertical-banner-ad {
+    background: #ffffff;
     border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
     transition: all 0.3s ease;
-}
-
-.empty-ad-slot:hover {
-    border-color: #007bff;
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
-}
-
-.empty-ad-slot strong {
-    font-size: 14px;
-    color: #495057;
-    margin: 8px 0;
-}
-
-.main-content-area {
-    padding: 0 15px;
-}
-
-/* Responsive Design */
-/* Büyük ekranlar (1200px ve üzeri) */
-@media (min-width: 1200px) {
-    .sidebar-ads-column {
-        padding: 15px;
-    }
-    
-    .ad-slot-static {
-        min-height: 250px;
-        padding: 10px;
-    }
-    
-    .static-banner-image {
-        max-height: 350px;
-    }
-}
-
-/* Orta ekranlar (992px - 1199px) */
-@media (max-width: 1199.98px) and (min-width: 992px) {
-    .sidebar-ads-column {
-        padding: 8px;
-    }
-    
-    .ad-slot-static {
-        min-height: 180px;
-        padding: 6px;
-    }
-    
-    .static-banner-image {
-        max-height: 250px;
-    }
-    
-    .static-banner-title {
-        font-size: 11px;
-        padding: 8px;
-    }
-}
-
-/* Mobil ve tablet (991px ve altı) */
-@media (max-width: 991.98px) {
-    .sidebar-ads-column {
-        display: none;
-    }
-    
-    .main-content-area {
-        padding: 0;
-    }
-    
-    /* Mobilde ana içerik tam genişlik */
-    .container-fluid .row .col-lg-8 {
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
+    width: 220px;
+    position: relative;
+    border: 2px solid #f1f3f4;
+    margin-bottom: 25px;
+    height: auto; /* Otomatik yükseklik - içeriğe göre ayarlanır */
+    min-height: 200px; /* En az 200px yükseklik */
 }
 
 /* Kapatma Butonu Stilleri */
@@ -1526,7 +1382,42 @@ body.has-bottom-banner {
     padding-bottom: 120px;
 }
 
-/* REMOVED - Old floating vertical banner system CSS */
+.vertical-banner-ad:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    border-color: var(--primary-blue);
+}
+
+.vertical-banner-image {
+    width: 100%;
+    height: auto; /* Otomatik yükseklik - fotoğrafın orijinal oranını korur */
+    max-height: none; /* Maksimum yükseklik sınırlamasını kaldır */
+    object-fit: contain; /* Kırpma yapmak yerine tüm görüntüyü göster */
+    object-position: center;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.vertical-banner-ad:hover .vertical-banner-image {
+    transform: scale(1.02);
+}
+
+.vertical-banner-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 /* Gelişmiş Popup Advertisement Styles */
 .popup-ad-overlay {
@@ -1733,20 +1624,6 @@ body.has-bottom-banner {
     opacity: 0.9;
 }
 
-/* Kenar Reklamlar Mobile Responsive */
-@media (max-width: 1200px) {
-    .sidebar-ads-left,
-    .sidebar-ads-right {
-        display: none !important;
-    }
-    
-    .main-content {
-        margin-left: 0;
-        margin-right: 0;
-        padding: 15px;
-    }
-}
-
 /* Popup Mobile Responsive */
 @media (max-width: 768px) {
     .popup-ad-overlay {
@@ -1844,290 +1721,6 @@ body.has-bottom-banner {
         width: 35px;
         height: 35px;
         font-size: 18px;
-    }
-}
-
-/* ========== YENİ GENİŞ REKLAM TASARIMI ========== */
-.ad-section-title {
-    text-align: center;
-    margin-bottom: 15px;
-    padding: 10px;
-    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-    color: white;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.ad-slot-wide {
-    position: relative;
-    width: 100%;
-    min-height: 300px;
-    margin: 0 auto;
-    background: #f8f9fa;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-}
-
-.ad-slot-wide:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-}
-
-.wide-banner-ad {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    min-height: 300px;
-    background: #fff;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.wide-banner-image {
-    width: 100%;
-    height: 100%;
-    min-height: 300px;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.3s ease;
-}
-
-.wide-banner-ad:hover .wide-banner-image {
-    transform: scale(1.05);
-}
-
-.wide-banner-title {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    color: white;
-    padding: 15px;
-    font-size: 14px;
-    font-weight: 600;
-    text-align: center;
-}
-
-.empty-ad-slot-wide {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 300px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border: 2px dashed #dee2e6;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-}
-
-.empty-ad-slot-wide:hover {
-    border-color: #007bff;
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    transform: translateY(-2px);
-}
-
-.sidebar-ads-left,
-.sidebar-ads-right {
-    position: sticky;
-    top: 20px;
-    height: fit-content;
-    max-height: calc(100vh - 40px);
-    overflow-y: auto;
-    scrollbar-width: thin;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 12px;
-    border: 1px solid #e0e0e0;
-}
-
-.sidebar-ads-left::-webkit-scrollbar,
-.sidebar-ads-right::-webkit-scrollbar {
-    width: 4px;
-}
-
-.sidebar-ads-left::-webkit-scrollbar-track,
-.sidebar-ads-right::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-.sidebar-ads-left::-webkit-scrollbar-thumb,
-.sidebar-ads-right::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 2px;
-}
-
-.sidebar-ads-left::-webkit-scrollbar-thumb:hover,
-.sidebar-ads-right::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-/* Featured Slider Styles */
-.featured-slider {
-    position: relative;
-    margin-bottom: 30px;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-.carousel-item {
-    height: 400px;
-    position: relative;
-}
-
-.slide-content {
-    display: flex;
-    height: 100%;
-    position: relative;
-}
-
-.slide-image {
-    flex: 1;
-    overflow: hidden;
-}
-
-.slide-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.7s ease;
-}
-
-.carousel-item.active .slide-image img {
-    transform: scale(1.05);
-}
-
-.slide-info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    color: white;
-    padding: 30px;
-    transform: translateY(20px);
-    transition: transform 0.5s ease;
-}
-
-.carousel-item.active .slide-info {
-    transform: translateY(0);
-}
-
-.slide-category {
-    display: inline-block;
-    background: #dc3545;
-    color: white;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.slide-title {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 15px;
-    line-height: 1.3;
-}
-
-.slide-summary {
-    font-size: 16px;
-    margin-bottom: 20px;
-    line-height: 1.5;
-    opacity: 0.9;
-}
-
-.carousel-control-prev,
-.carousel-control-next {
-    width: 50px;
-    height: 50px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255,255,255,0.2);
-    border-radius: 50%;
-    transition: all 0.3s ease;
-}
-
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-    background: rgba(255,255,255,0.4);
-}
-
-.carousel-control-prev {
-    left: 20px;
-}
-
-.carousel-control-next {
-    right: 20px;
-}
-
-/* Breaking News Ticker */
-.breaking-news-ticker {
-    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-    color: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
-}
-
-.ticker-header {
-    background: rgba(0,0,0,0.2);
-    padding: 8px 15px;
-    font-weight: 700;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.ticker-content {
-    padding: 10px 0;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.ticker-text {
-    display: inline-block;
-    animation: ticker 60s linear infinite;
-    padding-left: 100%;
-}
-
-.ticker-item {
-    margin-right: 50px;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-@keyframes ticker {
-    0% {
-        transform: translate3d(100%, 0, 0);
-    }
-    100% {
-        transform: translate3d(-100%, 0, 0);
-    }
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
-    .slide-title {
-        font-size: 20px;
-    }
-    
-    .slide-summary {
-        font-size: 14px;
-    }
-    
-    .slide-info {
-        padding: 20px;
-    }
-    
-    .carousel-item {
-        height: 300px;
     }
 }
 
@@ -2367,16 +1960,160 @@ body.has-bottom-banner {
     font-weight: 600;
 }
 
-/* Content Area Reserved Space for Ads - REMOVED - Using new static system */
+/* Content Area Reserved Space for Ads */
+body {
+    margin-left: 250px; /* Sol reklam alanı rezervasyonu */
+    margin-right: 250px; /* Sağ reklam alanı rezervasyonu */
+}
 
-/* REMOVED - Old floating banner responsive rules */
+/* Enhanced Responsive Design - Daha geniş ekranlarda da reklam göster */
+@media (max-width: 1599.98px) {
+    body {
+        margin-left: 200px;
+        margin-right: 200px;
+    }
+    
+    /* Tam ekran alanları için margin ayarı */
+    .header-top,
+    .main-header,
+    .main-nav,
+    .breaking-news,
+    .footer {
+        margin-left: -200px;
+        margin-right: -200px;
+    }
+    
+    .sidebar-ads-left {
+        left: 10px;
+        width: 180px;
+    }
+    
+    .sidebar-ads-right {
+        right: 10px;
+        width: 180px;
+    }
+    
+    .vertical-banner-ad {
+        width: 180px;
+    }
+    
+    .vertical-banner-image {
+        height: 400px;
+    }
+}
 
-/* REMOVED - Old floating banner 1399px responsive rules */
+@media (max-width: 1399.98px) {
+    body {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    /* Tam ekran alanları için margin sıfırla */
+    .header-top,
+    .main-header,
+    .main-nav,
+    .breaking-news,
+    .footer {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    /* Küçük ekranlar için de zorla görünür yap */
+    div.sidebar-ads-left,
+    div.sidebar-ads-left.d-none,
+    div.sidebar-ads-left.d-xl-block,
+    .sidebar-ads-left {
+        left: 5px !important;
+        width: 160px !important;
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    div.sidebar-ads-right,
+    div.sidebar-ads-right.d-none,
+    div.sidebar-ads-right.d-lg-block,
+    .sidebar-ads-right {
+        right: 5px !important;
+        width: 160px !important;
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .vertical-banner-ad {
+        width: 160px !important;
+        display: block !important;
+    }
+    
+    .vertical-banner-image {
+        height: 350px !important;
+    }
+}
 
-/* REMOVED - Old floating banner override rules */
+/* Bootstrap d-none Override - En yüksek öncelikli kurallar */
+@media (max-width: 1199.98px) {
+    .sidebar-ads-left.d-none.d-xl-block {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
 
-/* Keep widget responsive styles */
 @media (max-width: 991.98px) {
+    .sidebar-ads-right.d-none.d-lg-block {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+/* Global override - tüm Bootstrap sınıflarını etkisiz hale getir */
+.sidebar-ads-left,
+.sidebar-ads-right {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: fixed !important;
+    z-index: 1000 !important;
+}
+
+/* Büyük ekranlar için özel kurallar */
+@media (min-width: 1200px) {
+    .sidebar-ads-left,
+    .sidebar-ads-right {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: fixed !important;
+        z-index: 1000 !important;
+    }
+    
+    .vertical-banner-ad {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+@media (min-width: 1400px) {
+    .sidebar-ads-left,
+    .sidebar-ads-right {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: fixed !important;
+        z-index: 1000 !important;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .vertical-ads-container {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
     .widget-card {
         margin-bottom: 15px;
     }

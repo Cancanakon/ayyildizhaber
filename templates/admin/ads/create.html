@@ -58,77 +58,14 @@
                                 </div>
 
                                 <div class="mb-3" id="slot-selection" style="display: none;">
-                                    <label for="slot_number" class="form-label">Slot Seçimi</label>
-                                    <div class="row" id="slot-grid">
-                                        <!-- Sol taraf slotları -->
-                                        <div class="col-md-6" id="left-slots" style="display: none;">
-                                            <div class="card border-primary">
-                                                <div class="card-header bg-primary text-white">
-                                                    <h6 class="mb-0"><i class="fas fa-arrow-left"></i> Sol Kenar Slotları</h6>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="form-check mb-2">
-                                                        <input class="form-check-input" type="radio" name="slot_number" value="1" id="left-slot-1">
-                                                        <label class="form-check-label" for="left-slot-1">
-                                                            <strong>Sol Slot 1</strong> (Üst)
-                                                            <div class="text-muted small" id="left-slot-1-status">Kontrol ediliyor...</div>
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check mb-2">
-                                                        <input class="form-check-input" type="radio" name="slot_number" value="2" id="left-slot-2">
-                                                        <label class="form-check-label" for="left-slot-2">
-                                                            <strong>Sol Slot 2</strong> (Orta)
-                                                            <div class="text-muted small" id="left-slot-2-status">Kontrol ediliyor...</div>
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check mb-2">
-                                                        <input class="form-check-input" type="radio" name="slot_number" value="3" id="left-slot-3">
-                                                        <label class="form-check-label" for="left-slot-3">
-                                                            <strong>Sol Slot 3</strong> (Alt)
-                                                            <div class="text-muted small" id="left-slot-3-status">Kontrol ediliyor...</div>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Sağ taraf slotları -->
-                                        <div class="col-md-6" id="right-slots" style="display: none;">
-                                            <div class="card border-success">
-                                                <div class="card-header bg-success text-white">
-                                                    <h6 class="mb-0"><i class="fas fa-arrow-right"></i> Sağ Kenar Slotları</h6>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="form-check mb-2">
-                                                        <input class="form-check-input" type="radio" name="slot_number" value="1" id="right-slot-1">
-                                                        <label class="form-check-label" for="right-slot-1">
-                                                            <strong>Sağ Slot 1</strong> (Üst)
-                                                            <div class="text-muted small" id="right-slot-1-status">Kontrol ediliyor...</div>
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check mb-2">
-                                                        <input class="form-check-input" type="radio" name="slot_number" value="2" id="right-slot-2">
-                                                        <label class="form-check-label" for="right-slot-2">
-                                                            <strong>Sağ Slot 2</strong> (Orta)
-                                                            <div class="text-muted small" id="right-slot-2-status">Kontrol ediliyor...</div>
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check mb-2">
-                                                        <input class="form-check-input" type="radio" name="slot_number" value="3" id="right-slot-3">
-                                                        <label class="form-check-label" for="right-slot-3">
-                                                            <strong>Sağ Slot 3</strong> (Alt)
-                                                            <div class="text-muted small" id="right-slot-3-status">Kontrol ediliyor...</div>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="alert alert-info mt-3">
-                                        <i class="fas fa-info-circle"></i>
-                                        <strong>Slot Bilgileri:</strong> Her kenarda 3 adet reklam alanı bulunur. 
-                                        Dolu slotlar kırmızı, boş slotlar yeşil renkle gösterilir.
+                                    <label for="slot_number" class="form-label">Slot Numarası</label>
+                                    <select class="form-select" id="slot_number" name="slot_number">
+                                        <option value="1">1. Slot (Üst)</option>
+                                        <option value="2">2. Slot (Alt)</option>
+                                    </select>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle text-primary"></i>
+                                        Her kenarda 2 adet dikey reklam gösterilir. Yeni boyut: 160x400px
                                     </div>
                                 </div>
 
@@ -259,7 +196,6 @@
 <script>
 document.getElementById('ad_type').addEventListener('change', function() {
     const positionGroup = document.getElementById('position-group');
-    const slotSelection = document.getElementById('slot-selection');
     const positionSelect = document.getElementById('position');
     
     if (this.value === 'sidebar') {
@@ -267,63 +203,10 @@ document.getElementById('ad_type').addEventListener('change', function() {
         positionSelect.required = true;
     } else {
         positionGroup.style.display = 'none';
-        slotSelection.style.display = 'none';
         positionSelect.required = false;
         positionSelect.value = '';
     }
 });
-
-document.getElementById('position').addEventListener('change', function() {
-    const slotSelection = document.getElementById('slot-selection');
-    const leftSlots = document.getElementById('left-slots');
-    const rightSlots = document.getElementById('right-slots');
-    
-    if (this.value === 'left') {
-        slotSelection.style.display = 'block';
-        leftSlots.style.display = 'block';
-        rightSlots.style.display = 'none';
-        checkSlotAvailability('left');
-    } else if (this.value === 'right') {
-        slotSelection.style.display = 'block';
-        leftSlots.style.display = 'none';
-        rightSlots.style.display = 'block';
-        checkSlotAvailability('right');
-    } else {
-        slotSelection.style.display = 'none';
-        leftSlots.style.display = 'none';
-        rightSlots.style.display = 'none';
-    }
-});
-
-function checkSlotAvailability(position) {
-    // API üzerinden slot durumlarını kontrol et
-    fetch('/admin/ads/check-slots?position=' + position)
-        .then(response => response.json())
-        .then(data => {
-            for (let i = 1; i <= 3; i++) {
-                const statusDiv = document.getElementById(position + '-slot-' + i + '-status');
-                const radioInput = document.getElementById(position + '-slot-' + i);
-                
-                if (data.slots && data.slots[i]) {
-                    statusDiv.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle"></i> Dolu</span>';
-                    radioInput.disabled = true;
-                } else {
-                    statusDiv.innerHTML = '<span class="text-success"><i class="fas fa-check-circle"></i> Boş</span>';
-                    radioInput.disabled = false;
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Slot kontrolü hatası:', error);
-            // Hata durumunda tüm slotları aktif bırak
-            for (let i = 1; i <= 3; i++) {
-                const statusDiv = document.getElementById(position + '-slot-' + i + '-status');
-                const radioInput = document.getElementById(position + '-slot-' + i);
-                statusDiv.innerHTML = '<span class="text-info">Kontrol edilemiyor</span>';
-                radioInput.disabled = false;
-            }
-        });
-}
 
 // Image preview
 document.getElementById('image').addEventListener('change', function(e) {

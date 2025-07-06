@@ -98,21 +98,6 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
-- July 6, 2025: ✅ **BÜYÜK TASARIM YENİLEMESİ**: Tüm site layoutu yeniden tasarlandı - daha geniş ve dolu görünüm
-- July 6, 2025: ✅ 3-sütun sistem optimize edildi - XL ekranlarda 3-3-6 grid, LG'de 3-3-6 dağılımı
-- July 6, 2025: ✅ Reklam alanları büyütüldü - minimum 300px yükseklik, geniş banner sistemi
-- July 6, 2025: ✅ Featured slider eklendi - 5 haber ile carousel, hover efektleri ve animasyonlar
-- July 6, 2025: ✅ Breaking news ticker güncellendi - 60 saniye animasyon döngüsü
-- July 6, 2025: ✅ Widget sistemi yenilendi - daha kompakt ve görsel
-- July 6, 2025: ✅ Responsive tasarım iyileştirildi - mobil ve tablet uyumluluğu
-- July 6, 2025: ✅ CSS stilleri tamamen revize edildi - modern gradient'ler ve hover efektleri
-- July 6, 2025: ✅ Template değişken isimleri düzeltildi - routes.py ile tam uyumlu
-- July 6, 2025: ✅ "vertical-banner-image" öğesi sorunu tamamen giderildi - eski floating banner sistemi temizlendi
-- July 6, 2025: Statik kenar reklam sistemi tamamlandı - ana sayfa 3 sütunlu layout ile kenar reklamları entegre edildi
-- July 6, 2025: Boş reklam alanları için "Bu alana reklam verebilirsiniz" mesajı eklendi - güzel hover efektleri ile
-- July 6, 2025: closeAd global JavaScript fonksiyonu eklendi - reklam kapatma işlevselliği düzeltildi
-- July 6, 2025: Sidebar reklamları artık sayfa içeriği ile birlikte scroll oluyor - fixed positioning kaldırıldı
-- July 6, 2025: Reklam yönetimi tamamen admin panelinden yapılıyor - kullanıcı dostu arayüz
 - July 5, 2025: Bootstrap responsive sınıfları sorunu çözüldü - CSS !important ile d-none ve d-xl-block override edildi
 - July 5, 2025: Sidebar reklamlar için zorunlu display: flex !important - artık her ekran boyutunda görünür
 - July 5, 2025: HTML template'lerinden d-none sınıfları kaldırıldı - Bootstrap çakışması giderildi

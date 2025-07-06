@@ -5,7 +5,6 @@ from services.currency_service import get_currency_data
 from services.weather_service import get_weather_data
 from services.prayer_service import get_prayer_times
 from services.recommendation_engine import recommendation_engine
-from services.sentiment_service import sentiment_analyzer
 from utils.helpers import create_slug, get_popular_news
 from datetime import datetime
 import json
@@ -88,34 +87,6 @@ def index():
         print(f"Error fetching external data: {e}")
         currency_data = weather_data = prayer_data = None
     
-    # Analyze sentiment of recent news for dynamic background colors
-    try:
-        # Use latest news for sentiment analysis
-        recent_news_for_sentiment = News.query.filter_by(status='published').order_by(News.published_at.desc()).limit(20).all()
-        sentiment_data = sentiment_analyzer.get_global_sentiment(recent_news_for_sentiment)
-        sentiment_colors = sentiment_analyzer.sentiment_to_color(sentiment_data)
-        sentiment_colors['sentiment_data'] = sentiment_data  # Include sentiment data for indicator
-        print(f"Sentiment analysis complete. Sentiment: {sentiment_data['overall_sentiment']}, Colors: {sentiment_colors}")
-    except Exception as e:
-        print(f"Error in sentiment analysis: {e}")
-        # Default neutral colors if sentiment analysis fails
-        sentiment_colors = {
-            'primary': 'rgb(248, 249, 250)',
-            'secondary': 'rgb(241, 243, 245)',
-            'accent': 'rgb(233, 236, 239)',
-            'css_variables': {
-                '--sentiment-bg-primary': 'rgb(248, 249, 250)',
-                '--sentiment-bg-secondary': 'rgb(241, 243, 245)',
-                '--sentiment-bg-accent': 'rgb(233, 236, 239)',
-                '--sentiment-opacity': '0.5'
-            },
-            'sentiment_data': {
-                'overall_sentiment': 'neutral',
-                'sentiment_score': 0.0,
-                'confidence': 0.5
-            }
-        }
-    
     return render_template('index.html',
                          slider_news=slider_news,
                          breaking_news=breaking_news,
@@ -129,8 +100,7 @@ def index():
                          weather_data=weather_data,
                          prayer_data=prayer_data,
                          sidebar_ads=sidebar_ads,
-                         popup_ads=popup_ads,
-                         sentiment_colors=sentiment_colors)
+                         popup_ads=popup_ads)
 
 @main_bp.route('/haber/<slug>')
 def news_detail(slug):
@@ -213,32 +183,6 @@ def news_detail(slug):
     # Kategorileri al
     categories = Category.query.filter_by(is_active=True).all()
     
-    # Analyze sentiment of recent news for dynamic background colors
-    try:
-        # Use latest news for sentiment analysis
-        recent_news_for_sentiment = News.query.filter_by(status='published').order_by(News.published_at.desc()).limit(20).all()
-        sentiment_data = sentiment_analyzer.get_global_sentiment(recent_news_for_sentiment)
-        sentiment_colors = sentiment_analyzer.sentiment_to_color(sentiment_data)
-        sentiment_colors['sentiment_data'] = sentiment_data
-    except Exception as e:
-        print(f"Error in sentiment analysis: {e}")
-        sentiment_colors = {
-            'primary': 'rgb(248, 249, 250)',
-            'secondary': 'rgb(241, 243, 245)',
-            'accent': 'rgb(233, 236, 239)',
-            'css_variables': {
-                '--sentiment-bg-primary': 'rgb(248, 249, 250)',
-                '--sentiment-bg-secondary': 'rgb(241, 243, 245)',
-                '--sentiment-bg-accent': 'rgb(233, 236, 239)',
-                '--sentiment-opacity': '0.5'
-            },
-            'sentiment_data': {
-                'overall_sentiment': 'neutral',
-                'sentiment_score': 0.0,
-                'confidence': 0.5
-            }
-        }
-    
     return render_template('news_detail.html',
                          news=news,
                          related_news=related_news,
@@ -250,8 +194,7 @@ def news_detail(slug):
                          currency_data=currency_data,
                          prayer_data=prayer_data,
                          breaking_news=breaking_news,
-                         categories=categories,
-                         sentiment_colors=sentiment_colors)
+                         categories=categories)
 
 @main_bp.route('/kategori/<slug>')
 def category_news(slug):

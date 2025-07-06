@@ -27,13 +27,20 @@
     <div class="table-header p-3 bg-primary text-white">
         <h5 class="mb-0">
             <i class="fas fa-filter me-2"></i>
-            Filtreler
+            Gelişmiş Arama ve Filtreleme
         </h5>
     </div>
     
     <div class="p-3">
         <form method="GET" class="row g-3">
             <div class="col-md-3">
+                <label class="form-label">Makale Ara</label>
+                <input type="text" name="search" class="form-control" 
+                       value="{{ current_search or '' }}" 
+                       placeholder="Başlık, özet veya içerik...">
+            </div>
+            
+            <div class="col-md-2">
                 <label class="form-label">Durum</label>
                 <select name="status" class="form-select">
                     <option value="all" {{ 'selected' if current_status == 'all' }}>Tümü</option>
@@ -43,7 +50,7 @@
                 </select>
             </div>
             
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label class="form-label">Kategori</label>
                 <select name="category" class="form-select">
                     <option value="">Tüm Kategoriler</option>
@@ -55,13 +62,17 @@
                 </select>
             </div>
             
-            <div class="col-md-4">
-                <label class="form-label">Arama</label>
-                <input type="text" name="search" class="form-control" placeholder="Başlık veya içerik ara..." 
-                       value="{{ request.args.get('search', '') }}">
+            <div class="col-md-2">
+                <label class="form-label">Yazar</label>
+                <select name="author" class="form-select">
+                    <option value="all" {{ 'selected' if current_author == 'all' }}>Tümü</option>
+                    <option value="mine" {{ 'selected' if current_author == 'mine' }}>Sadece Benim</option>
+                    <option value="manual" {{ 'selected' if current_author == 'manual' }}>Manuel</option>
+                    <option value="external" {{ 'selected' if current_author == 'external' }}>Dış Kaynaklar</option>
+                </select>
             </div>
             
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label class="form-label">&nbsp;</label>
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary">

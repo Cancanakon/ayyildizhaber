@@ -147,6 +147,9 @@ This is a comprehensive news website application built with Flask, featuring a T
 - July 6, 2025: Kapsamlı VPS kurulum rehberi hazırlandı - VPS_KURULUM_REHBERİ.md dosyası
 - July 6, 2025: GitHub token yönetimi ve otomatik test komutları eklendi
 - July 6, 2025: SSL sertifikası, domain ayarları ve güvenlik önerileri dokümante edildi
+- July 6, 2025: Admin panelinde "Benim Makalelerim" özel bölümü eklendi - kullanıcılar kendi makalelerini kolayca bulabilir
+- July 6, 2025: Gelişmiş arama ve filtreleme sistemi - başlık, özet, içerik araması ve yazar filtresi
+- July 6, 2025: Admin paneli menüsüne "Benim Makalelerim" linki eklendi - hızlı erişim için dashboard'a da buton
 - July 5, 2025: Admin panel istatistikleri gerçek verilerle güncellendi - SQLite uyumlu sorgular ve otantik veri görünümü
 - July 5, 2025: Günlük görüntülenme trendi artık gerçek verileri gösteriyor - boş günler 0 değerle dahil edildi
 - July 5, 2025: Trafik kaynakları ve cihaz istatistikleri gerçek kullanıcı verilerinden beslenecek şekilde düzenlendi

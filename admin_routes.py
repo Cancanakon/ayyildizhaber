@@ -86,14 +86,35 @@ def news_list():
     page = request.args.get('page', 1, type=int)
     status = request.args.get('status', 'all')
     category_id = request.args.get('category', type=int)
+    search = request.args.get('search', '').strip()
+    author_filter = request.args.get('author', 'all')
     
     query = News.query
     
+    # Status filtresi
     if status != 'all':
         query = query.filter_by(status=status)
     
+    # Kategori filtresi
     if category_id:
         query = query.filter_by(category_id=category_id)
+    
+    # Arama filtresi
+    if search:
+        query = query.filter(
+            News.title.ilike(f'%{search}%') | 
+            News.summary.ilike(f'%{search}%') |
+            News.content.ilike(f'%{search}%')
+        )
+    
+    # Yazar filtresi
+    if author_filter != 'all':
+        if author_filter == 'mine':
+            query = query.filter_by(admin_id=current_user.id)
+        elif author_filter == 'external':
+            query = query.filter(News.source != 'manual')
+        elif author_filter == 'manual':
+            query = query.filter_by(source='manual')
     
     news = query.order_by(News.created_at.desc()).paginate(
         page=page, per_page=20, error_out=False
@@ -105,7 +126,49 @@ def news_list():
                          news=news,
                          categories=categories,
                          current_status=status,
-                         current_category=category_id)
+                         current_category=category_id,
+                         current_search=search,
+                         current_author=author_filter)
+
+@admin_bp.route('/benim-makalelerim')
+@login_required
+def my_articles():
+    page = request.args.get('page', 1, type=int)
+    status = request.args.get('status', 'all')
+    category_id = request.args.get('category', type=int)
+    search = request.args.get('search', '').strip()
+    
+    # Sadece mevcut kullanıcının makalelerini getir
+    query = News.query.filter_by(admin_id=current_user.id)
+    
+    # Status filtresi
+    if status != 'all':
+        query = query.filter_by(status=status)
+    
+    # Kategori filtresi
+    if category_id:
+        query = query.filter_by(category_id=category_id)
+    
+    # Arama filtresi
+    if search:
+        query = query.filter(
+            News.title.ilike(f'%{search}%') | 
+            News.summary.ilike(f'%{search}%') |
+            News.content.ilike(f'%{search}%')
+        )
+    
+    news = query.order_by(News.created_at.desc()).paginate(
+        page=page, per_page=20, error_out=False
+    )
+    
+    categories = Category.query.filter_by(is_active=True).all()
+    
+    return render_template('admin/my_articles.html',
+                         news=news,
+                         categories=categories,
+                         current_status=status,
+                         current_category=category_id,
+                         current_search=search)
 
 @admin_bp.route('/haber/yeni', methods=['GET', 'POST'])
 @login_required

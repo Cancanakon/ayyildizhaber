@@ -145,10 +145,18 @@
                     </li>
                     
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if 'news' in request.endpoint }}" 
+                        <a class="nav-link {{ 'active' if request.endpoint == 'admin.news_list' }}" 
                            href="{{ url_for('admin.news_list') }}">
                             <i class="fas fa-newspaper"></i>
-                            Haberler
+                            Tüm Haberler
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if request.endpoint == 'admin.my_articles' }}" 
+                           href="{{ url_for('admin.my_articles') }}">
+                            <i class="fas fa-user-edit"></i>
+                            Benim Makalelerim
                         </a>
                     </li>
                     

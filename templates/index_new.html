@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+
+{% block title %}Ayyıldız Haber Ajansı - Anasayfa{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Featured News Slider -->
+    {% if slider_news %}
+    <div class="featured-slider mb-4">
+        <div id="featuredSlider" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for news in slider_news[:5] %}
+                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    <div class="slide-content">
+                        <div class="slide-image">
+                            {% if news.featured_image %}
+                            <img src="{{ news.featured_image }}" alt="{{ news.title }}" class="img-fluid">
+                            {% else %}
+                            <img src="/static/images/default-news.jpg" alt="{{ news.title }}" class="img-fluid">
+                            {% endif %}
+                        </div>
+                        <div class="slide-info">
+                            <div class="slide-category">{{ news.category.name }}</div>
+                            <h2 class="slide-title">{{ news.title }}</h2>
+                            <p class="slide-summary">{{ news.summary[:200] }}{% if news.summary|length > 200 %}...{% endif %}</p>
+                            <a href="{{ url_for('main.news_detail', slug=news.slug) }}" class="btn btn-primary">Devamını Oku</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#featuredSlider" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#featuredSlider" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Main Content Row -->
+    <div class="row">
+        <!-- Sol Kenar - Geniş Reklam Alanı -->
+        <div class="col-xl-3 col-lg-3 d-none d-lg-block">
+            <div class="sidebar-ads-left">
+                <div class="ad-section-title">
+                    <h4><i class="fas fa-bullhorn"></i> Reklamlar</h4>
+                </div>
+                {% for i in range(1, 4) %}
+                <div class="ad-slot-wide mb-4" data-position="left" data-slot="{{ i }}">
+                    {% set ad = ads.sidebar_left | selectattr('slot_number', 'equalto', i) | first %}
+                    {% if ad %}
+                    <div class="wide-banner-ad">
+                        <button class="ad-close-btn" onclick="closeAd('{{ ad.id }}')" title="Reklamı Kapat">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <a href="{{ ad.link_url or '#' }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
+                            <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" class="wide-banner-image">
+                        </a>
+                        {% if ad.title %}
+                        <div class="wide-banner-title">{{ ad.title }}</div>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="empty-ad-slot-wide">
+                        <div class="empty-ad-text">
+                            <i class="fas fa-bullhorn mb-2"></i>
+                            <p>Bizimle iletişime geçin</p>
+                            <small>Bu alana reklam verebilirsiniz</small>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Orta Alan - Ana İçerik -->
+        <div class="col-xl-6 col-lg-6 col-md-12">
+            <div class="main-content">
+                <!-- Breaking News Ticker -->
+                {% if breaking_news %}
+                <div class="breaking-news-ticker mb-4">
+                    <div class="ticker-header">
+                        <span class="ticker-label">SON DAKİKA</span>
+                    </div>
+                    <div class="ticker-content">
+                        <div class="ticker-text">
+                            {% for news in breaking_news %}
+                            <span class="ticker-item">{{ news.title }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Featured News Grid -->
+                <div class="featured-news-section mb-4">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-star"></i> Öne Çıkan Haberler
+                        </h2>
+                    </div>
+                    <div class="row">
+                        {% for news in featured_news[:6] %}
+                        <div class="col-lg-6 col-md-6 mb-3">
+                            <div class="news-card featured-card">
+                                <div class="news-image">
+                                    {% if news.featured_image %}
+                                    <img src="{{ news.featured_image }}" alt="{{ news.title }}" class="img-fluid">
+                                    {% else %}
+                                    <img src="/static/images/default-news.jpg" alt="{{ news.title }}" class="img-fluid">
+                                    {% endif %}
+                                    <div class="news-category">{{ news.category.name }}</div>
+                                </div>
+                                <div class="news-content">
+                                    <h3><a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title }}</a></h3>
+                                    <p class="news-summary">{{ news.summary[:100] }}{% if news.summary|length > 100 %}...{% endif %}</p>
+                                    <div class="news-meta">
+                                        <span class="news-date">{{ news.published_at.strftime('%d.%m.%Y') }}</span>
+                                        <span class="news-views">{{ news.view_count }} görüntülenme</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Latest News List -->
+                <div class="latest-news-section mb-4">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-clock"></i> Son Dakika Haberleri
+                        </h2>
+                    </div>
+                    <div class="news-list">
+                        {% for news in latest_news[:8] %}
+                        <div class="news-item">
+                            <div class="news-image">
+                                {% if news.featured_image %}
+                                <img src="{{ news.featured_image }}" alt="{{ news.title }}" class="img-fluid">
+                                {% else %}
+                                <img src="/static/images/default-news.jpg" alt="{{ news.title }}" class="img-fluid">
+                                {% endif %}
+                            </div>
+                            <div class="news-content">
+                                <h4><a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title }}</a></h4>
+                                <p class="news-summary">{{ news.summary[:150] }}{% if news.summary|length > 150 %}...{% endif %}</p>
+                                <div class="news-meta">
+                                    <span class="news-category">{{ news.category.name }}</span>
+                                    <span class="news-date">{{ news.published_at.strftime('%d.%m.%Y %H:%M') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Yerel Haberler -->
+                {% if yerel_news %}
+                <div class="local-news-section mb-4">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-map-marker-alt"></i> Yerel Haberler
+                        </h2>
+                    </div>
+                    <div class="row">
+                        {% for news in yerel_news %}
+                        <div class="col-lg-6 col-md-6 mb-3">
+                            <div class="news-card local-card">
+                                <div class="news-image">
+                                    {% if news.featured_image %}
+                                    <img src="{{ news.featured_image }}" alt="{{ news.title }}" class="img-fluid">
+                                    {% else %}
+                                    <img src="/static/images/default-news.jpg" alt="{{ news.title }}" class="img-fluid">
+                                    {% endif %}
+                                </div>
+                                <div class="news-content">
+                                    <h4><a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title }}</a></h4>
+                                    <p class="news-summary">{{ news.summary[:80] }}{% if news.summary|length > 80 %}...{% endif %}</p>
+                                    <div class="news-meta">
+                                        <span class="news-date">{{ news.published_at.strftime('%d.%m.%Y') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Sağ Kenar - Widget'lar ve Reklamlar -->
+        <div class="col-xl-3 col-lg-3 d-none d-lg-block">
+            <div class="sidebar-right">
+                <!-- Widget Section -->
+                <div class="widget-section mb-4">
+                    <!-- Currency Widget -->
+                    <div class="widget currency-widget mb-4">
+                        <div class="widget-header">
+                            <h3 class="widget-title">
+                                <i class="fas fa-coins"></i> Döviz & Altın
+                            </h3>
+                        </div>
+                        <div class="widget-content">
+                            {% if currency_data %}
+                            <div class="currency-list">
+                                {% for currency, rates in currency_data.currency.items() %}
+                                <div class="currency-item">
+                                    <span class="currency-name">{{ currency }}</span>
+                                    <span class="currency-rate">₺{{ "%.2f"|format(rates.buying) }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Weather Widget -->
+                    {% if weather_data %}
+                    <div class="widget weather-widget mb-4">
+                        <div class="widget-header">
+                            <h3 class="widget-title">
+                                <i class="fas fa-cloud-sun"></i> Hava Durumu
+                            </h3>
+                        </div>
+                        <div class="widget-content">
+                            <div class="weather-list">
+                                {% for city, weather in weather_data.items() %}
+                                <div class="weather-item">
+                                    <span class="city-name">{{ city }}</span>
+                                    <span class="temperature">{{ weather.temperature }}°C</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Popular News Widget -->
+                    <div class="widget popular-widget mb-4">
+                        <div class="widget-header">
+                            <h3 class="widget-title">
+                                <i class="fas fa-fire"></i> Popüler Haberler
+                            </h3>
+                        </div>
+                        <div class="widget-content">
+                            <div class="popular-news-list">
+                                {% for news in popular_news %}
+                                <div class="popular-item">
+                                    <div class="popular-number">{{ loop.index }}</div>
+                                    <div class="popular-content">
+                                        <h5><a href="{{ url_for('main.news_detail', slug=news.slug) }}">{{ news.title }}</a></h5>
+                                        <div class="popular-meta">
+                                            <span class="view-count">{{ news.view_count }} görüntülenme</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sağ Kenar Reklamları -->
+                <div class="sidebar-ads-right">
+                    <div class="ad-section-title">
+                        <h4><i class="fas fa-bullhorn"></i> Reklamlar</h4>
+                    </div>
+                    {% for i in range(1, 3) %}
+                    <div class="ad-slot-wide mb-4" data-position="right" data-slot="{{ i }}">
+                        {% set ad = ads.sidebar_right | selectattr('slot_number', 'equalto', i) | first %}
+                        {% if ad %}
+                        <div class="wide-banner-ad">
+                            <button class="ad-close-btn" onclick="closeAd('{{ ad.id }}')" title="Reklamı Kapat">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <a href="{{ ad.link_url or '#' }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
+                                <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" class="wide-banner-image">
+                            </a>
+                            {% if ad.title %}
+                            <div class="wide-banner-title">{{ ad.title }}</div>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <div class="empty-ad-slot-wide">
+                            <div class="empty-ad-text">
+                                <i class="fas fa-bullhorn mb-2"></i>
+                                <p>Bizimle iletişime geçin</p>
+                                <small>Bu alana reklam verebilirsiniz</small>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Popup Advertisement -->
+{% if popup_ads %}
+<div class="popup-ad-overlay" id="popupAdOverlay">
+    <div class="popup-ad-container">
+        <div class="popup-ad-header">
+            <button class="popup-close-btn" onclick="closePopupAd()" title="Reklamı Kapat">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="popup-ad-content">
+            <a href="{{ popup_ads.link_url or '#' }}" target="_blank" onclick="trackAdClick({{ popup_ads.id }})">
+                <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" class="popup-ad-image">
+            </a>
+            {% if popup_ads.title %}
+            <div class="popup-ad-title">{{ popup_ads.title }}</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+// Popup ad handling
+function closePopupAd() {
+    document.getElementById('popupAdOverlay').style.display = 'none';
+}
+
+// Show popup ad on page load
+document.addEventListener('DOMContentLoaded', function() {
+    {% if popup_ads %}
+    setTimeout(function() {
+        document.getElementById('popupAdOverlay').style.display = 'flex';
+        trackAdImpression({{ popup_ads.id }});
+    }, 2000);
+    {% endif %}
+});
+
+// Close popup with ESC key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closePopupAd();
+    }
+});
+</script>
+{% endblock %}

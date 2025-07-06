@@ -33,95 +33,6 @@
     <!-- Custom CSS -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
     
-    <!-- VPS CSS Override - Zorla Çalışan Stiller -->
-    <style>
-        /* Sidebar Reklamlar - VPS Override */
-        .vertical-ads-container {
-            display: flex !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            position: fixed !important;
-            top: 150px !important;
-            z-index: 1000 !important;
-            pointer-events: auto !important;
-        }
-        
-        .vertical-ads-container.left {
-            left: 10px !important;
-        }
-        
-        .vertical-ads-container.right {
-            right: 10px !important;
-        }
-        
-        .vertical-banner-ad {
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            position: relative !important;
-            margin-bottom: 20px !important;
-            border-radius: 8px !important;
-            overflow: hidden !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-        }
-        
-        .vertical-banner-ad img {
-            width: 160px !important;
-            height: 400px !important;
-            object-fit: contain !important;
-            display: block !important;
-            border-radius: 6px !important;
-        }
-        
-        .ad-close-btn {
-            position: absolute !important;
-            top: 5px !important;
-            right: 5px !important;
-            background: rgba(220, 53, 69, 0.9) !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 50% !important;
-            width: 24px !important;
-            height: 24px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            cursor: pointer !important;
-            z-index: 10 !important;
-            font-size: 12px !important;
-            transition: all 0.2s ease !important;
-        }
-        
-        .ad-close-btn:hover {
-            background: rgba(200, 35, 51, 1) !important;
-            transform: scale(1.1) !important;
-        }
-        
-        /* Büyük Ekranlar için Reklam Zorla Görünümü */
-        @media (min-width: 1200px) {
-            .vertical-ads-container {
-                display: flex !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
-        }
-        
-        @media (min-width: 1400px) {
-            .vertical-ads-container {
-                display: flex !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
-        }
-        
-        /* Mobil Cihazlarda Gizle */
-        @media (max-width: 991px) {
-            .vertical-ads-container {
-                display: none !important;
-            }
-        }
-    </style>
-    
     {% block head %}{% endblock %}
 </head>
 <body>
@@ -322,13 +233,11 @@
             <div class="simple-popup-content">
                 {% if popup_ads.link_url %}
                 <a href="{{ popup_ads.link_url }}" target="_blank" onclick="trackAdClick({{ popup_ads.id }})">
-                    <img src="{{ url_for('static', filename='uploads/' + popup_ads.image_path) }}" 
-                         alt="{{ popup_ads.title or 'Reklam' }}" 
+                    <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
                          class="simple-popup-image">
                 </a>
                 {% else %}
-                <img src="{{ url_for('static', filename='uploads/' + popup_ads.image_path) }}" 
-                     alt="{{ popup_ads.title or 'Reklam' }}" 
+                <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
                      class="simple-popup-image">
                 {% endif %}
                 

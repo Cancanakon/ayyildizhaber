@@ -87,6 +87,12 @@ def index():
         print(f"Error fetching external data: {e}")
         currency_data = weather_data = prayer_data = None
     
+    # Organize ads by position for template
+    ads = {
+        'sidebar_left': [ad for ad in sidebar_ads if ad.position == 'left'],
+        'sidebar_right': [ad for ad in sidebar_ads if ad.position == 'right']
+    }
+    
     return render_template('index.html',
                          slider_news=slider_news,
                          breaking_news=breaking_news,
@@ -99,7 +105,7 @@ def index():
                          currency_data=currency_data,
                          weather_data=weather_data,
                          prayer_data=prayer_data,
-                         sidebar_ads=sidebar_ads,
+                         ads=ads,
                          popup_ads=popup_ads)
 
 @main_bp.route('/haber/<slug>')

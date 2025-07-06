@@ -352,6 +352,63 @@
         }
     </script>
     
+    <!-- Inline Admin Functions - VPS Uyumlu -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Inline admin functions loading...');
+        
+        // Admin paneli silme butonları
+        document.querySelectorAll('.delete-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const id = this.getAttribute('data-id');
+                const title = this.getAttribute('data-title');
+                
+                if (confirm('"' + title + '" adlı makaleyi silmek istediğinizden emin misiniz?\n\nBu işlem geri alınamaz!')) {
+                    // Loading göstergesi
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    this.disabled = true;
+                    
+                    fetch('/admin/haber/' + id + '/sil', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    .then(function(response) {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        throw new Error('Network response was not ok');
+                    })
+                    .then(function(data) {
+                        if (data.success) {
+                            alert('Makale başarıyla silindi!');
+                            location.reload();
+                        } else {
+                            alert('Silme işlemi başarısız: ' + (data.message || 'Bilinmeyen hata'));
+                            // Butonu eski haline getir
+                            btn.innerHTML = '<i class="fas fa-trash"></i>';
+                            btn.disabled = false;
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Silme hatası:', error);
+                        alert('Makale silinemedi. Lütfen tekrar deneyin.');
+                        // Butonu eski haline getir
+                        btn.innerHTML = '<i class="fas fa-trash"></i>';
+                        btn.disabled = false;
+                    });
+                }
+            });
+        });
+        
+        console.log('Inline admin functions ready');
+    });
+    </script>
+    
     {% block scripts %}{% endblock %}
 </body>
 </html>

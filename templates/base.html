@@ -412,6 +412,70 @@
     <!-- Yeni Reklam Sistemi -->
     <script src="{{ url_for('static', filename='js/ads.js') }}"></script>
     
+    <!-- Inline Reklam Fonksiyonları - VPS Uyumlu -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Inline ad functions loading...');
+        
+        // Sidebar reklam kapatma butonları
+        document.querySelectorAll('.ad-close-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const adElement = this.closest('.vertical-banner-ad');
+                if (adElement) {
+                    adElement.style.display = 'none';
+                    console.log('Sidebar ad closed');
+                }
+            });
+        });
+        
+        // Popup reklam kapatma butonu
+        const popupCloseBtn = document.getElementById('popup-close-btn');
+        if (popupCloseBtn) {
+            popupCloseBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const popupOverlay = document.getElementById('popup-ad-overlay');
+                if (popupOverlay) {
+                    popupOverlay.style.display = 'none';
+                    console.log('Popup ad closed');
+                }
+            });
+        }
+        
+        // Popup backdrop kapatma
+        const popupBackdrop = document.querySelector('.popup-ad-backdrop');
+        if (popupBackdrop) {
+            popupBackdrop.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const popupOverlay = document.getElementById('popup-ad-overlay');
+                if (popupOverlay) {
+                    popupOverlay.style.display = 'none';
+                    console.log('Popup ad closed via backdrop');
+                }
+            });
+        }
+        
+        // ESC tuşu ile popup kapatma
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const popupOverlay = document.getElementById('popup-ad-overlay');
+                if (popupOverlay && popupOverlay.style.display !== 'none') {
+                    popupOverlay.style.display = 'none';
+                    console.log('Popup ad closed via ESC');
+                }
+            }
+        });
+        
+        console.log('Inline ad functions ready');
+    });
+    </script>
+    
     {% block scripts %}{% endblock %}
 </body>
 </html>

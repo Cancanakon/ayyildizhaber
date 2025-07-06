@@ -1277,13 +1277,7 @@ body {
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
-.vertical-banner-ad {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-}
+/* REMOVED - Old floating vertical banner system */
 
 .empty-ad-text {
     color: #999;
@@ -1532,41 +1526,7 @@ body.has-bottom-banner {
     padding-bottom: 120px;
 }
 
-.vertical-banner-ad:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    border-color: var(--primary-blue);
-}
-
-.vertical-banner-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    transition: transform 0.3s ease;
-}
-
-.vertical-banner-ad:hover .vertical-banner-image {
-    transform: scale(1.02);
-}
-
-.vertical-banner-title {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 8px;
-    font-size: 10px;
-    font-weight: 600;
-    color: #fff;
-    text-align: center;
-    background: linear-gradient(transparent, rgba(0,0,0,0.8));
-    line-height: 1.2;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+/* REMOVED - Old floating vertical banner system CSS */
 
 /* Gelişmiş Popup Advertisement Styles */
 .popup-ad-overlay {
@@ -2123,160 +2083,16 @@ body.has-bottom-banner {
     font-weight: 600;
 }
 
-/* Content Area Reserved Space for Ads */
-body {
-    margin-left: 250px; /* Sol reklam alanı rezervasyonu */
-    margin-right: 250px; /* Sağ reklam alanı rezervasyonu */
-}
+/* Content Area Reserved Space for Ads - REMOVED - Using new static system */
 
-/* Enhanced Responsive Design - Daha geniş ekranlarda da reklam göster */
-@media (max-width: 1599.98px) {
-    body {
-        margin-left: 200px;
-        margin-right: 200px;
-    }
-    
-    /* Tam ekran alanları için margin ayarı */
-    .header-top,
-    .main-header,
-    .main-nav,
-    .breaking-news,
-    .footer {
-        margin-left: -200px;
-        margin-right: -200px;
-    }
-    
-    .sidebar-ads-left {
-        left: 10px;
-        width: 180px;
-    }
-    
-    .sidebar-ads-right {
-        right: 10px;
-        width: 180px;
-    }
-    
-    .vertical-banner-ad {
-        width: 180px;
-    }
-    
-    .vertical-banner-image {
-        height: 400px;
-    }
-}
+/* REMOVED - Old floating banner responsive rules */
 
-@media (max-width: 1399.98px) {
-    body {
-        margin-left: 0;
-        margin-right: 0;
-    }
-    
-    /* Tam ekran alanları için margin sıfırla */
-    .header-top,
-    .main-header,
-    .main-nav,
-    .breaking-news,
-    .footer {
-        margin-left: 0;
-        margin-right: 0;
-    }
-    
-    /* Küçük ekranlar için de zorla görünür yap */
-    div.sidebar-ads-left,
-    div.sidebar-ads-left.d-none,
-    div.sidebar-ads-left.d-xl-block,
-    .sidebar-ads-left {
-        left: 5px !important;
-        width: 160px !important;
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-    
-    div.sidebar-ads-right,
-    div.sidebar-ads-right.d-none,
-    div.sidebar-ads-right.d-lg-block,
-    .sidebar-ads-right {
-        right: 5px !important;
-        width: 160px !important;
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-    
-    .vertical-banner-ad {
-        width: 160px !important;
-        display: block !important;
-    }
-    
-    .vertical-banner-image {
-        height: 350px !important;
-    }
-}
+/* REMOVED - Old floating banner 1399px responsive rules */
 
-/* Bootstrap d-none Override - En yüksek öncelikli kurallar */
-@media (max-width: 1199.98px) {
-    .sidebar-ads-left.d-none.d-xl-block {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-}
+/* REMOVED - Old floating banner override rules */
 
+/* Keep widget responsive styles */
 @media (max-width: 991.98px) {
-    .sidebar-ads-right.d-none.d-lg-block {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-}
-
-/* Global override - tüm Bootstrap sınıflarını etkisiz hale getir */
-.sidebar-ads-left,
-.sidebar-ads-right {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: fixed !important;
-    z-index: 1000 !important;
-}
-
-/* Büyük ekranlar için özel kurallar */
-@media (min-width: 1200px) {
-    .sidebar-ads-left,
-    .sidebar-ads-right {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        position: fixed !important;
-        z-index: 1000 !important;
-    }
-    
-    .vertical-banner-ad {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-}
-
-@media (min-width: 1400px) {
-    .sidebar-ads-left,
-    .sidebar-ads-right {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        position: fixed !important;
-        z-index: 1000 !important;
-    }
-}
-
-@media (max-width: 991.98px) {
-    .vertical-ads-container {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-    
     .widget-card {
         margin-bottom: 15px;
     }

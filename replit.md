@@ -98,6 +98,11 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- July 6, 2025: VPS JavaScript deployment sorunları tamamen çözüldü - tüm fonksiyonlar inline script yaklaşımıyla güvenilir hale getirildi
+- July 6, 2025: Popup reklam sistemi basitleştirildi - karmaşık CSS ve HTML yapısı temizlendi, simetrik tasarım sağlandı
+- July 6, 2025: Admin paneli makale silme fonksiyonu düzeltildi - VPS sunucularında çalışacak şekilde inline JavaScript kullanıldı
+- July 6, 2025: Reklam kapatma butonları için basit ve güvenilir CSS - !important kurallarıyla VPS override sorunları giderildi
+- July 6, 2025: Base template'lerde inline script yaklaşımı benimsendi - external file loading sorunları tamamen aşıldı
 - July 6, 2025: Admin panel "Benim Makalelerim" sayfasındaki büyük görsel sorunu çözüldü - thumbnail boyutu 45x45px'e küçültüldü
 - July 6, 2025: VPS deployment için kritik CSS düzeltmeleri yapıldı - reklam kapatma butonları ve stillerinde !important kuralları eklendi
 - July 6, 2025: VPS sunucular için CSS güvenlik override'ları eklendi - Font Awesome, Bootstrap ve reklam sistemleri zorla çalışır hale getirildi

@@ -222,43 +222,31 @@
     </div>
     {% endif %}
 
-    <!-- Global Popup Advertisement -->
+    <!-- Basit Popup Advertisement -->
     {% if popup_ads %}
-    <div id="popup-ad-overlay" class="popup-ad-overlay" data-ad-id="{{ popup_ads.id }}" style="display: none;">
-        <div class="popup-ad-backdrop"></div>
-        <div class="popup-ad-container">
-            <div class="popup-ad-header">
-                <button id="popup-close-btn" class="popup-close-btn" type="button" title="Reklamı Kapat">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="popup-ad-content">
-                <div class="popup-image-container" style="position: relative;">
-                    <div class="popup-image-loader">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <span>Yükleniyor...</span>
-                    </div>
-                    {% if popup_ads.link_url %}
-                    <a href="{{ popup_ads.link_url }}" target="_blank" onclick="trackAdClick({{ popup_ads.id }})">
-                        <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
-                             class="popup-ad-image"
-                             onload="this.classList.add('loaded'); this.parentElement.parentElement.querySelector('.popup-image-loader').style.display='none';"
-                             onerror="this.classList.add('error'); var loader = this.parentElement.parentElement.querySelector('.popup-image-loader'); loader.innerHTML='<i class=\'fas fa-exclamation-triangle\'></i><span>Yükleme hatası</span>';">
-                    </a>
-                    {% else %}
+    <div id="popup-ad-overlay" class="simple-popup-overlay" data-ad-id="{{ popup_ads.id }}" style="display: none;">
+        <div class="simple-popup-backdrop"></div>
+        <div class="simple-popup-container">
+            <button id="popup-close-btn" class="simple-popup-close" type="button" title="Reklamı Kapat">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="simple-popup-content">
+                {% if popup_ads.link_url %}
+                <a href="{{ popup_ads.link_url }}" target="_blank" onclick="trackAdClick({{ popup_ads.id }})">
                     <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
-                         class="popup-ad-image"
-                         onload="this.classList.add('loaded'); this.parentElement.querySelector('.popup-image-loader').style.display='none';"
-                         onerror="this.classList.add('error'); var loader = this.parentElement.querySelector('.popup-image-loader'); loader.innerHTML='<i class=\'fas fa-exclamation-triangle\'></i><span>Yükleme hatası</span>';">
-                    {% endif %}
-                </div>
+                         class="simple-popup-image">
+                </a>
+                {% else %}
+                <img src="{{ popup_ads.image_path }}" alt="{{ popup_ads.title or 'Reklam' }}" 
+                     class="simple-popup-image">
+                {% endif %}
                 
                 {% if popup_ads.title %}
-                <div class="popup-ad-title">{{ popup_ads.title }}</div>
+                <div class="simple-popup-title">{{ popup_ads.title }}</div>
                 {% endif %}
                 
                 {% if popup_ads.description %}
-                <div class="popup-ad-description">{{ popup_ads.description }}</div>
+                <div class="simple-popup-description">{{ popup_ads.description }}</div>
                 {% endif %}
             </div>
         </div>
@@ -431,46 +419,54 @@
             });
         });
         
-        // Popup reklam kapatma butonu
-        const popupCloseBtn = document.getElementById('popup-close-btn');
-        if (popupCloseBtn) {
-            popupCloseBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const popupOverlay = document.getElementById('popup-ad-overlay');
-                if (popupOverlay) {
-                    popupOverlay.style.display = 'none';
-                    console.log('Popup ad closed');
-                }
-            });
-        }
-        
-        // Popup backdrop kapatma
-        const popupBackdrop = document.querySelector('.popup-ad-backdrop');
-        if (popupBackdrop) {
-            popupBackdrop.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const popupOverlay = document.getElementById('popup-ad-overlay');
-                if (popupOverlay) {
-                    popupOverlay.style.display = 'none';
-                    console.log('Popup ad closed via backdrop');
-                }
-            });
-        }
-        
-        // ESC tuşu ile popup kapatma
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const popupOverlay = document.getElementById('popup-ad-overlay');
-                if (popupOverlay && popupOverlay.style.display !== 'none') {
-                    popupOverlay.style.display = 'none';
-                    console.log('Popup ad closed via ESC');
-                }
+        // Basit popup reklam sistemi
+        const popupOverlay = document.getElementById('popup-ad-overlay');
+        if (popupOverlay) {
+            // 3 saniye sonra popup'ı göster
+            setTimeout(function() {
+                popupOverlay.style.display = 'flex';
+                setTimeout(function() {
+                    popupOverlay.classList.add('show');
+                }, 100);
+                console.log('Popup ad shown');
+            }, 3000);
+            
+            // Kapatma butonu
+            const closeBtn = document.getElementById('popup-close-btn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closePopup();
+                });
             }
-        });
+            
+            // Backdrop kapatma
+            const backdrop = document.querySelector('.simple-popup-backdrop');
+            if (backdrop) {
+                backdrop.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closePopup();
+                });
+            }
+            
+            // ESC tuşu ile kapatma
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closePopup();
+                }
+            });
+            
+            // Popup kapatma fonksiyonu
+            function closePopup() {
+                popupOverlay.classList.remove('show');
+                setTimeout(function() {
+                    popupOverlay.style.display = 'none';
+                }, 300);
+                console.log('Popup ad closed');
+            }
+        }
         
         console.log('Inline ad functions ready');
     });

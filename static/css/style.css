@@ -1421,43 +1421,133 @@ body.has-bottom-banner {
     white-space: nowrap;
 }
 
-/* Gelişmiş Popup Advertisement Styles */
-.popup-ad-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    background: linear-gradient(
-        135deg,
-        rgba(15, 15, 15, 0.95),
-        rgba(40, 40, 40, 0.90),
-        rgba(15, 15, 15, 0.95)
-    );
+/* Basit Popup Advertisement Styles */
+.simple-popup-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 9999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all 0.3s ease !important;
 }
 
-.popup-ad-overlay.show {
-    opacity: 1;
-    visibility: visible;
+.simple-popup-overlay.show {
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
-.popup-ad-backdrop {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: transparent;
-    backdrop-filter: blur(15px);
-    cursor: pointer;
+.simple-popup-backdrop {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: transparent !important;
+    cursor: pointer !important;
+}
+
+.simple-popup-container {
+    position: relative !important;
+    background: white !important;
+    border-radius: 12px !important;
+    max-width: 500px !important;
+    max-height: 80vh !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5) !important;
+    transform: scale(0.8) !important;
+    transition: transform 0.3s ease !important;
+    overflow: hidden !important;
+}
+
+.simple-popup-overlay.show .simple-popup-container {
+    transform: scale(1) !important;
+}
+
+.simple-popup-close {
+    position: absolute !important;
+    top: 10px !important;
+    right: 10px !important;
+    background: #dc3545 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 35px !important;
+    height: 35px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    z-index: 10 !important;
+    font-size: 16px !important;
+    transition: all 0.2s ease !important;
+}
+
+.simple-popup-close:hover {
+    background: #c82333 !important;
+    transform: scale(1.1) !important;
+}
+
+.simple-popup-content {
+    padding: 0 !important;
+}
+
+.simple-popup-image {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 400px !important;
+    object-fit: contain !important;
+    display: block !important;
+}
+
+.simple-popup-title {
+    padding: 15px 20px 10px !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #333 !important;
+    text-align: center !important;
+    border-top: 1px solid #eee !important;
+}
+
+.simple-popup-description {
+    padding: 0 20px 20px !important;
+    font-size: 14px !important;
+    color: #666 !important;
+    text-align: center !important;
+    line-height: 1.5 !important;
+}
+
+/* Mobile responsive popup */
+@media (max-width: 768px) {
+    .simple-popup-overlay {
+        padding: 10px !important;
+    }
+    
+    .simple-popup-container {
+        max-width: 95vw !important;
+        max-height: 90vh !important;
+        border-radius: 8px !important;
+    }
+    
+    .simple-popup-image {
+        max-height: 300px !important;
+    }
+    
+    .simple-popup-title {
+        font-size: 16px !important;
+        padding: 12px 15px 8px !important;
+    }
+    
+    .simple-popup-description {
+        font-size: 13px !important;
+        padding: 0 15px 15px !important;
+    }
 }
 
 .popup-ad-container {

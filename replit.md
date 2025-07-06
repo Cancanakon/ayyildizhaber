@@ -98,6 +98,11 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- July 6, 2025: Statik kenar reklam sistemi tamamlandı - ana sayfa 3 sütunlu layout ile kenar reklamları entegre edildi
+- July 6, 2025: Boş reklam alanları için "Bu alana reklam verebilirsiniz" mesajı eklendi - güzel hover efektleri ile
+- July 6, 2025: closeAd global JavaScript fonksiyonu eklendi - reklam kapatma işlevselliği düzeltildi
+- July 6, 2025: Sidebar reklamları artık sayfa içeriği ile birlikte scroll oluyor - fixed positioning kaldırıldı
+- July 6, 2025: Reklam yönetimi tamamen admin panelinden yapılıyor - kullanıcı dostu arayüz
 - July 5, 2025: Bootstrap responsive sınıfları sorunu çözüldü - CSS !important ile d-none ve d-xl-block override edildi
 - July 5, 2025: Sidebar reklamlar için zorunlu display: flex !important - artık her ekran boyutunda görünür
 - July 5, 2025: HTML template'lerinden d-none sınıfları kaldırıldı - Bootstrap çakışması giderildi

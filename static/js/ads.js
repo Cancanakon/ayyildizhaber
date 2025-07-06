@@ -188,6 +188,14 @@ window.trackAdClick = function(adId) {
     }
 };
 
+window.closeAd = function(adId) {
+    const adElement = document.querySelector(`[data-ad-id="${adId}"]`);
+    if (adElement) {
+        adElement.style.display = 'none';
+        console.log(`Reklam kapatıldı: ${adId}`);
+    }
+};
+
 window.closePopupAd = function() {
     if (window.adManager) {
         window.adManager.closePopup();

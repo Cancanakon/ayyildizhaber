@@ -33,9 +33,94 @@
     <!-- Custom CSS -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
     
+    <!-- Dynamic Sentiment-Based Background Colors -->
+    {% if sentiment_colors %}
+    <style>
+        :root {
+            {% for key, value in sentiment_colors.css_variables.items() %}
+            {{ key }}: {{ value }};
+            {% endfor %}
+        }
+        
+        /* Apply sentiment-based backgrounds */
+        body {
+            background: linear-gradient(135deg, 
+                var(--sentiment-bg-primary) 0%, 
+                var(--sentiment-bg-secondary) 50%, 
+                var(--sentiment-bg-accent) 100%) !important;
+            background-attachment: fixed !important;
+            min-height: 100vh !important;
+        }
+        
+        /* Apply overlay to main content areas for readability */
+        .main-content,
+        .widget-container,
+        .news-card,
+        .sidebar-widget {
+            background: rgba(255, 255, 255, 0.97) !important;
+            backdrop-filter: blur(5px) !important;
+            border-radius: 8px !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08) !important;
+        }
+        
+        /* Header transparency adjustments */
+        .header-top,
+        .main-header,
+        .main-nav {
+            background: rgba(255, 255, 255, 0.98) !important;
+            backdrop-filter: blur(10px) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, 
+                var(--sentiment-bg-secondary) 0%, 
+                var(--sentiment-bg-primary) 100%) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+        
+        /* Sentiment indicator */
+        .sentiment-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: var(--sentiment-bg-primary);
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+            z-index: 1000;
+            opacity: 0.8;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .sentiment-indicator {
+                display: none;
+            }
+        }
+    </style>
+    {% endif %}
+    
     {% block head %}{% endblock %}
 </head>
 <body>
+    <!-- Sentiment Indicator -->
+    {% if sentiment_colors and sentiment_colors.get('sentiment_data') %}
+    <div class="sentiment-indicator">
+        <i class="fas fa-brain"></i>
+        {% set sentiment = sentiment_colors.sentiment_data.overall_sentiment %}
+        {% if sentiment == 'positive' %}
+        <span style="color: #28a745;">Pozitif Haber Akışı</span>
+        {% elif sentiment == 'negative' %}
+        <span style="color: #dc3545;">Dikkat Gerektiren Gündem</span>
+        {% else %}
+        <span style="color: #6c757d;">Nötr Haber Akışı</span>
+        {% endif %}
+    </div>
+    {% endif %}
+    
     <!-- Top Banner Container -->
     {% set top_banner = ads.get('top_banner') %}
     {% if top_banner %}

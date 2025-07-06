@@ -13,7 +13,7 @@
                 {% for i in range(1, 4) %}
                 <div class="ad-slot-static mb-3" data-position="left" data-slot="{{ i }}">
                     {% set ad = ads.sidebar_left | selectattr('slot_number', 'equalto', i) | first %}
-                    <!-- Debug: Slot {{ i }}, Ad Found: {{ 'Yes' if ad else 'No' }} -->
+
                     {% if ad %}
                     <div class="static-banner-ad">
                         <button class="ad-close-btn" onclick="closeAd('{{ ad.id }}')" title="Reklamı Kapat">
@@ -30,7 +30,7 @@
                     <div class="empty-ad-slot">
                         <i class="fas fa-bullhorn fa-2x mb-2 text-muted"></i><br>
                         <strong>Bu alana reklam verebilirsiniz</strong><br>
-                        <small class="text-muted">Admin panelinden reklam ekleyebilirsiniz</small>
+                        <small class="text-muted">Bizimle iletişime geçin</small>
                     </div>
                     {% endif %}
                 </div>
@@ -651,7 +651,7 @@
                     <div class="empty-ad-slot">
                         <i class="fas fa-bullhorn fa-2x mb-2 text-muted"></i><br>
                         <strong>Bu alana reklam verebilirsiniz</strong><br>
-                        <small class="text-muted">Admin panelinden reklam ekleyebilirsiniz</small>
+                        <small class="text-muted">Bizimle iletişime geçin</small>
                     </div>
                     {% endif %}
                 </div>

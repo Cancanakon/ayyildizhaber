@@ -216,6 +216,30 @@ def toggle_status(id):
     
     return redirect(url_for('ads.index'))
 
+@ad_bp.route('/check-slots')
+@admin_required
+def check_slots():
+    """Check slot availability for admin panel"""
+    position = request.args.get('position', 'left')
+    
+    try:
+        ads = Advertisement.query.filter_by(
+            ad_type='sidebar',
+            position=position,
+            is_active=True
+        ).all()
+        
+        slots = {}
+        for ad in ads:
+            slots[ad.slot_number] = {
+                'id': ad.id,
+                'title': ad.title
+            }
+        
+        return jsonify({'slots': slots})
+    except Exception as e:
+        return jsonify({'error': str(e), 'slots': {}}), 500
+
 @ad_bp.route('/api/active-ads')
 def get_active_ads():
     """API endpoint to get active advertisements"""

@@ -1295,13 +1295,15 @@ body {
 
 /* Yeni Statik Kenar Reklam Sistemi CSS */
 .sidebar-ads-column {
-    padding: 15px;
+    padding: 10px;
     background: #f8f9fa;
     border-radius: 8px;
     margin-bottom: 20px;
     position: sticky;
     top: 20px;
     height: fit-content;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
 }
 
 .sidebar-ads-column.left-ads {
@@ -1316,11 +1318,12 @@ body {
     background: white;
     border: 1px solid #dee2e6;
     border-radius: 8px;
-    padding: 10px;
-    min-height: 250px;
+    padding: 8px;
+    min-height: 200px;
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
+    width: 100%;
 }
 
 .ad-slot-static:hover {
@@ -1389,7 +1392,45 @@ body {
     padding: 0 15px;
 }
 
-/* Mobile responsive için statik reklamları gizle */
+/* Responsive Design */
+/* Büyük ekranlar (1200px ve üzeri) */
+@media (min-width: 1200px) {
+    .sidebar-ads-column {
+        padding: 15px;
+    }
+    
+    .ad-slot-static {
+        min-height: 250px;
+        padding: 10px;
+    }
+    
+    .static-banner-image {
+        max-height: 350px;
+    }
+}
+
+/* Orta ekranlar (992px - 1199px) */
+@media (max-width: 1199.98px) and (min-width: 992px) {
+    .sidebar-ads-column {
+        padding: 8px;
+    }
+    
+    .ad-slot-static {
+        min-height: 180px;
+        padding: 6px;
+    }
+    
+    .static-banner-image {
+        max-height: 250px;
+    }
+    
+    .static-banner-title {
+        font-size: 11px;
+        padding: 8px;
+    }
+}
+
+/* Mobil ve tablet (991px ve altı) */
 @media (max-width: 991.98px) {
     .sidebar-ads-column {
         display: none;
@@ -1397,6 +1438,12 @@ body {
     
     .main-content-area {
         padding: 0;
+    }
+    
+    /* Mobilde ana içerik tam genişlik */
+    .container-fluid .row .col-lg-8 {
+        flex: 0 0 100%;
+        max-width: 100%;
     }
 }
 

@@ -1237,48 +1237,9 @@ body {
     }
 }
 
-/* Yeni Statik Kenar Reklam Sistemi */
-/* Ana content container margin'ları reklam alanları için ayarlanır */
+/* Ana İçerik Alanı */
 .main-content {
-    margin-left: 240px;
-    margin-right: 240px;
     padding: 20px;
-}
-
-/* Sol Kenar Reklam Alanları - Statik */
-.sidebar-ads-left {
-    position: fixed !important;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 220px;
-    background: #f8f9fa;
-    border-right: 2px solid #e9ecef;
-    z-index: 40;
-    display: flex !important;
-    flex-direction: column;
-    padding: 20px 10px;
-    overflow-y: auto;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-/* Sağ Kenar Reklam Alanları - Statik */
-.sidebar-ads-right {
-    position: fixed !important;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 220px;
-    background: #f8f9fa;
-    border-left: 2px solid #e9ecef;
-    z-index: 40;
-    display: flex !important;
-    flex-direction: column;
-    padding: 20px 10px;
-    overflow-y: auto;
-    visibility: visible !important;
-    opacity: 1 !important;
 }
 
 /* Reklam Slot Alanları */
@@ -1330,6 +1291,96 @@ body {
     text-align: center;
     padding: 20px;
     line-height: 1.4;
+}
+
+/* Yeni Statik Kenar Reklam Sistemi CSS */
+.sidebar-ads-column {
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+}
+
+.sidebar-ads-column.left-ads {
+    border-right: 1px solid #dee2e6;
+}
+
+.sidebar-ads-column.right-ads {
+    border-left: 1px solid #dee2e6;
+}
+
+.ad-slot-static {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 10px;
+    min-height: 250px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.ad-slot-static:hover {
+    border-color: #dc2626;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.static-banner-ad {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.static-banner-image {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+.static-banner-title {
+    padding: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    border-top: 1px solid #eee;
+}
+
+.empty-ad-slot {
+    color: #999;
+    font-size: 12px;
+    text-align: center;
+    padding: 20px;
+    line-height: 1.4;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-content-area {
+    padding: 0 15px;
+}
+
+/* Mobile responsive için statik reklamları gizle */
+@media (max-width: 991.98px) {
+    .sidebar-ads-column {
+        display: none;
+    }
+    
+    .main-content-area {
+        padding: 0;
+    }
 }
 
 /* Kapatma Butonu Stilleri */

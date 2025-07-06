@@ -5,6 +5,42 @@
 
 {% block content %}
 
+<div class="container-fluid px-0">
+    <div class="row no-gutters">
+        <!-- Sol Kenar Reklamları -->
+        <div class="col-lg-2 col-md-3 d-none d-md-block">
+            <div class="sidebar-ads-column left-ads">
+                {% for i in range(1, 4) %}
+                <div class="ad-slot-static mb-3" data-position="left" data-slot="{{ i }}">
+                    {% set ad = ads.sidebar_left | selectattr('slot_number', 'equalto', i) | first %}
+                    {% if ad %}
+                    <div class="static-banner-ad">
+                        <button class="ad-close-btn" onclick="closeAd('{{ ad.id }}')" title="Reklamı Kapat">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <a href="{{ ad.link_url or '#' }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
+                            <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" class="static-banner-image">
+                        </a>
+                        {% if ad.title %}
+                        <div class="static-banner-title">{{ ad.title }}</div>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="empty-ad-slot">
+                        <i class="fas fa-ad fa-2x mb-2"></i><br>
+                        Sol Slot {{ i }}<br>
+                        <small>Reklam Alanı</small>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Ana İçerik -->
+        <div class="col-lg-8 col-md-6 col-12">
+            <div class="main-content-area">
+
     <!-- News Slider -->
     {% if slider_news %}
     <div class="news-slider-section">
@@ -588,6 +624,42 @@
     </div>
 </div>
 {% endif %}
+
+            </div>
+        </div>
+
+        <!-- Sağ Kenar Reklamları -->
+        <div class="col-lg-2 col-md-3 d-none d-md-block">
+            <div class="sidebar-ads-column right-ads">
+                {% for i in range(1, 4) %}
+                <div class="ad-slot-static mb-3" data-position="right" data-slot="{{ i }}">
+                    {% set ad = ads.sidebar_right | selectattr('slot_number', 'equalto', i) | first %}
+                    {% if ad %}
+                    <div class="static-banner-ad">
+                        <button class="ad-close-btn" onclick="closeAd('{{ ad.id }}')" title="Reklamı Kapat">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <a href="{{ ad.link_url or '#' }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
+                            <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" class="static-banner-image">
+                        </a>
+                        {% if ad.title %}
+                        <div class="static-banner-title">{{ ad.title }}</div>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="empty-ad-slot">
+                        <i class="fas fa-ad fa-2x mb-2"></i><br>
+                        Sağ Slot {{ i }}<br>
+                        <small>Reklam Alanı</small>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
 
 {% endblock %}
 

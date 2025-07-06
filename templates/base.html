@@ -167,6 +167,62 @@
     </div>
     {% endif %}
 
+    <!-- Sol Kenar Reklam Alanları -->
+    <div class="sidebar-ads-left">
+        {% for i in range(1, 4) %}
+        <div class="ad-slot" id="ad-slot-left-{{ i }}" data-position="left" data-slot="{{ i }}">
+            {% set ad = ads.sidebar_left | selectattr('slot_number', 'equalto', i) | first %}
+            {% if ad %}
+            <div class="vertical-banner-ad has-ad">
+                <button class="ad-close-btn" onclick="closeAd('{{ ad.id }}')" title="Reklamı Kapat">
+                    <i class="fas fa-times"></i>
+                </button>
+                <a href="{{ ad.link_url or '#' }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
+                    <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" class="vertical-banner-image">
+                </a>
+                {% if ad.title %}
+                <div class="vertical-banner-title">{{ ad.title }}</div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="empty-ad-text">
+                <i class="fas fa-ad fa-2x mb-2"></i><br>
+                Sol Slot {{ i }}<br>
+                <small>Reklam Alanı</small>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Sağ Kenar Reklam Alanları -->
+    <div class="sidebar-ads-right">
+        {% for i in range(1, 4) %}
+        <div class="ad-slot" id="ad-slot-right-{{ i }}" data-position="right" data-slot="{{ i }}">
+            {% set ad = ads.sidebar_right | selectattr('slot_number', 'equalto', i) | first %}
+            {% if ad %}
+            <div class="vertical-banner-ad has-ad">
+                <button class="ad-close-btn" onclick="closeAd('{{ ad.id }}')" title="Reklamı Kapat">
+                    <i class="fas fa-times"></i>
+                </button>
+                <a href="{{ ad.link_url or '#' }}" target="_blank" onclick="trackAdClick({{ ad.id }})">
+                    <img src="{{ ad.image_path }}" alt="{{ ad.title or 'Reklam' }}" class="vertical-banner-image">
+                </a>
+                {% if ad.title %}
+                <div class="vertical-banner-title">{{ ad.title }}</div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="empty-ad-text">
+                <i class="fas fa-ad fa-2x mb-2"></i><br>
+                Sağ Slot {{ i }}<br>
+                <small>Reklam Alanı</small>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
     <!-- Main Content -->
     <main class="main-content">
         {% with messages = get_flashed_messages(with_categories=true) %}

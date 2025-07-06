@@ -120,29 +120,39 @@ register_template_filters(app)
 # Template context processor for global ads
 @app.context_processor
 def inject_global_ads():
-    """Inject banner ads into all templates"""
+    """Inject all advertisements into templates"""
     try:
         from models import Advertisement
         
-        top_banner = Advertisement.query.filter_by(
-            ad_type='top_banner',
+        # Get sidebar ads - 3 per side
+        left_ads = Advertisement.query.filter_by(
+            ad_type='sidebar',
+            position='left',
             is_active=True
-        ).first()
+        ).order_by(Advertisement.slot_number.asc()).all()
         
-        bottom_banner = Advertisement.query.filter_by(
-            ad_type='bottom_banner',
+        right_ads = Advertisement.query.filter_by(
+            ad_type='sidebar',
+            position='right',
             is_active=True
-        ).first()
+        ).order_by(Advertisement.slot_number.asc()).all()
+        
+        # Get popup ads
+        popup_ads = Advertisement.query.filter_by(
+            ad_type='popup',
+            is_active=True
+        ).order_by(Advertisement.created_at.desc()).all()
         
         return {
             'ads': {
-                'top_banner': top_banner,
-                'bottom_banner': bottom_banner
+                'sidebar_left': left_ads,
+                'sidebar_right': right_ads,
+                'popup': popup_ads
             }
         }
     except Exception as e:
         print(f"Error injecting ads: {e}")
-        return {'ads': {'top_banner': None, 'bottom_banner': None}}
+        return {'ads': {'sidebar_left': [], 'sidebar_right': [], 'popup': []}}
 
 # Background scheduler for fetching news
 scheduler = BackgroundScheduler()

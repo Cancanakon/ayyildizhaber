@@ -295,16 +295,38 @@ def news_edit(id):
 @admin_bp.route('/haber/<int:id>/sil', methods=['POST'])
 @login_required
 def news_delete(id):
-    news = News.query.get_or_404(id)
-    
-    # Delete associated views
-    NewsView.query.filter_by(news_id=id).delete()
-    
-    db.session.delete(news)
-    db.session.commit()
-    
-    flash('Haber başarıyla silindi', 'success')
-    return redirect(url_for('admin.news_list'))
+    try:
+        news = News.query.get_or_404(id)
+        
+        # Yetki kontrolü - sadece makale sahibi veya super admin silebilir
+        if news.admin_id != current_user.id and not current_user.is_super_admin:
+            return jsonify({'success': False, 'message': 'Bu makaleyi silme yetkiniz yok'}), 403
+        
+        # Delete associated views
+        NewsView.query.filter_by(news_id=id).delete()
+        
+        # Delete the news article
+        db.session.delete(news)
+        db.session.commit()
+        
+        # Ajax isteği kontrolü
+        if request.headers.get('Content-Type') == 'application/json' or request.is_json:
+            return jsonify({'success': True, 'message': 'Makale başarıyla silindi'})
+        
+        # Normal form isteği
+        flash('Haber başarıyla silindi', 'success')
+        return redirect(url_for('admin.news_list'))
+        
+    except Exception as e:
+        db.session.rollback()
+        
+        # Ajax isteği kontrolü
+        if request.headers.get('Content-Type') == 'application/json' or request.is_json:
+            return jsonify({'success': False, 'message': 'Silme işlemi başarısız: ' + str(e)}), 500
+        
+        # Normal form isteği
+        flash('Haber silinemedi: ' + str(e), 'error')
+        return redirect(url_for('admin.news_list'))
 
 # User Management Routes
 @admin_bp.route('/kullanicilar')

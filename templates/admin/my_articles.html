@@ -161,8 +161,8 @@
                                    class="btn btn-sm btn-outline-warning" title="Düzenle">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <button type="button" class="btn btn-sm btn-outline-danger" 
-                                        onclick="deleteArticle({{ article.id }}, '{{ article.title }}')" title="Sil">
+                                <button type="button" class="btn btn-sm btn-outline-danger delete-btn" 
+                                        data-id="{{ article.id }}" data-title="{{ article.title }}" title="Sil">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -307,31 +307,53 @@
 </style>
 {% endblock %}
 
-{% block extra_js %}
+{% block scripts %}
 <script>
-function deleteArticle(id, title) {
-    if (confirm('"' + title + '" adlı makaleyi silmek istediğinizden emin misiniz?\n\nBu işlem geri alınamaz!')) {
-        fetch(`/admin/haber/sil/${id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
+document.addEventListener('DOMContentLoaded', function() {
+    // Delete button event listeners
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const title = this.getAttribute('data-title');
+            
+            if (confirm('"' + title + '" adlı makaleyi silmek istediğinizden emin misiniz?\n\nBu işlem geri alınamaz!')) {
+                // CSRF token alımı
+                const csrfToken = document.querySelector('meta[name="csrf-token"]');
+                const headers = {
+                    'Content-Type': 'application/json',
+                };
+                
+                if (csrfToken) {
+                    headers['X-CSRFToken'] = csrfToken.getAttribute('content');
+                }
+                
+                fetch(`/admin/haber/${id}/sil`, {
+                    method: 'POST',
+                    headers: headers
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Network response was not ok');
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Başarılı silme mesajı
+                        alert('Makale başarıyla silindi!');
+                        // Sayfayı yenile
+                        location.reload();
+                    } else {
+                        alert('Silme işlemi başarısız: ' + (data.message || 'Bilinmeyen hata'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Silme hatası:', error);
+                    alert('Makale silinemedi. Lütfen tekrar deneyin.');
+                });
             }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Sayfayı yenile
-                location.reload();
-            } else {
-                alert('Silme işlemi başarısız: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Bir hata oluştu. Lütfen tekrar deneyin.');
         });
-    }
-}
+    });
 
 // Arama formu geliştirmeleri
 document.getElementById('search').addEventListener('keypress', function(e) {

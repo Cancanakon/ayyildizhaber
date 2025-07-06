@@ -98,6 +98,10 @@ This is a comprehensive news website application built with Flask, featuring a T
 - Proxy configuration for reverse proxy deployment
 
 ## Recent Changes  
+- July 6, 2025: VPS popup reklam CSS sorunu tamamen çözüldü - inline critical CSS eklendi ve cache busting sistemi kuruldu
+- July 6, 2025: Complete VPS deployment fix - popup reklamları artık tüm sunucularda tutarlı görünür ve çalışır
+- July 6, 2025: Inline CSS override sistemi base template'e eklendi - external CSS dosya yolu sorunları bypass edildi
+- July 6, 2025: GitHub VPS kurulum scripti cache busting ile güncellendi - CSS versioning ve hard refresh talimatları
 - July 6, 2025: VPS JavaScript deployment sorunları tamamen çözüldü - tüm fonksiyonlar inline script yaklaşımıyla güvenilir hale getirildi
 - July 6, 2025: Popup reklam sistemi basitleştirildi - karmaşık CSS ve HTML yapısı temizlendi, simetrik tasarım sağlandı
 - July 6, 2025: Admin paneli makale silme fonksiyonu düzeltildi - VPS sunucularında çalışacak şekilde inline JavaScript kullanıldı

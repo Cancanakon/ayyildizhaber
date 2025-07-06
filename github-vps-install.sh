@@ -209,6 +209,9 @@ chmod -R 775 ${PROJECT_DIR}/static/uploads
 touch /var/log/ayyildizhaber.log
 chown www-data:www-data /var/log/ayyildizhaber.log
 
+# CSS Cache Busting - Force reload on VPS
+echo "/* VPS Cache Buster - $(date +%s) */" >> ${PROJECT_DIR}/static/css/style.css
+
 # Servisleri başlat
 systemctl reload supervisor
 supervisorctl reread
@@ -218,6 +221,13 @@ supervisorctl start ayyildizhaber
 nginx -t
 systemctl restart nginx
 systemctl enable nginx
+
+# Clear browser cache instructions
+echo ""
+echo "🔄 VPS CACHE CLEARING INSTRUCTIONS:"
+echo "   1. CSS files have been cache-busted"
+echo "   2. Users should hard refresh: Ctrl+F5 (Windows) or Cmd+Shift+R (Mac)"
+echo "   3. For persistent issues, clear browser cache completely"
 
 # Güvenlik duvarı
 ufw --force enable

@@ -152,7 +152,7 @@
                         <td>
                             <div class="btn-group" role="group">
                                 {% if article.status == 'published' %}
-                                <a href="{{ url_for('routes.news_detail', slug=article.slug) }}" 
+                                <a href="{{ url_for('main.news_detail', slug=article.slug) }}" 
                                    class="btn btn-sm btn-outline-primary" target="_blank" title="Görüntüle">
                                     <i class="fas fa-eye"></i>
                                 </a>
